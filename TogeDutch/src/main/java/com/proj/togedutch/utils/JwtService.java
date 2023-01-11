@@ -1,8 +1,8 @@
 package com.proj.togedutch.utils;
 
 
-import com.example.demo.config.BaseException;
-import com.example.demo.config.secret.Secret;
+import com.proj.togedutch.config.BaseException;
+import com.proj.togedutch.config.secret.Secret;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -14,7 +14,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
-import static com.example.demo.config.BaseResponseStatus.*;
+import static com.proj.togedutch.config.BaseResponseStatus.*;
 
 @Service
 public class JwtService {
@@ -49,7 +49,7 @@ public class JwtService {
     @return int
     @throws BaseException
      */
-    public int getUserIdx() throws BaseException{
+    public int getUserIdx() throws BaseException {
         //1. JWT 추출
         String accessToken = getJwt();
         if(accessToken == null || accessToken.length() == 0){

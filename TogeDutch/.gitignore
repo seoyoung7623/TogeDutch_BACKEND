@@ -26,5 +26,5 @@ out/
 !**/src/main/**/out/
 !**/src/test/**/out/
 
-application.properties
-Secret.java
+TogeDutch/src/main/resources/application.properties
+TogeDutch/src/main/java/com/proj/togedutch/config/secret/Secret.java
