@@ -1,5 +1,6 @@
 package com.proj.togedutch.dao;
 
+import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.entity.Keyword;
 import com.proj.togedutch.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.List;
+
+import static com.proj.togedutch.config.BaseResponseStatus.*;
 
 @Repository
 public class UserDao {
@@ -70,4 +74,65 @@ public class UserDao {
                         rs.getString("word6")),
                 getKeywordParams);
     }
+
+    public List<User> getUsers() {
+        String getUsersQuery = "select * from User";
+        return this.jdbcTemplate.query(getUsersQuery,
+                (rs, rowNum) -> new User(
+                        rs.getInt("user_id"),
+                        rs.getInt("Keyword_keyword_id"),
+                        rs.getString("name"),
+                        rs.getString("role"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phone"),
+                        rs.getString("location"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getString("jwt"))
+                );
+    }
+
+    public User getPwd(User user) {
+        String getPwdQuery = "select * from User where email = ?";
+        String getPwdParams = user.getEmail();
+        return this.jdbcTemplate.queryForObject(getPwdQuery,
+                (rs, rowNum) -> new User(
+                        rs.getInt("user_id"),
+                        rs.getInt("Keyword_keyword_id"),
+                        rs.getString("name"),
+                        rs.getString("role"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phone"),
+                        rs.getString("location"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getString("jwt")),
+                getPwdParams
+                );
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public User modifyUser(User user) throws BaseException {
+        String modifyUserQuery = "update User set name = ?, phone = ?, location = ? where user_id = ?";
+        Object[] modifyUserParams = new Object[]{user.getName(), user.getPhone(), user.getLocation(), user.getUserIdx()};
+        if (this.jdbcTemplate.update(modifyUserQuery, modifyUserParams) == 1)
+            return getUser(user.getUserIdx());
+        else {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    @Transactional(rollbackFor = Exception.class)
+    public Keyword modifyKeyword(Keyword keyword) throws BaseException {
+        String modifyKeywordQuery = "update Keyword set word1 = ?, word2 = ?, word3 = ?, word4 = ?, word5 = ? where keyword_id = ?";
+        Object[] modifyKeywordParams = new Object[]{keyword.getWord1(), keyword.getWord2(), keyword.getWord3(), keyword.getWord4(), keyword.getWord5(), keyword.getKeywordIdx()};
+        if (this.jdbcTemplate.update(modifyKeywordQuery, modifyKeywordParams) == 1)
+            return getKeyword(keyword.getKeywordIdx());
+        else
+            throw new BaseException(DATABASE_ERROR);
+    }
+
 }
