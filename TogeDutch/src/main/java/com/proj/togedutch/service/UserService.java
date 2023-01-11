@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.proj.togedutch.config.BaseResponseStatus.*;
 
 
@@ -75,6 +77,60 @@ public class UserService {
             return userDao.getKeyword(keywordIdx);
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    public Keyword getKeywordByUserIdx(int userIdx) throws BaseException {
+        try {
+            User user = userDao.getUser(userIdx);
+            return userDao.getKeyword(user.getKeywordIdx());
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+
+    public List<User> getUsers() throws BaseException {
+        try {
+            List<User> users = userDao.getUsers();
+            return users;
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public User login(User user) throws BaseException {
+        User getUser = userDao.getPwd(user);
+        String password;
+        try {
+            password = new AES128(Secret.USER_INFO_PASSWORD_KEY).decrypt(user.getPassword());
+        } catch (Exception e) {
+            throw new BaseException(PASSWORD_DECRYPTION_ERROR);
+        }
+        if (user.getPassword().equals(password)) {
+            int userIdx = user.getUserIdx();
+            String jwt = jwtService.createJwt(userIdx);
+
+            return getUser;
+        } else {
+            throw new BaseException(FAILED_TO_LOGIN);
+        }
+    }
+
+    public User modifyUser(User user) throws BaseException {
+        try {
+            User patchUser = userDao.modifyUser(user);
+            return patchUser;
+        } catch (Exception e) {
+            throw new BaseException(MODIFY_FAIL_USER);
+        }
+    }
+
+    public Keyword modifyKeyword(Keyword keyword) throws BaseException {
+        try {
+            Keyword patchKeyword = userDao.modifyKeyword(keyword);
+            return patchKeyword;
+        } catch (Exception e) {
+            throw new BaseException(MODIFY_FAIL_USER);
         }
     }
 }
