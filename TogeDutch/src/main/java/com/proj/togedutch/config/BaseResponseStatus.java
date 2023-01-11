@@ -31,6 +31,13 @@ public enum BaseResponseStatus {
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
     POST_USERS_EMPTY_PASSWORD(false, 2018, "비밀번호를 입력해주세요."),
 
+    // [POST] /post
+    POST_POST_EMPTY_TITLE(false, 2019, "공고 제목을 입력해주세요."),
+    POST_POST_EMPTY_URL(false, 2020, "URL을 입력해주세요."),
+    POST_POST_EMPTY_TIP(false, 2021, "배달팁을 입력해주세요."),
+    POST_POST_EMPTY_MINIMUM(false, 2022, "최소 주문 금액을 입력해주세요."),
+    POST_POST_EMPTY_RECRUIT(false, 2023, "모집 인원을 선택해주세요."),
+    POST_POST_EMPTY_LOCATION(false, 2024, "약속 장소를 설정해주세요."),
 
     /**
      * 3000 : Response 오류
