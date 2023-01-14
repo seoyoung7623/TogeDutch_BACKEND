@@ -21,8 +21,8 @@ public class PostService {
     @Autowired
     PostDao postDao;
 
-    public Post createPost(Post post, int userIdx) throws BaseException {
-        int postIdx = postDao.createPost(post, userIdx);
+    public Post createPost(Post post, int userIdx, String fileUrl) throws BaseException {
+        int postIdx = postDao.createPost(post, userIdx, fileUrl);
         Post createPost = postDao.getPostById(postIdx);
         return createPost;
         /*

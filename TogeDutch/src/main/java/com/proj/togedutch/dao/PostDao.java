@@ -19,11 +19,11 @@ public class PostDao {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int createPost(Post post, int userIdx) {
+    public int createPost(Post post, int userIdx, String fileUrl) {
         String createPostQuery
-                = "insert into Post (title, url, delivery_tips, minimum, order_time, num_of_recruits, location, User_user_id, FileProvider_file_id) " +
+                = "insert into Post (title, url, delivery_tips, minimum, order_time, num_of_recruits, location, User_user_id, image) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Object[] createPostParams = new Object[]{post.getTitle(), post.getUrl(), post.getDelivery_tips(), post.getMinimum(), post.getOrder_time(), post.getNum_of_recruits(), post.getLocation(), userIdx, post.getFile_id()};
+        Object[] createPostParams = new Object[]{post.getTitle(), post.getUrl(), post.getDelivery_tips(), post.getMinimum(), post.getOrder_time(), post.getNum_of_recruits(), post.getLocation(), userIdx, fileUrl};
         this.jdbcTemplate.update(createPostQuery, createPostParams);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class); // post_id 반환
@@ -46,7 +46,7 @@ public class PostDao {
                         rs.getTimestamp("updated_at"),
                         rs.getString("location"),
                         rs.getInt("User_user_id"),
-                        rs.getInt("FileProvider_file_id")
+                        rs.getString("image")
                 ), postIdx);
     }
 }

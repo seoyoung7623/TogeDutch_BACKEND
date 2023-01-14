@@ -23,5 +23,5 @@ public class Post {
     private Timestamp updated_at;
     private String location;
     private int user_id;
-    private int file_id;
+    private String image;
 }
