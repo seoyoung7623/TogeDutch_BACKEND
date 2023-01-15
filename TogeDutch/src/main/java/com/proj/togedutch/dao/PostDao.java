@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Repository
 public class PostDao {
@@ -48,5 +49,55 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image")
                 ), postIdx);
+    }
+
+    // 공고 전체 조회
+    public List<Post> getAllPosts(){
+        String getPostQuery = "select * from Post";
+        return this.jdbcTemplate.query(getPostQuery,
+                (rs, rowNum) -> new Post(
+                        rs.getInt("post_id"),
+                        rs.getString("title"),
+                        rs.getString("url"),
+                        rs.getInt("delivery_tips"),
+                        rs.getInt("minimum"),
+                        rs.getTimestamp("order_time"),
+                        rs.getInt("num_of_recruits"),
+                        rs.getInt("recruited_num"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getString("location"),
+                        rs.getInt("User_user_id"),
+                        rs.getString("image")
+                ));
+    }
+
+    // 공고 전체 조회 (최신순 / 주문 임박)
+    public List<Post> getSortingPosts(String sort){
+        String getPostQuery;
+
+        if(sort.equals("latest"))   // 최신순
+            getPostQuery = "select * from Post order by created_at desc";
+        else                        // 주문 임박
+            getPostQuery = "select * from Post where order_time between now() and DATE_ADD(NOW(), INTERVAL 10 MINUTE) order by order_time asc";
+
+        return this.jdbcTemplate.query(getPostQuery,
+                (rs, rowNum) -> new Post(
+                        rs.getInt("post_id"),
+                        rs.getString("title"),
+                        rs.getString("url"),
+                        rs.getInt("delivery_tips"),
+                        rs.getInt("minimum"),
+                        rs.getTimestamp("order_time"),
+                        rs.getInt("num_of_recruits"),
+                        rs.getInt("recruited_num"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getString("location"),
+                        rs.getInt("User_user_id"),
+                        rs.getString("image")
+                ));
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 import java.util.UUID;
 
 import static com.proj.togedutch.utils.ValidationRegex.isRegexEmail;
@@ -70,6 +71,29 @@ public class PostController {
         }
 
     }
+
+    // 공고 전체 조회
+    @GetMapping("")
+    public BaseResponse<List<Post>> getAllPosts() throws BaseException {
+        try{
+            List<Post> getPostsRes = postService.getAllPosts();
+            return new BaseResponse<>(getPostsRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
+    // 공고 전체 조회 (최신순 / )
+    @GetMapping("/")
+    public BaseResponse<List<Post>> getSortingPosts(@RequestParam String sort) throws BaseException {
+        try{
+            List<Post> getPostsRes = postService.getSortingPosts(sort);
+            return new BaseResponse<>(getPostsRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
+
 
     // AWS S3 이미지 서버에서 이미지 삭제
     // ?fileName=TEST.jpg 형식으로 테스트 확인

@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.proj.togedutch.config.BaseResponseStatus.*;
 
 @Service
@@ -22,18 +24,29 @@ public class PostService {
     PostDao postDao;
 
     public Post createPost(Post post, int userIdx, String fileUrl) throws BaseException {
-        int postIdx = postDao.createPost(post, userIdx, fileUrl);
-        Post createPost = postDao.getPostById(postIdx);
-        return createPost;
-        /*
         try {
-            int postIdx = postDao.createPost(post, userIdx);
+            int postIdx = postDao.createPost(post, userIdx, fileUrl);
             Post createPost = postDao.getPostById(postIdx);
             return createPost;
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
-
-         */
     }
+
+    public List<Post> getAllPosts() throws BaseException {
+        try{
+            return postDao.getAllPosts();
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<Post> getSortingPosts(String sort) throws BaseException{
+        try{
+            return postDao.getSortingPosts(sort);
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 }
