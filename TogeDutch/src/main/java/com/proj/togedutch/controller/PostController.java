@@ -94,6 +94,44 @@ public class PostController {
         }
     }
 
+    // 공고 수정
+    @PutMapping("/{post_id}")
+    public BaseResponse<Post> modifyPost(@PathVariable("post_id") int post_id, @RequestPart Post post,
+                                         @RequestParam int user, @RequestPart MultipartFile file) throws IOException {
+        if (post.getTitle() == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_TITLE);
+        }
+        if (post.getUrl() == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_URL);
+        }
+        if (Integer.valueOf(post.getDelivery_tips()) == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_TIP);
+        }
+        if (Integer.valueOf(post.getMinimum()) == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_MINIMUM);
+        }
+        if (Integer.valueOf(post.getNum_of_recruits()) == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_RECRUIT);
+        }
+        if (post.getLocation() == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_LOCATION);
+        }
+
+        String fileUrl = null;
+        // 기존에 서버에 등록된 이미지 삭제하고 해당 이미지 업로드 하기
+        if(file != null)
+            fileUrl = "https://umcbucket.s3.ap-northeast-2.amazonaws.com/" + awsS3Service.uploadFile(file, post, user);
+
+        // 추후 수정 예정
+        try {
+            Post newPost = postService.createPost(post, user, fileUrl);
+            return new BaseResponse<>(newPost);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+
 
     // AWS S3 이미지 서버에서 이미지 삭제
     // ?fileName=TEST.jpg 형식으로 테스트 확인
@@ -103,4 +141,3 @@ public class PostController {
         awsS3Service.deleteImage(fileName);
     }
 }
-
