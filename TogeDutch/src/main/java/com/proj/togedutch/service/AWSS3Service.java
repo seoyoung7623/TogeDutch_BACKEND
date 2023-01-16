@@ -11,6 +11,8 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.proj.togedutch.config.BaseResponse;
 import com.proj.togedutch.entity.Post;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,8 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AWSS3Service {
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     private final AmazonS3 amazonS3;
@@ -52,8 +56,9 @@ public class AWSS3Service {
     }
 
 
-    public void deleteImage(String fileName) {
+    public boolean deleteImage(String fileName) {
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+        return true;
     }
 
     // 기존 확장자명을 유지하면서, 식별되는 파일명을 생성

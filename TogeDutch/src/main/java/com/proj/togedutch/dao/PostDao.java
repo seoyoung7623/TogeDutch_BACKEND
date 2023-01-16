@@ -1,17 +1,25 @@
 package com.proj.togedutch.dao;
 
+import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.entity.Post;
-import com.proj.togedutch.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
+
+import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
+
 
 @Repository
 public class PostDao {
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -99,5 +107,29 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image")
                 ));
+    }
+
+    public String getImageUrl(int postIdx){
+        String getImageUrlQuery = "select image from Post where post_id = ?";
+        return this.jdbcTemplate.queryForObject(getImageUrlQuery, String.class, postIdx);
+    }
+
+    // 공고 수정
+    @Transactional(rollbackFor = Exception.class)
+    public Post modifyPost(int postIdx, Post post, int userIdx, String fileUrl) throws BaseException {
+        String modifyPostQuery = "update Post " +
+                "set title = ?, url = ?, delivery_tips = ?, minimum = ?, order_time = ?, num_of_recruits = ?, location = ?, User_user_id = ?, image = ?, updated_at = ? " +
+                "where post_id = ?";
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+
+        Object[] modifyPostParams = new Object[]{post.getTitle(), post.getUrl(), post.getDelivery_tips(), post.getMinimum(), post.getOrder_time(), post.getNum_of_recruits(), post.getLocation(), userIdx, fileUrl, sdf.format(timeStamp), postIdx};
+
+        if (this.jdbcTemplate.update(modifyPostQuery, modifyPostParams) == 1)
+            return getPostById(postIdx);
+        else {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }

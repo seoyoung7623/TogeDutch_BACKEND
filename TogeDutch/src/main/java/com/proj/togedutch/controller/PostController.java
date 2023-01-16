@@ -33,13 +33,12 @@ public class PostController {
 
     @Autowired
     PostService postService;
-
     @Autowired
     AWSS3Service awsS3Service;
 
     // 공고 등록
     @PostMapping("")
-    public BaseResponse<Post> test(@RequestPart Post post, @RequestParam int user, @RequestPart MultipartFile file) throws IOException{
+    public BaseResponse<Post> createPost(@RequestPart Post post, @RequestParam int user, @RequestPart MultipartFile file) throws IOException{
         if (post.getTitle() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_TITLE);
         }
@@ -83,7 +82,7 @@ public class PostController {
         }
     }
 
-    // 공고 전체 조회 (최신순 / )
+    // 공고 전체 조회 (최신순 / 주문임박)
     @GetMapping("/")
     public BaseResponse<List<Post>> getSortingPosts(@RequestParam String sort) throws BaseException {
         try{
@@ -95,9 +94,12 @@ public class PostController {
     }
 
     // 공고 수정
-    @PutMapping("/{post_id}")
-    public BaseResponse<Post> modifyPost(@PathVariable("post_id") int post_id, @RequestPart Post post,
-                                         @RequestParam int user, @RequestPart MultipartFile file) throws IOException {
+    @PutMapping("/{postIdx}")
+    public BaseResponse<Post> modifyPost(@PathVariable("postIdx") int postIdx, @RequestPart Post post,
+                                         @RequestParam int user, @RequestPart MultipartFile file) throws Exception {
+
+        /* 23.01.16 로그인한 유저와 Post_User_id가 같은 경우만 수정 가능하도록 검사하는 코드 추가 필요*/
+
         if (post.getTitle() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_TITLE);
         }
@@ -117,27 +119,24 @@ public class PostController {
             return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_LOCATION);
         }
 
-        String fileUrl = null;
-        // 기존에 서버에 등록된 이미지 삭제하고 해당 이미지 업로드 하기
+        String fileUrl = postService.getImageUrl(postIdx);
+        if(fileUrl != null) {           // 기존에 서버에 등록된 이미지 삭제
+            String[] url = fileUrl.split("/");
+            logger.info("Delete Image start");
+            awsS3Service.deleteImage(url[3]); // https:~ 경로 빼고 파일명으로 삭제
+        }
+        
+        // 이미지 파일이 있으면 서버에 등록
         if(file != null)
             fileUrl = "https://umcbucket.s3.ap-northeast-2.amazonaws.com/" + awsS3Service.uploadFile(file, post, user);
 
-        // 추후 수정 예정
+        // 공고 내용 수정
         try {
-            Post newPost = postService.createPost(post, user, fileUrl);
-            return new BaseResponse<>(newPost);
+            Post modifyPost = postService.modifyPost(postIdx, post, user, fileUrl);
+            logger.info("Modify success");
+            return new BaseResponse<>(modifyPost);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
-    }
-
-
-
-    // AWS S3 이미지 서버에서 이미지 삭제
-    // ?fileName=TEST.jpg 형식으로 테스트 확인
-    @DeleteMapping("/file")
-    public void deleteImage(@RequestParam String fileName) throws IOException {
-        logger.info("file-remove");
-        awsS3Service.deleteImage(fileName);
     }
 }

@@ -49,4 +49,21 @@ public class PostService {
         }
     }
 
+    public String getImageUrl(int postIdx) throws BaseException {
+        try{
+            return postDao.getImageUrl(postIdx);
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public Post modifyPost(int postIdx, Post post, int userIdx, String fileUrl) throws BaseException {
+        try{
+            Post modifyPost = postDao.modifyPost(postIdx, post, userIdx, fileUrl);
+            return modifyPost;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 }
