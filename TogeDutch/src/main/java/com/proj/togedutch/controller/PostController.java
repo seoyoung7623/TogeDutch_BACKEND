@@ -142,4 +142,30 @@ public class PostController {
             return new BaseResponse<>(e.getStatus());
         }
     }
+
+    // 공고 특정 조회 (로그인 전과 로그인 후의 화면 버튼 달라짐 -> 근데 굳이 11번과 안나눠도 될 것 같음)
+    @GetMapping("/{postIdx}")
+    public BaseResponse<Post> getPostByUserId(@PathVariable("postIdx") int postIdx, @RequestParam int user) throws BaseException {
+        try {
+            Post getPost = postService.getPostByUserId(postIdx, user);
+            return new BaseResponse<>(getPost);
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

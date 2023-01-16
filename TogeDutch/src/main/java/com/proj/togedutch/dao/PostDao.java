@@ -132,4 +132,26 @@ public class PostDao {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public Post getPostByUserId(int postIdx, int userIdx) throws BaseException {
+        String getPostQuery = "select * from Post where post_id = ? and User_user_id = ?";
+
+        return this.jdbcTemplate.queryForObject(getPostQuery,
+                (rs, rowNum) -> new Post(
+                        rs.getInt("post_id"),
+                        rs.getString("title"),
+                        rs.getString("url"),
+                        rs.getInt("delivery_tips"),
+                        rs.getInt("minimum"),
+                        rs.getTimestamp("order_time"),
+                        rs.getInt("num_of_recruits"),
+                        rs.getInt("recruited_num"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getString("location"),
+                        rs.getInt("User_user_id"),
+                        rs.getString("image")
+                ), postIdx, userIdx);
+    }
 }
