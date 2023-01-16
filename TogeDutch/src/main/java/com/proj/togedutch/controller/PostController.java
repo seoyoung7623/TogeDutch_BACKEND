@@ -36,6 +36,9 @@ public class PostController {
     @Autowired
     AWSS3Service awsS3Service;
 
+    @Value("${cloud.aws.url}")
+    private String url;
+
     // 공고 등록
     @PostMapping("")
     public BaseResponse<Post> createPost(@RequestPart Post post, @RequestParam int user, @RequestPart MultipartFile file) throws IOException{
@@ -60,7 +63,7 @@ public class PostController {
 
         String fileUrl = null;
         if(file != null)
-            fileUrl = "https://umcbucket.s3.ap-northeast-2.amazonaws.com/" + awsS3Service.uploadFile(file, post, user);
+            fileUrl = url + awsS3Service.uploadFile(file, post, user);
 
         try {
             Post newPost = postService.createPost(post, user, fileUrl);
@@ -128,7 +131,7 @@ public class PostController {
         
         // 이미지 파일이 있으면 서버에 등록
         if(file != null)
-            fileUrl = "https://umcbucket.s3.ap-northeast-2.amazonaws.com/" + awsS3Service.uploadFile(file, post, user);
+            fileUrl = url + awsS3Service.uploadFile(file, post, user);
 
         // 공고 내용 수정
         try {
