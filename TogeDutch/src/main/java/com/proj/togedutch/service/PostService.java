@@ -66,4 +66,13 @@ public class PostService {
         }
     }
 
+    public Post getPostByUserId(int postIdx, int userIdx) throws BaseException {
+        try{
+            Post getPost = postDao.getPostByUserId(postIdx, userIdx);
+            return getPost;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 }
