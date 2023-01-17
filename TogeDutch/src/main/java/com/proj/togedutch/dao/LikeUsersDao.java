@@ -1,12 +1,18 @@
 package com.proj.togedutch.dao;
 
+import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.entity.LikeUsers;
 import com.proj.togedutch.entity.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+
+import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Repository
 public class LikeUsersDao {
@@ -25,6 +31,7 @@ public class LikeUsersDao {
         return uploader;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int createLikePost(int userIdx, int postIdx, int Uploader_userIdx){
         String createLikePostQuery
                 = "insert into LikeUsers(Post_post_id, Post_User_user_id, User_user_id) VALUES (?, ?, ?)";
@@ -43,5 +50,16 @@ public class LikeUsersDao {
                         rs.getInt("Post_User_user_id"),
                         rs.getInt("User_user_id")
                 ), likeIdx);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteLikePost(int userIdx, int postIdx) throws BaseException {
+        String deleteLikePostQuery = "delete from LikeUsers where User_user_id = ? and Post_post_id = ?";
+        Object[] deleteLikePostParams = new Object[]{userIdx, postIdx};
+
+        if (this.jdbcTemplate.update(deleteLikePostQuery, deleteLikePostParams) == 1)
+            return 1;
+        else
+            throw new BaseException(DATABASE_ERROR);
     }
 }
