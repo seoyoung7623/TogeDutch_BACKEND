@@ -34,4 +34,13 @@ public class LikeUsersService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public int deleteLikePost(int userIdx, int postIdx) throws BaseException {
+        try{
+            int result = likeUsersDao.deleteLikePost(userIdx, postIdx);
+            return result;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
