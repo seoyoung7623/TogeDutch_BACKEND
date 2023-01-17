@@ -155,17 +155,38 @@ public class PostController {
     }
 
 
+    @PutMapping("/{postIdx}")
+    public BaseResponse<Integer> deletePost(@PathVariable("postIdx") int postIdx, @RequestPart Post post,
+                                         @RequestParam int user) throws Exception {
 
+        if (post.getTitle() == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_TITLE);
+        }
+        if (post.getUrl() == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_URL);
+        }
+        if (Integer.valueOf(post.getDelivery_tips()) == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_TIP);
+        }
+        if (Integer.valueOf(post.getMinimum()) == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_MINIMUM);
+        }
+        if (Integer.valueOf(post.getNum_of_recruits()) == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_RECRUIT);
+        }
+        if (post.getLocation() == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_LOCATION);
+        }
 
-
-
-
-
-
-
-
-
-
+        // 공고 내용 삭제
+        try {
+            int deletePost = postService.deletePost(postIdx, post, user);
+            logger.info("Delete success");
+            return new BaseResponse<>(deletePost);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 
 
 }
