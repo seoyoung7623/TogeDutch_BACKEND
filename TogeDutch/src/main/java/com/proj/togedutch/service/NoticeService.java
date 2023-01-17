@@ -28,33 +28,33 @@ public class NoticeService {
 
 
     /**공지사항 생성 메소드 미완성*/
-    public Notice createNotice(Notice notice) throws BaseException{
+    /*public Notice createNotice(Notice notice) throws BaseException{
         int noticeIdx=noticeDao.createNotice(notice);
         Notice createNotice=getNotice()
-    }
+    }*/
 
 
 
 
 
     //공고 전체 조회 메소드(최신순)
-    public List<Notice> getSortingNotice(String sort) throws BaseException{
+    /*public List<Notice> getSortingNotice(String sort) throws BaseException{
         try{
             return noticeDao.getSortingNotice(sort);
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
-    }
+    }*/
 
     //특정 공지사항 조회
-    public User getNotice(int noticeIdx) throws BaseException{
+    /*public User getNotice(int noticeIdx) throws BaseException{
         try {
             User user = noticeDao.getNotice(noticeIdx);
             return user;
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
-    }
+    }*/
 
     //공지사항 수정
 

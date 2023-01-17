@@ -8,9 +8,13 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class LikeUsers {
-    private int like_id;
+    private int likeIdx;
 
-    private int post_id;
+    private int postIdx;
 
-    private int user_id;
+    // 공고 업로드 한 유저의 id
+    private int Post_User_userIdx;
+
+    // 공고를 관심 목록에 담은 유저의 id
+    private int Like_userIdx;
 }
