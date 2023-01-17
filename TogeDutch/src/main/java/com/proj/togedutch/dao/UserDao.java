@@ -3,6 +3,8 @@ package com.proj.togedutch.dao;
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.entity.Keyword;
 import com.proj.togedutch.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -15,6 +17,7 @@ import static com.proj.togedutch.config.BaseResponseStatus.*;
 
 @Repository
 public class UserDao {
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     private JdbcTemplate jdbcTemplate;
     @Autowired
     public void setDataSource(DataSource dataSource) {
@@ -27,9 +30,10 @@ public class UserDao {
     }
     @Transactional(rollbackFor = Exception.class)
     public int createUser(User user) {
-        String createUserQuery = "insert into User (keyword_id, name, role, email, password, phone, location, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        Object[] createUserParams = new Object[]{user.getKeywordIdx(), user.getName(), user.getRole(), user.getEmail(), user.getPassword(), user.getPhone(), user.getLocation(), user.getStatus()};
-        this.jdbcTemplate.update(createUserQuery, createUserParams);
+        String createUserQuery = "insert into User (Keyword_keyword_id, name, role, email, password, phone, location, status, FileProvider_file_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Object[] createUserParams = new Object[]{user.getKeywordIdx(), user.getName(), user.getRole(), user.getEmail(), user.getPassword(), user.getPhone(), user.getLocation(), user.getStatus(), user.getFileproviderIdx()};
+        int row = this.jdbcTemplate.update(createUserQuery, createUserParams);
+        logger.debug(String.valueOf(row));
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
@@ -56,7 +60,8 @@ public class UserDao {
                         rs.getString("password"),
                         rs.getString("phone"),
                         rs.getString("location"),
-                        rs.getString("status")),
+                        rs.getString("status"),
+                        rs.getInt("FileProvider_file_id")),
                         getUserParams
                 );
     }
@@ -90,7 +95,8 @@ public class UserDao {
                         rs.getString("status"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
-                        rs.getString("jwt"))
+                        rs.getString("jwt"),
+                        rs.getInt("FileProvider_file_id"))
                 );
     }
 
@@ -110,7 +116,8 @@ public class UserDao {
                         rs.getString("status"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
-                        rs.getString("jwt")),
+                        rs.getString("jwt"),
+                        rs.getInt("FileProvider_file_id")),
                 getPwdParams
                 );
     }

@@ -40,6 +40,7 @@ public class UserService {
         }
         try {
             int userIdx = userDao.createUser(user);
+            logger.debug(user.getName());
             String jwt = jwtService.createJwt(userIdx);
             User createUser = getUser(userIdx);
             createUser.setJwt(jwt);
@@ -63,6 +64,7 @@ public class UserService {
     //키워드 생성
     public Keyword createKeyword(Keyword keyword) throws BaseException {
         try {
+            logger.debug(keyword.getWord1());
             int keywordIdx = userDao.createKeyword(keyword);
             Keyword createKeyword = getKeyword(keywordIdx);
             return createKeyword;

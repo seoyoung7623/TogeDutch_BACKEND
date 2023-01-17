@@ -29,6 +29,18 @@ public class UserController {
     @Autowired
     JwtService jwtService;
 
+    //keyword-1
+    @ResponseBody
+    @PostMapping("/keyword")
+    public BaseResponse<Keyword> createKeyword(@RequestBody Keyword keyword) {
+        try {
+            Keyword newKeyword = userService.createKeyword(keyword);
+            return new BaseResponse<>(newKeyword);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
     //user-1
     @ResponseBody
     @PostMapping("/signup")
@@ -109,17 +121,7 @@ public class UserController {
     //TODO user-7
 
 
-    //keyword-1
-    @ResponseBody
-    @PostMapping("/keyword")
-    public BaseResponse<Keyword> createKeyword(@RequestBody Keyword keyword) {
-        try {
-            Keyword newKeyword = userService.createKeyword(keyword);
-            return new BaseResponse<>(newKeyword);
-        } catch (BaseException e) {
-            return new BaseResponse<>(e.getStatus());
-        }
-    }
+
 
     //keyword-2
     @ResponseBody
