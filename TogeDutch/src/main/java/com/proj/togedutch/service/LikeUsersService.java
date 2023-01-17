@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Service
@@ -40,6 +42,15 @@ public class LikeUsersService {
             int result = likeUsersDao.deleteLikePost(userIdx, postIdx);
             return result;
         } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<Post> getLikePosts(int userIdx) throws BaseException {
+        try {
+            List<Post> likePosts = likeUsersDao.getLikePosts(userIdx);
+            return likePosts;
+        } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
