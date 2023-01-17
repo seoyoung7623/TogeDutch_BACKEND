@@ -24,7 +24,7 @@ public class ApplicationController {
 
 
     //공고 신청
-    @ResponseBody
+    /*@ResponseBody
     @PostMapping("/{postIdx}/application")
     public BaseResponse<Post> applyPost(@RequestBody Post post){
         try{
@@ -93,6 +93,6 @@ public class ApplicationController {
         } catch(BaseException e){
             return new BaseResponse<>(e.getStatus());
         }
-    }
+    }*/
 
 }

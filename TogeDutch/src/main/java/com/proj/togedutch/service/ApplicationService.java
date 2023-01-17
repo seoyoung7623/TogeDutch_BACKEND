@@ -15,12 +15,12 @@ public class ApplicationService {
 
 
     //공고신청
-    public Post applyPost(Post post) throw BaseException{
+   /* public Post applyPost(Post post) throw BaseException{
         try{
 
         }
     }
-
+`*/
 
 
 }

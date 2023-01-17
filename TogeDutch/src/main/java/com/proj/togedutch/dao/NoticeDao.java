@@ -54,9 +54,9 @@ public class NoticeDao {
                         rs.getString("content"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
-                        rs.getString("status"),
-                        getNoticeParams
-        );
+                        rs.getString("status")
+                        //,getNoticeParams
+        ));
     }
 
 

@@ -9,16 +9,16 @@ import com.proj.togedutch.entity.Notice;
 import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.entity.User;
 import com.proj.togedutch.service.ApplicationService;
-import com.proj.togedutch.service.NoticeService;
+//import com.proj.togedutch.service.NoticeService;
 import com.proj.togedutch.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/notice")
-public class NoticeController {
+//@RestController
+//@RequestMapping("/notice")
+/*public class NoticeController {
 
     @Autowired
     NoticeService noticeService;
@@ -60,7 +60,7 @@ public class NoticeController {
 
         //공지사항 삭제
 
-    /**공지사항 수정 어랴움*/
+    //공지사항 수정 어랴움
     @ResponseBody
     @PatchMapping("/{noticeIdx}")
     public BaseResponse<Keyword> modifyKeyword(@PathVariable("noticeIdx") int noticeIdx, @RequestBody Notice notice) {
@@ -83,4 +83,4 @@ public class NoticeController {
 
 
 
-}
+}*/
