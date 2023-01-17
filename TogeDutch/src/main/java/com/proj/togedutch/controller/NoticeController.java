@@ -10,19 +10,21 @@ import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.entity.User;
 import com.proj.togedutch.service.ApplicationService;
 //import com.proj.togedutch.service.NoticeService;
+import com.proj.togedutch.service.NoticeService;
 import com.proj.togedutch.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@RestController
-//@RequestMapping("/notice")
-/*public class NoticeController {
+@RestController
+@RequestMapping("/notice")
+public class NoticeController {
 
     @Autowired
     NoticeService noticeService;
 
+    /*
     //공고생성
     @ResponseBody
     @PostMapping("")
@@ -82,5 +84,5 @@ import java.util.List;
 
 
 
-
-}*/
+*/
+}
