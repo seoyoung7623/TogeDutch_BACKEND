@@ -1,7 +1,7 @@
 package com.proj.togedutch.dao;
 
 import com.proj.togedutch.entity.Chat;
-import com.proj.togedutch.entity.Message;
+import com.proj.togedutch.entity.ChatMessage;
 import com.proj.togedutch.entity.Notice;
 import com.proj.togedutch.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class ChatDao {
 //    }
 
     //save
-    public int saveMessage(Message message){
+    public int saveMessage(ChatMessage message){
         String saveChatQuery = "INSERT INTO Chat (ChatRoom_chatRoom_id, User_user_id,created_at,content) VALUES (?,?,NOW(),?);";
         Object[] saveChatParams = new Object[]{message.getChatRoom_id(),message.getUser_id(),message.getContent()}; //ChatRoom,userID 외래키 관계설정해야됨
         this.jdbcTemplate.update(saveChatQuery,saveChatParams);
@@ -57,7 +57,7 @@ public class ChatDao {
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
 
-    public Message insertMessage(Message mes){
+    public ChatMessage insertMessage(ChatMessage mes){
         String saveChatQuery = "INSERT INTO Chat (ChatRoom_chatRoom_id, User_user_id,created_at,content) VALUES (?,?,NOW(),?);";
         Object[] saveChatParams = new Object[]{mes.getChatRoom_id(),mes.getUser_id(),mes.getContent()};
         this.jdbcTemplate.update(saveChatQuery,saveChatParams);

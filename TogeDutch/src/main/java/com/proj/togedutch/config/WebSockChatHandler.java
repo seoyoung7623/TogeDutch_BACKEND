@@ -2,7 +2,7 @@ package com.proj.togedutch.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proj.togedutch.entity.ChatRoom;
-import com.proj.togedutch.entity.Message;
+import com.proj.togedutch.entity.ChatMessage;
 import com.proj.togedutch.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ public class WebSockChatHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception{
         String payload = message.getPayload();
         log.info("payload {}", payload);
-        Message chatMessage = objectMapper.readValue(payload, Message.class);
+        ChatMessage chatMessage = objectMapper.readValue(payload, ChatMessage.class);
 
         // ChatRoom chatRoom = chatService.findRoomById(chatMessage,getRoomId()); //findRoomById 추가해야됨
         // ChatRoom.handlerActions(session,chatMessage,chatService);

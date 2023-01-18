@@ -1,7 +1,7 @@
 package com.proj.togedutch.controller;
 
 import com.proj.togedutch.dao.ChatDao;
-import com.proj.togedutch.entity.Message;
+import com.proj.togedutch.entity.ChatMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -21,8 +21,9 @@ public class WebSockController {
     //JwtService jwtService = new JwtService;
     ChatDao chatDao;
 
+    // 참고한 레퍼런스 : https://github.com/ititandev/threadripper-chat-api
     @MessageMapping(value = "/chat/sendMessage")
-    public void message(@Payload Message mes, SimpMessageHeaderAccessor headerAccessor){
+    public void message(@Payload ChatMessage mes, SimpMessageHeaderAccessor headerAccessor){
         int user_id = 0;
         int chatroom_id = 0;
         try{
@@ -33,13 +34,13 @@ public class WebSockController {
             chatroom_id = mes.getChatRoom_id();
         }
         mes.setUser_id(user_id);
-        Message recMessage = mes;
+        ChatMessage recMessage = mes;
         List<Integer> revUser;
 
         switch (mes.getType()){
             case ENTER:
                 recMessage = chatDao.insertMessage(mes);
-                Message temp = recMessage;
+                ChatMessage temp = recMessage;
                 revUser =chatDao.getRevUser(user_id,chatroom_id);
                 if (revUser.size() == 0){
                     messagingTemplate.convertAndSend("/topic/"+user_id,"{\"error\":\"Error conversation\"}");
