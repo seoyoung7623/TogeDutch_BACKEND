@@ -20,6 +20,7 @@ public class ChatController {
 //        System.out.println("enter method");
 //    }
 
+    // @MessageMapping는 클라이언트에서 보내는 메시지를 매핑한다.
     @MessageMapping("/enter/{userIdx}")
     public BaseResponse<Chat> sendMessage(@PathVariable("userIdx") int userIdx, @RequestBody Chat chat){
         try {
