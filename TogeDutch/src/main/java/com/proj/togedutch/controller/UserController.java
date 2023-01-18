@@ -1,38 +1,48 @@
 package com.proj.togedutch.controller;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.config.BaseResponse;
 import com.proj.togedutch.config.BaseResponseStatus;
-import com.proj.togedutch.config.BaseResponseStatus.*;
 import com.proj.togedutch.entity.Keyword;
 import com.proj.togedutch.entity.User;
+import com.proj.togedutch.service.AWSS3Service;
 import com.proj.togedutch.service.UserService;
 import com.proj.togedutch.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 import static com.proj.togedutch.utils.ValidationRegex.isRegexEmail;
+
+
 
 @RestController
 @RequestMapping("/user")
 public class UserController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    @Value("${cloud.aws.url}")
+    private String url;
+
     @Autowired
     UserService userService;
     @Autowired
     JwtService jwtService;
+    @Autowired
+    AWSS3Service awsS3Service;
+
+
 
     //user-1
     @ResponseBody
     @PostMapping("/signup")
-    public BaseResponse<User> createUser(@RequestBody User user){
+    public BaseResponse<User> createUser(@RequestBody User user, @RequestPart MultipartFile file) throws IOException {
         if (user.getEmail() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_USERS_EMPTY_EMAIL);
         }
@@ -40,6 +50,11 @@ public class UserController {
             return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_EMAIL);
         }
         try {
+            String fileUrl = null;
+            if(file != null)
+                fileUrl = url + awsS3Service.uploadUserFile(file);
+
+            user.setImage(fileUrl);
             User newUser = userService.createUser(user);
             return new BaseResponse<>(newUser);
         } catch (BaseException e) {
@@ -104,10 +119,57 @@ public class UserController {
         }
     }
 
-    //TODO user-6
+    //user-6
+    @ResponseBody
+    @DeleteMapping("/{userIdx}")
+    public BaseResponse<String> deleteUser(@PathVariable("userIdx") int userIdx) {
+        try {
+            int delete = userService.deleteUser(userIdx);
+            if (delete == 0) {
+                return new BaseResponse<>("delete success" + userIdx);
+            }
+            return new BaseResponse<>("delete fail");
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 
 
-    //TODO user-7
+    //user-7
+    @ResponseBody
+    @PatchMapping("/{userIdx}/status")
+    public BaseResponse<User> modifyStatus(@PathVariable("userIdx") int userIdx, @RequestParam String status) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+            User user = userService.modifyStatus(userIdx, status);
+            return new BaseResponse<>(user);
+
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    @ResponseBody
+    @PatchMapping("/{userIdx}/image")
+    public BaseResponse<User> modifyUserImage(@PathVariable("userIdx") int userIdx, @RequestPart MultipartFile file) throws IOException {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+            String fileUrl = null;
+            if(file != null)
+                fileUrl = url + awsS3Service.uploadUserFile(file);
+            User user = userService.modifyUserImage(userIdx, fileUrl);
+            return new BaseResponse<>(user);
+
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 
 
     //keyword-1
@@ -151,8 +213,5 @@ public class UserController {
             return new BaseResponse<>(e.getStatus());
         }
     }
-
-
-    //TODO keyword-4
 
 }

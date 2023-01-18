@@ -5,8 +5,10 @@ import com.proj.togedutch.entity.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+@Service
 public class ApplicationService {
     final Logger logger= LoggerFactory.getLogger(this.getClass());
 
@@ -15,12 +17,12 @@ public class ApplicationService {
 
 
     //공고신청
-    public Post applyPost(Post post) throw BaseException{
+   /* public Post applyPost(Post post) throw BaseException{
         try{
 
         }
     }
-
+`*/
 
 
 }
