@@ -1,9 +1,6 @@
 package com.proj.togedutch.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Timestamp;
 
@@ -11,6 +8,7 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@RequiredArgsConstructor
 public class User {
     private int userIdx;
     private int keywordIdx;
@@ -19,15 +17,15 @@ public class User {
     private String email;
     private String password;
     private String phone;
-    private String location;
-    //TODO:파일 추가
     private String image;
     private String status;
     private Timestamp created_at;
     private Timestamp updated_at;
+    private double latitude;
+    private double longitude;
     private String jwt;
 
-    public User(int userIdx, int keywordIdx, String name, String role, String email, String password, String phone, String location, String status, String image) {
+    public User(int userIdx, int keywordIdx, String name, String role, String email, String password, String phone, String image, double latitude, double longitude, String status, Timestamp created_at, Timestamp updated_at, String jwt) {
         this.userIdx = userIdx;
         this.keywordIdx = keywordIdx;
         this.name = name;
@@ -35,19 +33,27 @@ public class User {
         this.email = email;
         this.password = password;
         this.phone = phone;
-        this.location = location;
-        this.status = status;
         this.image = image;
+        this.status = status;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.jwt = jwt;
     }
-    public User(int keywordIdx, String name, String role, String email, String password, String phone, String location, String status, String image) {
+
+    public User(int userIdx, int keywordIdx, String name, String role, String email, String password, String phone, double latitude, double longitude, String image, String status, String jwt) {
+        this.userIdx = userIdx;
         this.keywordIdx = keywordIdx;
         this.name = name;
         this.role = role;
         this.email = email;
         this.password = password;
         this.phone = phone;
-        this.location = location;
-        this.status = status;
         this.image = image;
+        this.status = status;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.jwt = jwt;
     }
 }
