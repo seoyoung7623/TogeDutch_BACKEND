@@ -26,9 +26,8 @@ public class User {
     private Timestamp created_at;
     private Timestamp updated_at;
     private String jwt;
-    private int fileproviderIdx;
 
-    public User(int userIdx, int keywordIdx, String name, String role, String email, String password, String phone, String location, String status, int fileproviderIdx) {
+    public User(int userIdx, int keywordIdx, String name, String role, String email, String password, String phone, String location, String status, String image) {
         this.userIdx = userIdx;
         this.keywordIdx = keywordIdx;
         this.name = name;
@@ -38,9 +37,9 @@ public class User {
         this.phone = phone;
         this.location = location;
         this.status = status;
-        this.fileproviderIdx = fileproviderIdx;
+        this.image = image;
     }
-    public User(int keywordIdx, String name, String role, String email, String password, String phone, String location, String status, int fileproviderIdx) {
+    public User(int keywordIdx, String name, String role, String email, String password, String phone, String location, String status, String image) {
         this.keywordIdx = keywordIdx;
         this.name = name;
         this.role = role;
@@ -49,6 +48,6 @@ public class User {
         this.phone = phone;
         this.location = location;
         this.status = status;
-        this.fileproviderIdx = fileproviderIdx;
+        this.image = image;
     }
 }
