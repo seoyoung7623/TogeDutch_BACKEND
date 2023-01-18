@@ -57,7 +57,7 @@ public class PostController {
         if (Integer.valueOf(post.getNum_of_recruits()) == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_RECRUIT);
         }
-        if (post.getLocation() == null) {
+        if (post.getLatitude() == null || post.getLongitude() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_LOCATION);
         }
 
@@ -118,7 +118,7 @@ public class PostController {
         if (Integer.valueOf(post.getNum_of_recruits()) == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_RECRUIT);
         }
-        if (post.getLocation() == null) {
+        if (post.getLatitude() == null || post.getLongitude() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_LOCATION);
         }
 
