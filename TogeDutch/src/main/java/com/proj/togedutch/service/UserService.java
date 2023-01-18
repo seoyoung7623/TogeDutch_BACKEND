@@ -151,4 +151,12 @@ public class UserService {
             throw new BaseException(MODIFY_FAIL_USER);
         }
     }
+
+    public User modifyUserImage(int userIdx, String fileUrl) throws BaseException {
+        try {
+            return userDao.modifyUserImage(userIdx, fileUrl);
+        } catch (Exception e) {
+            throw new BaseException(MODIFY_FAIL_USER);
+        }
+    }
 }

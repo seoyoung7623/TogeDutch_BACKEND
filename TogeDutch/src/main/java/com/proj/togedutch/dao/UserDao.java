@@ -162,4 +162,14 @@ public class UserDao {
             throw new BaseException(DATABASE_ERROR);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public User modifyUserImage(int userIdx, String fileUrl) throws BaseException {
+        String modifyUserImageQuery = "update User set image = ? where user_id = ?";
+        Object[] modifyUserImageParams = new Object[]{fileUrl, userIdx};
+        if (this.jdbcTemplate.update(modifyUserImageQuery, modifyUserImageParams) == 1)
+            return getUser(userIdx);
+        else
+            throw new BaseException(DATABASE_ERROR);
+    }
+
 }
