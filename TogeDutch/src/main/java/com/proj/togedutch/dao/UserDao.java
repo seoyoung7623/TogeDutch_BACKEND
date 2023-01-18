@@ -31,8 +31,8 @@ public class UserDao {
     }
     @Transactional(rollbackFor = Exception.class)
     public int createUser(User user) {
-        String createUserQuery = "insert into User (Keyword_keyword_id, name, role, email, password, phone, location, status, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Object[] createUserParams = new Object[]{user.getKeywordIdx(), user.getName(), user.getRole(), user.getEmail(), user.getPassword(), user.getPhone(), user.getLocation(), user.getStatus(), user.getImage()};
+        String createUserQuery = "insert into User (Keyword_keyword_id, name, role, email, password, phone, location, status, image, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Object[] createUserParams = new Object[]{user.getKeywordIdx(), user.getName(), user.getRole(), user.getEmail(), user.getPassword(), user.getPhone(), user.getStatus(), user.getImage(), user.getLatitude(), user.getLongitude()};
         int row = this.jdbcTemplate.update(createUserQuery, createUserParams);
         logger.debug(String.valueOf(row));
         String lastInsertIdQuery = "select last_insert_id()";
@@ -60,9 +60,11 @@ public class UserDao {
                         rs.getString("email"),
                         rs.getString("password"),
                         rs.getString("phone"),
-                        rs.getString("location"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude"),
                         rs.getString("status"),
-                        rs.getString("image")),
+                        rs.getString("image"),
+                        rs.getString("jwt")),
                         getUserParams
                 );
     }
@@ -93,7 +95,8 @@ public class UserDao {
                         rs.getString("password"),
                         rs.getString("phone"),
                         rs.getString("image"),
-                        rs.getString("location"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude"),
                         rs.getString("status"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
@@ -114,7 +117,8 @@ public class UserDao {
                         rs.getString("password"),
                         rs.getString("phone"),
                         rs.getString("image"),
-                        rs.getString("location"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude"),
                         rs.getString("status"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
@@ -125,8 +129,8 @@ public class UserDao {
 
     @Transactional(rollbackFor = Exception.class)
     public User modifyUser(User user) throws BaseException {
-        String modifyUserQuery = "update User set name = ?, phone = ?, location = ? where user_id = ?";
-        Object[] modifyUserParams = new Object[]{user.getName(), user.getPhone(), user.getLocation(), user.getUserIdx()};
+        String modifyUserQuery = "update User set name = ?, phone = ?, latitude = ?, longitude = ? where user_id = ?";
+        Object[] modifyUserParams = new Object[]{user.getName(), user.getPhone(), user.getLatitude(), user.getLongitude(), user.getUserIdx()};
         if (this.jdbcTemplate.update(modifyUserQuery, modifyUserParams) == 1)
             return getUser(user.getUserIdx());
         else {
