@@ -135,4 +135,20 @@ public class UserService {
             throw new BaseException(MODIFY_FAIL_USER);
         }
     }
+
+    public int deleteUser(int userIdx) throws BaseException {
+        try {
+            return userDao.deleteUser(userIdx);
+        } catch (Exception e) {
+            throw new BaseException(DELETE_FAIL_USER);
+        }
+    }
+
+    public User modifyStatus(int userIdx, String status) throws BaseException {
+        try {
+            return userDao.modifyStatus(userIdx, status);
+        } catch (Exception e) {
+            throw new BaseException(MODIFY_FAIL_USER);
+        }
+    }
 }

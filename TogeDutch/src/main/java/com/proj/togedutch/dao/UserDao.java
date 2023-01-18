@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.stream.BaseStream;
 
 import static com.proj.togedutch.config.BaseResponseStatus.*;
 
@@ -138,6 +139,25 @@ public class UserDao {
         Object[] modifyKeywordParams = new Object[]{keyword.getWord1(), keyword.getWord2(), keyword.getWord3(), keyword.getWord4(), keyword.getWord5(), keyword.getKeywordIdx()};
         if (this.jdbcTemplate.update(modifyKeywordQuery, modifyKeywordParams) == 1)
             return getKeyword(keyword.getKeywordIdx());
+        else
+            throw new BaseException(DATABASE_ERROR);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int deleteUser(int userIdx) throws BaseException {
+        String deleteUserQuery = "delete from User where user_id = ?";
+        Object[] deleteUserParams = new Object[]{userIdx};
+        if (this.jdbcTemplate.update(deleteUserQuery, deleteUserParams) == 1)
+            return 1;
+        else throw new BaseException(DATABASE_ERROR);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public User modifyStatus(int userIdx, String status) throws BaseException {
+        String modifyStatusQuery = "update User set status = ? where user_id = ?";
+        Object[] modifyStatusParams = new Object[]{status, userIdx};
+        if (this.jdbcTemplate.update(modifyStatusQuery, modifyStatusParams) == 1)
+            return getUser(userIdx);
         else
             throw new BaseException(DATABASE_ERROR);
     }

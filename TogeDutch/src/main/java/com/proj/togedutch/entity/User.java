@@ -21,6 +21,7 @@ public class User {
     private String phone;
     private String location;
     //TODO:파일 추가
+    private String image;
     private String status;
     private Timestamp created_at;
     private Timestamp updated_at;
