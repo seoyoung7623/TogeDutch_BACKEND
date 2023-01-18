@@ -1,10 +1,7 @@
 package com.proj.togedutch.controller;
 
-import com.proj.togedutch.TogeDutchApplication;
 import com.proj.togedutch.dao.ChatDao;
-import com.proj.togedutch.entity.Chat;
 import com.proj.togedutch.entity.Message;
-import com.proj.togedutch.utils.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,7 +14,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class StompChatController {
+public class WebSockController {
 
     @Autowired
     private SimpMessageSendingOperations messagingTemplate;
