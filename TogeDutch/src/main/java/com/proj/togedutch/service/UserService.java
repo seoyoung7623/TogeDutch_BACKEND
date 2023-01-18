@@ -40,6 +40,7 @@ public class UserService {
         }
         try {
             int userIdx = userDao.createUser(user);
+            logger.debug(user.getName());
             String jwt = jwtService.createJwt(userIdx);
             User createUser = getUser(userIdx);
             createUser.setJwt(jwt);
@@ -63,6 +64,7 @@ public class UserService {
     //키워드 생성
     public Keyword createKeyword(Keyword keyword) throws BaseException {
         try {
+            logger.debug(keyword.getWord1());
             int keywordIdx = userDao.createKeyword(keyword);
             Keyword createKeyword = getKeyword(keywordIdx);
             return createKeyword;
@@ -129,6 +131,22 @@ public class UserService {
         try {
             Keyword patchKeyword = userDao.modifyKeyword(keyword);
             return patchKeyword;
+        } catch (Exception e) {
+            throw new BaseException(MODIFY_FAIL_USER);
+        }
+    }
+
+    public int deleteUser(int userIdx) throws BaseException {
+        try {
+            return userDao.deleteUser(userIdx);
+        } catch (Exception e) {
+            throw new BaseException(DELETE_FAIL_USER);
+        }
+    }
+
+    public User modifyStatus(int userIdx, String status) throws BaseException {
+        try {
+            return userDao.modifyStatus(userIdx, status);
         } catch (Exception e) {
             throw new BaseException(MODIFY_FAIL_USER);
         }
