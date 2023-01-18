@@ -152,6 +152,25 @@ public class UserController {
         }
     }
 
+    @ResponseBody
+    @PatchMapping("/{userIdx}/image")
+    public BaseResponse<User> modifyUserImage(@PathVariable("userIdx") int userIdx, @RequestPart MultipartFile file) throws IOException {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+            String fileUrl = null;
+            if(file != null)
+                fileUrl = url + awsS3Service.uploadUserFile(file);
+            User user = userService.modifyUserImage(userIdx, fileUrl);
+            return new BaseResponse<>(user);
+
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
 
     //keyword-1
     @ResponseBody
