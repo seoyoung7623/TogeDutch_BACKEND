@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user/{userIdx}/likePost")
 public class LikeUsersController {
@@ -42,4 +44,14 @@ public class LikeUsersController {
         }
     }
 
+    // 공고 관심목록 전체 조회
+    @GetMapping("")
+    public BaseResponse<List<Post>> getLikePosts(@PathVariable("userIdx") int userIdx) throws BaseException {
+        try{
+            List<Post> likePosts = likeUsersService.getLikePosts(userIdx);
+            return new BaseResponse<>(likePosts);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 }
