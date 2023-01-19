@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class User {
     private int userIdx;
     private int keywordIdx;
