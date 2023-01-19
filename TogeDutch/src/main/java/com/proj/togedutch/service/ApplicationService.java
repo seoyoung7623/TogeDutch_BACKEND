@@ -27,7 +27,7 @@ public class ApplicationService {
             application.setPost_id(postIdx); // entity에있는 setter사용
             int userIdx = jwtService.getUserIdx();
             application.setUser_id(userIdx);
-            application.setStatus(null); //초기화 값임으로
+            application.setStatus("수락대기"); //초기화 값임으로
             int applicationIdx = applicationDao.applyPost(application);
             Application createApplication = getApplication(applicationIdx);
             return createApplication;

@@ -22,9 +22,9 @@ public class NoticeController {
     NoticeService noticeService;
 
 
-    //공고생성
+    //공지사항 생성
     @ResponseBody
-    @PostMapping("")
+    @PostMapping("notice")
     public BaseResponse<Notice> createNotice(@RequestBody Notice notice){
         try{
             Notice newNotice=noticeService.createNotice(notice);
@@ -33,6 +33,9 @@ public class NoticeController {
             return new BaseResponse<>(e.getStatus());
         }
     }
+
+
+
     // 공고 전체 조회 (최신순 / )
     @GetMapping("/")
     public BaseResponse<List<Notice>> getSortingNotice(@RequestParam String sort) throws BaseException {
@@ -64,5 +67,4 @@ public class NoticeController {
 
 
 
-}
-*/
+}*/

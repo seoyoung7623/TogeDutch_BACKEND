@@ -3,6 +3,7 @@ package com.proj.togedutch.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import software.amazon.ion.Decimal;
 
 import java.sql.Timestamp;
 
@@ -21,7 +22,8 @@ public class Post {
     private String status;
     private Timestamp created_at;
     private Timestamp updated_at;
-    private String location;
     private int user_id;
     private String image;
+    private Double latitude;
+    private Double longitude;
 }

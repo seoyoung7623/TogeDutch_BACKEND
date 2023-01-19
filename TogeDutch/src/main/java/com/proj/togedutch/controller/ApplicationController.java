@@ -21,7 +21,7 @@ public class ApplicationController {
     ApplicationService applicationService;
 
 
-    // 공고 신청
+    // 공고 생성
     @ResponseBody
     @PostMapping("post/{postIdx}/application")
     public BaseResponse<Application> applyPost(@PathVariable("postIdx") int postIdx,@RequestBody Application application){

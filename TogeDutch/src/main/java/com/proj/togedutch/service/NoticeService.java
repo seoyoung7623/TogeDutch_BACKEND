@@ -1,11 +1,16 @@
 /*package com.proj.togedutch.service;
 
+import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.dao.NoticeDao;
+import com.proj.togedutch.entity.Notice;
+import com.proj.togedutch.entity.Notice;
 import com.proj.togedutch.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Service
 public class NoticeService {
@@ -15,16 +20,28 @@ public class NoticeService {
     NoticeDao noticeDao;
 
 
-    공지사항 생성 메소드 미완성
+    //공지사항 생성
     public Notice createNotice(Notice notice) throws BaseException {
         try {
             int noticeIdx = noticeDao.createNotice(notice);
-            Keyword createKeyword = getNotice(noticeIdx);
-            return createNotice;
+            notice.setNotice_id(noticeIdx);
+            Notice newNotice = getNotice(noticeIdx);
+            return newNotice;
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
 
+    }
+
+
+    //TODO 공고 전체 조회
+    public Notice getNotice(int noticeIdx) throws BaseException{
+        try {
+            Notice notice = noticeDao.getNotice(noticeIdx);
+            return notice;
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
 
