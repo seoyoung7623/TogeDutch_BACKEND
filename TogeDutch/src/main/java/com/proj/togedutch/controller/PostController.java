@@ -7,24 +7,15 @@ import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.entity.User;
 import com.proj.togedutch.service.AWSS3Service;
 import com.proj.togedutch.service.PostService;
-import com.proj.togedutch.service.UserService;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
-import java.util.UUID;
-
-import static com.proj.togedutch.utils.ValidationRegex.isRegexEmail;
 
 @RestController
 @RequestMapping("/post")
