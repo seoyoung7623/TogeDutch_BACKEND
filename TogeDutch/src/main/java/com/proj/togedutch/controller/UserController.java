@@ -1,16 +1,13 @@
 package com.proj.togedutch.controller;
 
-import com.fasterxml.jackson.databind.ser.Serializers;
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.config.BaseResponse;
 import com.proj.togedutch.config.BaseResponseStatus;
-import com.proj.togedutch.config.BaseResponseStatus.*;
 import com.proj.togedutch.entity.Keyword;
 import com.proj.togedutch.entity.User;
 import com.proj.togedutch.service.UserService;
 import com.proj.togedutch.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;

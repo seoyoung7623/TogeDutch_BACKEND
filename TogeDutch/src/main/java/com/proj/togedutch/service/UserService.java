@@ -1,7 +1,6 @@
 package com.proj.togedutch.service;
 
 import com.proj.togedutch.config.BaseException;
-import com.proj.togedutch.config.BaseResponseStatus;
 import com.proj.togedutch.config.secret.Secret;
 import com.proj.togedutch.dao.UserDao;
 import com.proj.togedutch.entity.Keyword;
