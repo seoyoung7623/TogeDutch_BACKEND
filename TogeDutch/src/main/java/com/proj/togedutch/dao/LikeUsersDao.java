@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import software.amazon.ion.Decimal;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
 
@@ -61,5 +63,31 @@ public class LikeUsersDao {
             return 1;
         else
             throw new BaseException(DATABASE_ERROR);
+    }
+
+
+    // userIdx가 누른 관심 목록 리스트로 반환
+    public List<Post> getLikePosts(int userIdx) throws BaseException {
+        String getLikePostsQuery = "select * from Post where post_id IN (select Post_post_id from LikeUsers where User_user_id = ?)";
+
+        // LikeUsers의 userIdx와 같은 user_id를 가진 놈의 post_id를 가진 Post를 List를 반환
+        return this.jdbcTemplate.query(getLikePostsQuery,
+                (rs, rowNum) -> new Post(
+                        rs.getInt("post_id"),
+                        rs.getString("title"),
+                        rs.getString("url"),
+                        rs.getInt("delivery_tips"),
+                        rs.getInt("minimum"),
+                        rs.getTimestamp("order_time"),
+                        rs.getInt("num_of_recruits"),
+                        rs.getInt("recruited_num"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getInt("User_user_id"),
+                        rs.getString("image"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude")
+                ), userIdx);
     }
 }
