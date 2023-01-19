@@ -145,18 +145,69 @@ public class PostController {
         }
     }
 
+    //공고삭제
+    @DeleteMapping("/{postIdx}")
+    public BaseResponse<Integer> deletePost(@PathVariable("postIdx") int postIdx, @RequestPart Post post,
+                                         @RequestParam int user) throws Exception {
 
+        if (post.getTitle() == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_TITLE);
+        }
+        if (post.getUrl() == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_URL);
+        }
+        if (Integer.valueOf(post.getDelivery_tips()) == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_TIP);
+        }
+        if (Integer.valueOf(post.getMinimum()) == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_MINIMUM);
+        }
+        if (Integer.valueOf(post.getNum_of_recruits()) == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_RECRUIT);
+        }
+        if (post.getLatitude() == null || post.getLongitude() == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_LOCATION);
+        }
 
-
-
-
-
-
-
-
-
-
-
+        // 공고 내용 삭제
+        try {
+            int deletePost = postService.deletePost(postIdx, post, user);
+            logger.info("Delete success");
+            return new BaseResponse<>(deletePost);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+    //공고 내가 참여 조회
+    @GetMapping("/{postIdx}")
+    public BaseResponse<Post> getPostByJoinUserId(@PathVariable("postIdx") int postIdx, @RequestParam int user) throws BaseException {
+        try {
+            Post getPost = postService.getPostByJoinUserId(postIdx, user);
+            return new BaseResponse<>(getPost);
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+    //공고 내가 업로드
+    @GetMapping("/{postIdx}")
+    public BaseResponse<Post> getPostBuUploadUserId(@PathVariable("postIdx") int postIdx, @RequestParam int user) throws BaseException {
+        try {
+            Post getPost = postService.getPostByUploadUserId(postIdx, user);
+            return new BaseResponse<>(getPost);
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+    //공고 검색어
+    @GetMapping("/{postIdx}")
+    public BaseResponse<Post> getPostByTitleUserId(@PathVariable("postIdx") int postIdx, @RequestParam String keyword) throws BaseException {
+        try {
+            Post getPost = postService.getPostByTitleUserId(keyword);
+            return new BaseResponse<>(getPost);
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 
 
 }

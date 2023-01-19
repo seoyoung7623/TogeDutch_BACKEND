@@ -62,6 +62,39 @@ public class PostService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+    public int deletePost(int postIdx, Post post, int userIdx) throws BaseException {
+        try{
+            int deletePost = postDao.deletePost(postIdx, post, userIdx);
+            return deletePost;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    public Post getPostByJoinUserId(int postIdx, int userIdx) throws BaseException {
+        try{
+            Post joinPost = postDao.getPostByJoinUserId(postIdx, userIdx);
+            return joinPost;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    public Post getPostByUploadUserId(int postIdx, int userIdx) throws BaseException {
+        try{
+            Post UploadPost = postDao.getPostByUploadUserId(postIdx, userIdx);
+            return UploadPost;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    public Post getPostByTitleUserId(String title) throws BaseException {
+        try{
+            Post TitlePost = postDao.getPostByTitleUserId(title);
+            return TitlePost;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 
     public Post getPostByUserId(int postIdx, int userIdx) throws BaseException {
         try{
