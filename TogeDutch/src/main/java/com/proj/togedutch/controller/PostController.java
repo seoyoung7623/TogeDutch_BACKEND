@@ -154,8 +154,8 @@ public class PostController {
         }
     }
 
-
-    @PutMapping("/{postIdx}")
+    //공고삭제
+    @DeleteMapping("/{postIdx}")
     public BaseResponse<Integer> deletePost(@PathVariable("postIdx") int postIdx, @RequestPart Post post,
                                          @RequestParam int user) throws Exception {
 
@@ -184,6 +184,36 @@ public class PostController {
             logger.info("Delete success");
             return new BaseResponse<>(deletePost);
         } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+    //공고 내가 참여 조회
+    @GetMapping("/{postIdx}")
+    public BaseResponse<Post> getPostByJoinUserId(@PathVariable("postIdx") int postIdx, @RequestParam int user) throws BaseException {
+        try {
+            Post getPost = postService.getPostByJoinUserId(postIdx, user);
+            return new BaseResponse<>(getPost);
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+    //공고 내가 업로드
+    @GetMapping("/{postIdx}")
+    public BaseResponse<Post> getPostBuUploadUserId(@PathVariable("postIdx") int postIdx, @RequestParam int user) throws BaseException {
+        try {
+            Post getPost = postService.getPostByUploadUserId(postIdx, user);
+            return new BaseResponse<>(getPost);
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+    //공고 검색어
+    @GetMapping("/{postIdx}")
+    public BaseResponse<Post> getPostByTitleUserId(@PathVariable("postIdx") int postIdx, @RequestParam String keyword) throws BaseException {
+        try {
+            Post getPost = postService.getPostByTitleUserId(keyword);
+            return new BaseResponse<>(getPost);
+        } catch(BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
     }
