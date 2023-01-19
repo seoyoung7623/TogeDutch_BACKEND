@@ -184,9 +184,10 @@ public class PostDao {
                         rs.getString("status"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
-                        rs.getString("location"),
                         rs.getInt("User_user_id"),
-                        rs.getString("image")
+                        rs.getString("image"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude")
                 ), postIdx, userIdx);
     }
     public Post getPostByUploadUserId(int postIdx, int userIdx) throws BaseException {
@@ -205,9 +206,10 @@ public class PostDao {
                         rs.getString("status"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
-                        rs.getString("location"),
                         rs.getInt("User_user_id"),
-                        rs.getString("image")
+                        rs.getString("image"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude")
                 ), postIdx, userIdx);
     }
     public Post getPostByTitleUserId(String title) throws BaseException {
@@ -226,9 +228,10 @@ public class PostDao {
                         rs.getString("status"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
-                        rs.getString("location"),
                         rs.getInt("User_user_id"),
-                        rs.getString("image")
+                        rs.getString("image"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude")
                 ), title);
     }
 
