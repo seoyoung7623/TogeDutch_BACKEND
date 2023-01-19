@@ -16,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/review")
 public class ReviewController {
@@ -33,9 +35,9 @@ public class ReviewController {
 
     @ResponseBody
     @PostMapping("/application/{applicationId}")
-    public BaseResponse<Review> createReview(@RequestPart Review review, @PathVariable("applicationId") int applicationId) {
+    public BaseResponse<Integer> createReview(@RequestPart Review review, @PathVariable("applicationId") int applicationId) {
         try {
-            Review createReview = reviewService.createReview(applicationId,review);
+            int createReview = reviewService.createReview(applicationId,review);
             return new BaseResponse<>(createReview);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
@@ -45,10 +47,10 @@ public class ReviewController {
     //keyword-2
     @ResponseBody
     @GetMapping("/{postId}/{reviewId}")
-    public BaseResponse<Review> getTextReview(@PathVariable("postId") int postId, @PathVariable("reviewId") int reviewId) {
+    public BaseResponse<List<Review>> getTextReview(@PathVariable("postId") int postId, @PathVariable("reviewId") int reviewId) {
         try {
-            Review getKTextReview = reviewService.getTextReview(reviewId,postId);
-            return new BaseResponse<>(getKTextReview);
+            List<Review> getTextReview = reviewService.getTextReview(reviewId,postId);
+            return new BaseResponse<>(getTextReview);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }

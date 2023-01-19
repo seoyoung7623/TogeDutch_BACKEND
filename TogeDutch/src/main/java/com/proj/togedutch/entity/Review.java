@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 public class Review {
     private int reviewId;
-    private String emotionStatus;
+    private int emotionStatus;
     private String content;
     private Timestamp createdAt;
     private int applicationId;

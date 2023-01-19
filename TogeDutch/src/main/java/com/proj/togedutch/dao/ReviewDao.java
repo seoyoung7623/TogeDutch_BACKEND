@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 public class ReviewDao {
 
@@ -18,40 +19,26 @@ public class ReviewDao {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public Review createReview(int applicationId,Review review) {
-        String getUserQuery = "insert into Review (title, url, delivery_tips, minimum, order_time, num_of_recruits, User_user_id, image, latitude, longitude) " +
+    public int createReview(int applicationId, Review review) {
+        String InsertReviewQuery = "insert into Review (title, url, delivery_tips, minimum, order_time, num_of_recruits, User_user_id, image, latitude, longitude) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        int getUserParams = applicationId;
-        return this.jdbcTemplate.queryForObject(getUserQuery,
-                (rs, rowNum) -> new Review(
-                        rs.getInt("user_id"),
-                        rs.getInt("Keyword_keyword_id"),
-                        rs.getString("name"),
-                        rs.getString("role"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("phone"),
-                        rs.getDouble("latitude"),
-                        rs.getDouble("longitude"),
-                        rs.getString("status"),
-                        rs.getString("image"),
-                        rs.getString("jwt")),
-                getUserParams
-        );
+        Object[] createReviewParams = new Object[]{review.getEmotionStatus(), review.getContent(), applicationId, review.getPostId(), review.getUserId()};
+        return this.jdbcTemplate.update(InsertReviewQuery, createReviewParams);
+
     }
-    public Review getTextReview(int reviewId,int postId) {
-        String getKeywordQuery = "select * from Keyword where keyword_id = ?";
-        int getKeywordParams = keywordIdx;
-        return this.jdbcTemplate.queryForObject(getKeywordQuery,
-                (rs, rowNum) -> new Keyword(
-                        rs.getInt("keyword_id"),
-                        rs.getString("word1"),
-                        rs.getString("word2"),
-                        rs.getString("word3"),
-                        rs.getString("word4"),
-                        rs.getString("word5"),
-                        rs.getString("word6")),
-                getKeywordParams);
+    public List<Review> getTextReview(int reviewId, int postId) {
+        String getTextReviewQuery = "select * from Review where review_id = ?";
+        int getreviewParams = reviewId;
+        return this.jdbcTemplate.query(getTextReviewQuery,
+                (rs, rowNum) -> new Review(
+                        rs.getInt("review_id"),
+                        rs.getInt("emotion_status"),
+                        rs.getString("content"),
+                        rs.getTimestamp("created_at"),
+                        rs.getInt("Application_application_id"),
+                        rs.getInt("Application_Post_post_id"),
+                        rs.getInt("Application_Post_User_user_id")),
+                getreviewParams);
     }
 
 }
