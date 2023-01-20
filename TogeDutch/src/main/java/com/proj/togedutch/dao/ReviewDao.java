@@ -5,11 +5,12 @@ import com.proj.togedutch.entity.Review;
 import com.proj.togedutch.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.util.List;
-
+@Repository
 public class ReviewDao {
 
     private JdbcTemplate jdbcTemplate;
