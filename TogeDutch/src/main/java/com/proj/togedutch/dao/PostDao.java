@@ -169,7 +169,7 @@ public class PostDao {
 
     }
     public List<Post> getPostByJoinUserId(int userIdx) throws BaseException {
-        String getPostQuery = "select * from Application where User_user_id = ?";
+        String getPostQuery = "select * From Post where post_id In( select Post_post_id from Application where User_user_id = ? )";
 
         return this.jdbcTemplate.query(getPostQuery,
                 (rs, rowNum) -> new Post(
