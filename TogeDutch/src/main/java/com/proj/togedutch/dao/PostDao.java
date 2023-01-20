@@ -168,10 +168,10 @@ public class PostDao {
         return this.jdbcTemplate.update(deletePostQuery, deletePostParams);
 
     }
-    public Post getPostByJoinUserId(int postIdx, int userIdx) throws BaseException {
-        String getPostQuery = "select * from Application where post_id = ? and User_user_id = ?";
+    public List<Post> getPostByJoinUserId(int userIdx) throws BaseException {
+        String getPostQuery = "select * from Application where User_user_id = ?";
 
-        return this.jdbcTemplate.queryForObject(getPostQuery,
+        return this.jdbcTemplate.query(getPostQuery,
                 (rs, rowNum) -> new Post(
                         rs.getInt("post_id"),
                         rs.getString("title"),
@@ -188,12 +188,12 @@ public class PostDao {
                         rs.getString("image"),
                         rs.getDouble("latitude"),
                         rs.getDouble("longitude")
-                ), postIdx, userIdx);
+                ), userIdx);
     }
-    public Post getPostByUploadUserId(int postIdx, int userIdx) throws BaseException {
-        String getPostQuery = "select * from Post where post_id = ? and User_user_id = ?";
+    public List<Post> getPostByUploadUserId(int userIdx) throws BaseException {
+        String getPostQuery = "select * from Post where User_user_id = ? ";
 
-        return this.jdbcTemplate.queryForObject(getPostQuery,
+        return this.jdbcTemplate.query(getPostQuery,
                 (rs, rowNum) -> new Post(
                         rs.getInt("post_id"),
                         rs.getString("title"),
@@ -210,7 +210,7 @@ public class PostDao {
                         rs.getString("image"),
                         rs.getDouble("latitude"),
                         rs.getDouble("longitude")
-                ), postIdx, userIdx);
+                ), userIdx);
     }
     public Post getPostByTitleUserId(String title) throws BaseException {
         String getPostQuery = "select * from Post where title = ? ";

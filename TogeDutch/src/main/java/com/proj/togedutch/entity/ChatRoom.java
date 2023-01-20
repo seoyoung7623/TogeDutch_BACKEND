@@ -1,20 +1,25 @@
 package com.proj.togedutch.entity;
 
+import com.proj.togedutch.service.ChatService;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Service;
+import org.springframework.web.socket.WebSocketSession;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
+
 
 @Getter
 @Setter
-public class ChatRoom implements Serializable {
-    private int chatRoom_id;
-    private Timestamp created_at;
+public class ChatRoom {
+    private int chatRoomIdx;
+    private Timestamp createdAt;
 
-    public ChatRoom(int chatRoom_id,Timestamp created_at){
-        this.chatRoom_id = chatRoom_id;
-        this.created_at = created_at;
+    @Builder
+    public ChatRoom(int chatRoomIdx, Timestamp createdAt){
+        this.chatRoomIdx = chatRoomIdx;
+        this.createdAt = createdAt;
     }
 
 

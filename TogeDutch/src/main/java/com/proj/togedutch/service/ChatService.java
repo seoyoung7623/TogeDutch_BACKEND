@@ -2,6 +2,7 @@ package com.proj.togedutch.service;
 
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.config.BaseResponseStatus;
+import com.proj.togedutch.dao.AdDao;
 import com.proj.togedutch.dao.ChatDao;
 import com.proj.togedutch.dao.PostDao;
 import com.proj.togedutch.entity.Chat;
@@ -11,34 +12,33 @@ import com.proj.togedutch.entity.User;
 import com.proj.togedutch.repo.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
+import org.springframework.web.socket.WebSocketSession;
 
 import javax.annotation.PostConstruct;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Slf4j
 @Service
 public class ChatService {
-
-    private final ChannelTopic channelTopic;
-    private final RedisTemplate redisTemplate;
-    private final ChatRoomRepository chatRoomRepository;
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ChatDao chatDao;
 
-    /**
-     * destination정보에서 roomId 추출
-     */
-    public String getRoomId(String destination) {
-        int lastIndex = destination.lastIndexOf('/');
-        if (lastIndex != -1)
-            return destination.substring(lastIndex + 1);
-        else
-            return "";
+    @Autowired
+    public ChatService(ChatDao chatDao){
+        this.chatDao = chatDao;
     }
+
+    public <T> void sendMessage(WebSocketSession session, T message) {
+    }
+
+
+
 
     /**
      * 채팅방에 메시지 발송

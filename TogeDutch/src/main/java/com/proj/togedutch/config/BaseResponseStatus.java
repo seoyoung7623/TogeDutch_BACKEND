@@ -39,6 +39,12 @@ public enum BaseResponseStatus {
     POST_POST_EMPTY_RECRUIT(false, 2023, "모집 인원을 선택해주세요."),
     POST_POST_EMPTY_LOCATION(false, 2024, "약속 장소를 설정해주세요."),
 
+    // [POST] /Advertisement
+    POST_AD_EMPTY_STORE(false, 2025, "가게 이름을 입력해주세요."),
+    POST_AD_EMPTY_INFORMATION(false, 2026, "가게 정보를 입력해주세요."),
+    POST_AD_EMPTY_MAINMENU(false, 2027, "메인 메뉴를 입력해주세요."),
+    POST_AD_EMPTY_TIP(false, 2028, "배달팁을 입력해주세요."),
+    POST_AD_EMPTY_LOCATION(false, 2029, "약속 장소를 설정해주세요."),
     /**
      * 3000 : Response 오류
      */
