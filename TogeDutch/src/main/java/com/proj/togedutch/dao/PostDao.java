@@ -212,10 +212,10 @@ public class PostDao {
                         rs.getDouble("longitude")
                 ), userIdx);
     }
-    public Post getPostByTitleUserId(String title) throws BaseException {
+    public List<Post> getPostByTitleUserId(String title) throws BaseException {
         String getPostQuery = "select * from Post where title = ? ";
 
-        return this.jdbcTemplate.queryForObject(getPostQuery,
+        return this.jdbcTemplate.query(getPostQuery,
                 (rs, rowNum) -> new Post(
                         rs.getInt("post_id"),
                         rs.getString("title"),

@@ -203,10 +203,10 @@ public class PostController {
     }
     //공고 검색어
     @ResponseBody
-    @GetMapping("/search/keyword")
-    public BaseResponse<Post> getPostByTitleUserId(@RequestParam String keyword) throws BaseException {
+    @GetMapping("/search")
+    public BaseResponse <List<Post>> getPostByTitleUserId(@RequestParam String keyword) throws BaseException {
         try {
-            Post getPost = postService.getPostByTitleUserId(keyword);
+            List<Post> getPost = postService.getPostByTitleUserId(keyword);
             return new BaseResponse<>(getPost);
         } catch(BaseException e) {
             return new BaseResponse<>(e.getStatus());
