@@ -70,17 +70,17 @@ public class PostService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-    public Post getPostByJoinUserId(int userIdx) throws BaseException {
+    public List<Post> getPostByJoinUserId(int userIdx) throws BaseException {
         try{
-            Post joinPost = postDao.getPostByJoinUserId(userIdx);
+            List<Post> joinPost = postDao.getPostByJoinUserId(userIdx);
             return joinPost;
         } catch(Exception e){
             throw new BaseException(DATABASE_ERROR);
         }
     }
-    public Post getPostByUploadUserId(int userIdx) throws BaseException {
+    public List<Post> getPostByUploadUserId(int userIdx) throws BaseException {
         try{
-            Post UploadPost = postDao.getPostByUploadUserId(userIdx);
+            List<Post> UploadPost = postDao.getPostByUploadUserId(userIdx);
             return UploadPost;
         } catch(Exception e){
             throw new BaseException(DATABASE_ERROR);
