@@ -181,7 +181,7 @@ public class PostController {
     }
     //공고 내가 참여 조회
     @ResponseBody
-    @GetMapping("/{userIdx}")
+    @GetMapping("/join/{userIdx}")
     public BaseResponse<List<Post>> getPostByJoinUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
         try {
             List<Post> getPost = postService.getPostByJoinUserId(userIdx);
