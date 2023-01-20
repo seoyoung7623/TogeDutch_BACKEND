@@ -12,25 +12,30 @@ public class ChatMessage {
 
     }
 
+    public ChatMessage(int chat_id, int chatRoom_chatRoom_id, int user_user_id, Timestamp created_at, String content) {
+        this.chat_id = chat_id;
+        this.chatRoom_id = chatRoom_chatRoom_id;
+        this.userId = user_user_id;
+        this.createAt = created_at;
+        this.content = content;
+    }
+
     // 메시지 타입 : 입장, 퇴장, 채팅, 파일송신
     public enum MessageType {
         ENTER, QUIT, TALK,FILE
     }
 
     private MessageType type;
+    private int chat_id;
     private int chatRoom_id;
-    private int user_id;
+    private int userId;
+    private Timestamp createAt;
     private String content;
     private String status;
     //private Timestamp created_at;
 
-    @Builder
-    public ChatMessage(MessageType type,int chatRoom_id,int user_id,String content){
-        this.type = type;
-        this.chatRoom_id = chatRoom_id;
-        this.user_id = user_id;
-        this.content = content;
-    }
+    private String roomId;
+    private String writer;
 
 
 }
