@@ -1,7 +1,6 @@
 package com.proj.togedutch.service;
 
-import com.proj.togedutch.config.BaseResponse;
-import com.proj.togedutch.dao.ChatDao;
+import com.proj.togedutch.dao.ChatRoomDao;
 import com.proj.togedutch.entity.ChatRoom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,14 +10,14 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChatRoomService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
-    private ChatDao chatDao;
+    private ChatRoomDao chatRoomDao;
     @Autowired
-    public ChatRoomService(ChatDao chatDao){
+    public ChatRoomService(ChatRoomDao chatRoomDao){
 
-        this.chatDao = chatDao;
+        this.chatRoomDao = chatRoomDao;
     }
     public ChatRoom createChatRoom() {
-        int chatRoomIdx = chatDao.createChatRoom();
-        return chatDao.getChatRoomById(chatRoomIdx);
+        int chatRoomIdx = chatRoomDao.createChatRoom();
+        return chatRoomDao.getChatRoomById(chatRoomIdx);
     }
 }
