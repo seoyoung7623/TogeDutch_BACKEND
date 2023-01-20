@@ -182,9 +182,9 @@ public class PostController {
     //공고 내가 참여 조회
     @ResponseBody
     @GetMapping("/{userIdx}")
-    public BaseResponse<Post> getPostByJoinUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
+    public BaseResponse<List<Post>> getPostByJoinUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
         try {
-            Post getPost = postService.getPostByJoinUserId(userIdx);
+            List<Post> getPost = postService.getPostByJoinUserId(userIdx);
             return new BaseResponse<>(getPost);
         } catch(BaseException e) {
             return new BaseResponse<>(e.getStatus());
@@ -193,9 +193,9 @@ public class PostController {
     //공고 내가 업로드
     @ResponseBody
     @GetMapping("/all/{userIdx}")
-    public BaseResponse<Post> getPostBuUploadUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
+    public BaseResponse<List<Post>> getPostBuUploadUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
         try {
-            Post getPost = postService.getPostByUploadUserId(userIdx);
+            List<Post> getPost = postService.getPostByUploadUserId(userIdx);
             return new BaseResponse<>(getPost);
         } catch(BaseException e) {
             return new BaseResponse<>(e.getStatus());
