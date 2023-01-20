@@ -45,6 +45,11 @@ public enum BaseResponseStatus {
     POST_AD_EMPTY_MAINMENU(false, 2027, "메인 메뉴를 입력해주세요."),
     POST_AD_EMPTY_TIP(false, 2028, "배달팁을 입력해주세요."),
     POST_AD_EMPTY_LOCATION(false, 2029, "약속 장소를 설정해주세요."),
+
+    // [POST] /notice
+    POST_NOTICE_EMPTY_TITLE(false, 2030, "공지 제목을 설정해주세요."),
+    POST_NOTICE_EMPTY_CONTENT(false, 2031, "공지 내용을 설정해주세요."),
+
     /**
      * 3000 : Response 오류
      */
