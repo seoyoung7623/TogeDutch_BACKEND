@@ -86,9 +86,9 @@ public class PostService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-    public Post getPostByTitleUserId(String title) throws BaseException {
+    public List<Post> getPostByTitleUserId(String title) throws BaseException {
         try{
-            Post TitlePost = postDao.getPostByTitleUserId(title);
+            List<Post> TitlePost = postDao.getPostByTitleUserId(title);
             return TitlePost;
         } catch(Exception e){
             throw new BaseException(DATABASE_ERROR);
