@@ -161,6 +161,7 @@ public class PostDao {
                 ), postIdx, userIdx);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int deletePost(int postIdx, int userIdx) {
         String deletePostQuery
                 = "delete from Post WHERE post_id = ? and User_user_id = ?";
