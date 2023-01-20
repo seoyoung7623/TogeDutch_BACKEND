@@ -37,9 +37,9 @@ public class WebSockChatHandler implements ChannelInterceptor { //유저인증�
             log.info("CONNECT {}", jwtToken);
             // Header의 jwt token 검증
             //jwtTokenProvider.validateToken(jwtToken);
-        } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) { // 채팅룸 구독요청 유저가 일치하는지 확인하고
+        } else if (StompCommand.SUBSCRIBE == accessor.getCommand()) { // 채팅룸 구독요청 / 유저가 일치하는지 확인하고
             // header정보에서 구독 destination정보를 얻고, roomId를 추출한다.
-            Integer chatRoom_id = chatService.getRoomId(Optional.ofNullable((Integer) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
+            Integer chatRoom_id = chatService.getChatRoomId(Optional.ofNullable((Integer) message.getHeaders().get()).orElse("InvalidRoomId"));
             String roomId = chatService.getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
             // 채팅방에 들어온 클라이언트 sessionId를 roomId와 맵핑해 놓는다.(나중에 특정 세션이 어떤 채팅방에 들어가 있는지 알기 위함)
             String sessionId = (String) message.getHeaders().get("simpSessionId");
