@@ -21,15 +21,14 @@ public class ReviewDao {
 
     @Transactional(rollbackFor = Exception.class)
     public int createReview(int applicationId, Review review) {
-        String InsertReviewQuery = "insert into Review (title, url, delivery_tips, minimum, order_time, num_of_recruits, User_user_id, image, latitude, longitude) " +
+        String InsertReviewQuery = "insert into Review (emotion_status, content, Application_application_Id, Apllication_Post_post_id, Application_Post_User_user_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Object[] createReviewParams = new Object[]{review.getEmotionStatus(), review.getContent(), applicationId, review.getPostId(), review.getUserId()};
         return this.jdbcTemplate.update(InsertReviewQuery, createReviewParams);
 
     }
     public List<Review> getTextReview(int reviewId, int postId) {
-        String getTextReviewQuery = "select * from Review where review_id = ?";
-        int getreviewParams = reviewId;
+        String getTextReviewQuery = "select * from Review where review_id = ? and Application_Post_post_id = ? ";
         return this.jdbcTemplate.query(getTextReviewQuery,
                 (rs, rowNum) -> new Review(
                         rs.getInt("review_id"),
@@ -39,7 +38,7 @@ public class ReviewDao {
                         rs.getInt("Application_application_id"),
                         rs.getInt("Application_Post_post_id"),
                         rs.getInt("Application_Post_User_user_id")),
-                getreviewParams);
+                reviewId, postId);
     }
 
 }
