@@ -147,41 +147,18 @@ public class PostController {
 
     //공고삭제
     @ResponseBody
-    @DeleteMapping("/{postIdx}")
-    public BaseResponse<Integer> deletePost(@PathVariable("postIdx") int postIdx, @RequestPart Post post,
+    @DeleteMapping("/{postIdx}/user")
+    public int deletePost(@PathVariable("postIdx") int postIdx,
                                          @RequestParam int user) throws Exception {
 
-        if (post.getTitle() == null) {
-            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_TITLE);
-        }
-        if (post.getUrl() == null) {
-            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_URL);
-        }
-        if (Integer.valueOf(post.getDelivery_tips()) == null) {
-            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_TIP);
-        }
-        if (Integer.valueOf(post.getMinimum()) == null) {
-            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_MINIMUM);
-        }
-        if (Integer.valueOf(post.getNum_of_recruits()) == null) {
-            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_RECRUIT);
-        }
-        if (post.getLatitude() == null || post.getLongitude() == null) {
-            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_LOCATION);
-        }
-
-        // 공고 내용 삭제
-        try {
-            int deletePost = postService.deletePost(postIdx, post, user);
+            int deletePost = postService.deletePost(postIdx, user);
             logger.info("Delete success");
-            return new BaseResponse<>(deletePost);
-        } catch (BaseException e) {
-            return new BaseResponse<>(e.getStatus());
-        }
+            return deletePost;
+
     }
     //공고 내가 참여 조회
     @ResponseBody
-    @GetMapping("/{userIdx}")
+    @GetMapping("/join/{userIdx}")
     public BaseResponse<List<Post>> getPostByJoinUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
         try {
             List<Post> getPost = postService.getPostByJoinUserId(userIdx);
@@ -203,10 +180,10 @@ public class PostController {
     }
     //공고 검색어
     @ResponseBody
-    @GetMapping("/search/keyword")
-    public BaseResponse<Post> getPostByTitleUserId(@RequestParam String keyword) throws BaseException {
+    @GetMapping("/search")
+    public BaseResponse <List<Post>> getPostByTitleUserId(@RequestParam String keyword) throws BaseException {
         try {
-            Post getPost = postService.getPostByTitleUserId(keyword);
+            List<Post> getPost = postService.getPostByTitleUserId(keyword);
             return new BaseResponse<>(getPost);
         } catch(BaseException e) {
             return new BaseResponse<>(e.getStatus());

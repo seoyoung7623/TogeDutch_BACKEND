@@ -62,9 +62,9 @@ public class PostService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-    public int deletePost(int postIdx, Post post, int userIdx) throws BaseException {
+    public int deletePost(int postIdx, int userIdx) throws BaseException {
         try{
-            int deletePost = postDao.deletePost(postIdx, post, userIdx);
+            int deletePost = postDao.deletePost(postIdx, userIdx);
             return deletePost;
         } catch(Exception e){
             throw new BaseException(DATABASE_ERROR);
@@ -86,9 +86,9 @@ public class PostService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-    public Post getPostByTitleUserId(String title) throws BaseException {
+    public List<Post> getPostByTitleUserId(String title) throws BaseException {
         try{
-            Post TitlePost = postDao.getPostByTitleUserId(title);
+            List<Post> TitlePost = postDao.getPostByTitleUserId(title);
             return TitlePost;
         } catch(Exception e){
             throw new BaseException(DATABASE_ERROR);

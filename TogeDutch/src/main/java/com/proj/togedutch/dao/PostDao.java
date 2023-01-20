@@ -161,7 +161,7 @@ public class PostDao {
                 ), postIdx, userIdx);
     }
 
-    public int deletePost(int postIdx, Post post, int userIdx) {
+    public int deletePost(int postIdx, int userIdx) {
         String deletePostQuery
                 = "delete from Post WHERE post_id = ? and User_user_id = ?";
         Object[] deletePostParams = new Object[]{postIdx,userIdx};
@@ -169,7 +169,7 @@ public class PostDao {
 
     }
     public List<Post> getPostByJoinUserId(int userIdx) throws BaseException {
-        String getPostQuery = "select * from Application where User_user_id = ?";
+        String getPostQuery = "select * From Post where post_id In( select Post_post_id from Application where User_user_id = ? )";
 
         return this.jdbcTemplate.query(getPostQuery,
                 (rs, rowNum) -> new Post(
@@ -212,10 +212,10 @@ public class PostDao {
                         rs.getDouble("longitude")
                 ), userIdx);
     }
-    public Post getPostByTitleUserId(String title) throws BaseException {
+    public List<Post> getPostByTitleUserId(String title) throws BaseException {
         String getPostQuery = "select * from Post where title = ? ";
 
-        return this.jdbcTemplate.queryForObject(getPostQuery,
+        return this.jdbcTemplate.query(getPostQuery,
                 (rs, rowNum) -> new Post(
                         rs.getInt("post_id"),
                         rs.getString("title"),
