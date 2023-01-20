@@ -44,7 +44,7 @@ public class ReviewController {
         }
     }
 
-    //keyword-2
+
     @ResponseBody
     @GetMapping("/{postId}/{reviewId}")
     public BaseResponse<List<Review>> getTextReview(@PathVariable("postId") int postId, @PathVariable("reviewId") int reviewId) {
