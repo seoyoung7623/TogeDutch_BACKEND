@@ -12,7 +12,8 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class ChatRoomRepository { //repository -> Dao로 옮길예정
+public class ChatRoomRepository {
+    //repository -> Dao로 옮길예정
 
     private static final String CHAT_ROOMS = "CHAT_ROOM"; // 채팅룸 저장
     public static final String USER_COUNT = "USER_COUNT"; // 채팅룸에 입장한 클라이언트수 저장
@@ -37,11 +38,11 @@ public class ChatRoomRepository { //repository -> Dao로 옮길예정
     }
 
     // 채팅방 생성 : 서버간 채팅방 공유를 위해 redis hash에 저장한다.
-    public ChatRoom createChatRoom(int post_id) {
-        ChatRoom chatRoom = ChatRoom.create(post_id);
-        hashOpsChatRoom.put(CHAT_ROOMS, chatRoom.getChatRoom_id(), chatRoom);
-        return chatRoom;
-    }
+//    public ChatRoom createChatRoom(int post_id) {
+//        ChatRoom chatRoom = ChatRoom.create(post_id);
+//        hashOpsChatRoom.put(CHAT_ROOMS, chatRoom.getChatRoom_id(), chatRoom);
+//        return chatRoom;
+//    }
 
     // 유저가 입장한 채팅방ID와 유저 세션ID 맵핑 정보 저장
     public void setUserEnterInfo(String sessionId, String roomId) {

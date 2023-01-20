@@ -1,11 +1,8 @@
 package com.proj.togedutch.entity;
 
-import com.proj.togedutch.service.ChatService;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
-import org.springframework.web.socket.WebSocketSession;
 
 import java.sql.Timestamp;
 
