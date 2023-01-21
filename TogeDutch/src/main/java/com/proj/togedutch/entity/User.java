@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class User {
     private int userIdx;
     private int keywordIdx;
@@ -25,7 +24,9 @@ public class User {
     private double longitude;
     private String jwt;
 
-    public User(int userIdx, int keywordIdx, String name, String role, String email, String password, String phone, String image, double latitude, double longitude, String status, Timestamp created_at, Timestamp updated_at, String jwt) {
+
+
+    public User(int userIdx, int keywordIdx, String name, String role, String email, String password, String phone, String image, String status, Timestamp created_at, Timestamp updated_at, double latitude, double longitude) {
         this.userIdx = userIdx;
         this.keywordIdx = keywordIdx;
         this.name = name;
@@ -39,10 +40,9 @@ public class User {
         this.updated_at = updated_at;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.jwt = jwt;
     }
 
-    public User(int userIdx, int keywordIdx, String name, String role, String email, String password, String phone, double latitude, double longitude, String image, String status, String jwt) {
+    public User(int userIdx, int keywordIdx, String name, String role, String email, String password, String phone, String image, String status, double latitude, double longitude) {
         this.userIdx = userIdx;
         this.keywordIdx = keywordIdx;
         this.name = name;
@@ -54,6 +54,5 @@ public class User {
         this.status = status;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.jwt = jwt;
     }
 }
