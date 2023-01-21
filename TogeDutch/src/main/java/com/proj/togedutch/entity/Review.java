@@ -6,14 +6,17 @@ import lombok.Setter;
 
 import java.sql.Timestamp;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
-public class Notice {
-    private int notice_id;
-    private String title;
+public class Review {
+    private int reviewId;
+    private int emotionStatus;
     private String content;
-    private Timestamp created_at;
-    private Timestamp updated_at;
+    private Timestamp createdAt;
+    private int applicationId;
+    private int postId;
+    private int userId;
+
+
 }

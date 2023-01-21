@@ -5,9 +5,7 @@ import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.config.BaseResponse;
 import com.proj.togedutch.entity.Application;
 import com.proj.togedutch.entity.Post;
-import com.proj.togedutch.entity.User;
 import com.proj.togedutch.service.ApplicationService;
-import com.proj.togedutch.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("")
 public class ApplicationController {
     final Logger logger= LoggerFactory.getLogger(this.getClass());
 
@@ -23,44 +21,53 @@ public class ApplicationController {
     ApplicationService applicationService;
 
 
-    //공고 신청
-    /*@ResponseBody
-    @PostMapping("/{postIdx}/application")
-    public BaseResponse<Post> applyPost(@RequestBody Post post){
+    // 공고 생성
+    @ResponseBody
+    @PostMapping("post/{postIdx}/application")
+    public BaseResponse<Application> applyPost(@PathVariable("postIdx") int postIdx,@RequestBody Application application){
         try{
-            Post newPost=ApplicationService.createPost(post);
-            return new BaseResponse<>(newPost);
+            Application newApplication=applicationService.applyPost(postIdx, application);
+            return new BaseResponse<>(newApplication);
         }catch(BaseException e){
             return new BaseResponse<>(e.getStatus());
         }
     }
 
 
-    //공고 수락
+    //TODO 공고 수락
     @ResponseBody
-    @PostMapping("/{postIdx}/application/accept")
-    public BaseResponse<Post> acceptPost(@RequestBody Post post){
+    @PostMapping("application/{applicationidx}/accept")
+    public BaseResponse<Application> modifyStatus(@PathVariable("applicationidx") int applicationIdx){
         try{
-            Post acceptPost=ApplicationService.createPost(post);
-            return new BaseResponse<>(acceptPost);
+            Application application=applicationService.modifyStatus(applicationIdx);
+            return new BaseResponse<>(application);
         }catch(BaseException e){
             return new BaseResponse<>(e.getStatus());
         }
     }
 
-    //공고 거절
+
+    //TODO 공고 수락
     @ResponseBody
-    @PostMapping("/{postIdx}/application/deny")
-    public BaseResponse<Post> denyPost(@RequestBody Post post){
+    @PostMapping("application/{applicationidx}/deny")
+    public BaseResponse<Application> modifyStatus_deny(@PathVariable("applicationidx") int applicationIdx){
         try{
-            Post denyPost=ApplicationService.createPost(post);
-            return new BaseResponse<>(denyPost);
-        }catch(BaseException e) {
+            Application application=applicationService.modifyStatus_deny(applicationIdx);
+            return new BaseResponse<>(application);
+        }catch(BaseException e){
             return new BaseResponse<>(e.getStatus());
         }
     }
+
+    // 신청상태 전체조회
+
+
+
+
+
+
     //공고 상태 전체 조회(내가 업로드)
-    @ResponseBody
+    /*@ResponseBody
     @GetMapping("{postIdx}/application/upload")
     public BaseResponse<Post> getPost(@PathVariable("{postIdx}/application/upload") int postIdx) {
         try{
@@ -85,14 +92,13 @@ public class ApplicationController {
 
     //채팅방 전체 조회(내가 참여)
     @ResponseBody
-    @GetMapping("{userIdx}/chatroom")
-    public BaseResponse<User> getJoinPost(@PathVariable("{userIdx}/chatroom") int userIdx) {
+    @GetMapping("{postIdx}/chatroom")
+    public BaseResponse<Post> getJoinPost(@PathVariable("{postIdx}/chatroom") int postIdx) {
         try{
-            User getChatroom=userService.getChatByuserIdx(userIdx);
+            Post getChatroom=postService.getChatBypostIdx(postIdx);
             return new BaseResponse<>(getChatroom);
         } catch(BaseException e){
             return new BaseResponse<>(e.getStatus());
         }
     }*/
-
 }

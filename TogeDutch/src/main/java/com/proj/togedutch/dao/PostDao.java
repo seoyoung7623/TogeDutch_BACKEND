@@ -160,4 +160,80 @@ public class PostDao {
                         rs.getDouble("longitude")
                 ), postIdx, userIdx);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int deletePost(int postIdx, int userIdx) {
+        String deletePostQuery
+                = "delete from Post WHERE post_id = ? and User_user_id = ?";
+        Object[] deletePostParams = new Object[]{postIdx,userIdx};
+        return this.jdbcTemplate.update(deletePostQuery, deletePostParams);
+
+    }
+    public List<Post> getPostByJoinUserId(int userIdx) throws BaseException {
+        String getPostQuery = "select * From Post where post_id In( select Post_post_id from Application where User_user_id = ? )";
+
+        return this.jdbcTemplate.query(getPostQuery,
+                (rs, rowNum) -> new Post(
+                        rs.getInt("post_id"),
+                        rs.getString("title"),
+                        rs.getString("url"),
+                        rs.getInt("delivery_tips"),
+                        rs.getInt("minimum"),
+                        rs.getTimestamp("order_time"),
+                        rs.getInt("num_of_recruits"),
+                        rs.getInt("recruited_num"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getInt("User_user_id"),
+                        rs.getString("image"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude")
+                ), userIdx);
+    }
+    public List<Post> getPostByUploadUserId(int userIdx) throws BaseException {
+        String getPostQuery = "select * from Post where User_user_id = ? ";
+
+        return this.jdbcTemplate.query(getPostQuery,
+                (rs, rowNum) -> new Post(
+                        rs.getInt("post_id"),
+                        rs.getString("title"),
+                        rs.getString("url"),
+                        rs.getInt("delivery_tips"),
+                        rs.getInt("minimum"),
+                        rs.getTimestamp("order_time"),
+                        rs.getInt("num_of_recruits"),
+                        rs.getInt("recruited_num"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getInt("User_user_id"),
+                        rs.getString("image"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude")
+                ), userIdx);
+    }
+    public List<Post> getPostByTitleUserId(String title) throws BaseException {
+        String getPostQuery = "select * from Post where title = ? ";
+
+        return this.jdbcTemplate.query(getPostQuery,
+                (rs, rowNum) -> new Post(
+                        rs.getInt("post_id"),
+                        rs.getString("title"),
+                        rs.getString("url"),
+                        rs.getInt("delivery_tips"),
+                        rs.getInt("minimum"),
+                        rs.getTimestamp("order_time"),
+                        rs.getInt("num_of_recruits"),
+                        rs.getInt("recruited_num"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getInt("User_user_id"),
+                        rs.getString("image"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude")
+                ), title);
+    }
+
 }

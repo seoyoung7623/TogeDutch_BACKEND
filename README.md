@@ -14,7 +14,7 @@ UMC 3기 가치더치 팀프로젝트
 
 > 커밋태그: 내용 #닉네임
 
-ex. `add: login 파일 추가 #jay
+ex. `add: login 파일 추가 #jay'
 
 - 파일 추가 : add
 - 버그 수정 : fix

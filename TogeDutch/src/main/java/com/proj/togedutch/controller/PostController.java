@@ -7,24 +7,15 @@ import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.entity.User;
 import com.proj.togedutch.service.AWSS3Service;
 import com.proj.togedutch.service.PostService;
-import com.proj.togedutch.service.UserService;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.List;
-import java.util.UUID;
-
-import static com.proj.togedutch.utils.ValidationRegex.isRegexEmail;
 
 @RestController
 @RequestMapping("/post")
@@ -154,18 +145,50 @@ public class PostController {
         }
     }
 
+    //공고삭제
+    @ResponseBody
+    @DeleteMapping("/{postIdx}/user")
+    public int deletePost(@PathVariable("postIdx") int postIdx,
+                                         @RequestParam int user) throws Exception {
 
+            int deletePost = postService.deletePost(postIdx, user);
+            logger.info("Delete success");
+            return deletePost;
 
-
-
-
-
-
-
-
-
-
-
+    }
+    //공고 내가 참여 조회
+    @ResponseBody
+    @GetMapping("/join/{userIdx}")
+    public BaseResponse<List<Post>> getPostByJoinUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
+        try {
+            List<Post> getPost = postService.getPostByJoinUserId(userIdx);
+            return new BaseResponse<>(getPost);
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+    //공고 내가 업로드
+    @ResponseBody
+    @GetMapping("/all/{userIdx}")
+    public BaseResponse<List<Post>> getPostBuUploadUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
+        try {
+            List<Post> getPost = postService.getPostByUploadUserId(userIdx);
+            return new BaseResponse<>(getPost);
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+    //공고 검색어
+    @ResponseBody
+    @GetMapping("/search")
+    public BaseResponse <List<Post>> getPostByTitleUserId(@RequestParam String keyword) throws BaseException {
+        try {
+            List<Post> getPost = postService.getPostByTitleUserId(keyword);
+            return new BaseResponse<>(getPost);
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 
 
 }
