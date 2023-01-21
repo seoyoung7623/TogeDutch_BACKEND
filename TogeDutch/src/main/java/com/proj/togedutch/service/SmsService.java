@@ -34,7 +34,7 @@ import java.util.Random;
 @RequiredArgsConstructor
 @Service
 public class SmsService {
-    private final String smsConfirmNum = createSmsKey();
+
 
     @Value("${naver-cloud-sms.accessKey}")
     private String accessKey;
@@ -76,6 +76,7 @@ public class SmsService {
         return encodeBase64String;
     }
     public SmsResponse sendSms(Message message) throws JsonProcessingException, RestClientException, URISyntaxException, InvalidKeyException, NoSuchAlgorithmException, UnsupportedEncodingException {
+        String smsConfirmNum = createSmsKey();
         String time = Long.toString(System.currentTimeMillis());
 
         HttpHeaders headers = new HttpHeaders();
@@ -106,7 +107,8 @@ public class SmsService {
         restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         //restTemplate로 post 요청 보내고 오류가 없으면 202코드 반환
         SmsResponse smsResponse = restTemplate.postForObject(new URI("https://sens.apigw.ntruss.com/sms/v2/services/"+ serviceId +"/messages"), httpBody, SmsResponse.class);
-        SmsResponse response = new SmsResponse(smsConfirmNum);
+        //SmsResponse response = new SmsResponse(smsConfirmNum);
+        smsResponse.setSmsConfirmNum(smsConfirmNum);
         // redisUtil.setDataExpire(smsConfirmNum, messageDto.getTo(), 60 * 3L); // 유효시간 3분
         return smsResponse;
     }

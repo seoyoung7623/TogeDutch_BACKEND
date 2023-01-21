@@ -42,7 +42,7 @@ public class UserController {
     //user-1
     @ResponseBody
     @PostMapping("/signup")
-    public BaseResponse<User> createUser(@RequestBody User user, @RequestPart MultipartFile file) throws IOException {
+    public BaseResponse<User> createUser(@RequestPart User user, @RequestPart(value="file",required = false)  MultipartFile file) throws IOException {
         if (user.getEmail() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_USERS_EMPTY_EMAIL);
         }
@@ -51,13 +51,16 @@ public class UserController {
         }
         try {
             String fileUrl = null;
-            if(file != null)
+            if(file != null) {
                 fileUrl = url + awsS3Service.uploadUserFile(file);
-
+            }
             user.setImage(fileUrl);
             User newUser = userService.createUser(user);
             return new BaseResponse<>(newUser);
         } catch (BaseException e) {
+            logger.debug("에러로그 : " + e.getCause());
+            System.out.println("에러로그 : " + e.getCause());
+            e.printStackTrace();
             return new BaseResponse<>(e.getStatus());
         }
     }
@@ -91,6 +94,7 @@ public class UserController {
     }
 
     //user-4
+    /*
     @ResponseBody
     @PatchMapping("/{userIdx}")
     public BaseResponse<User> modifyUser(@PathVariable("userIdx") int userIdx, @RequestBody User user) {
@@ -102,6 +106,24 @@ public class UserController {
             user.setUserIdx(userIdx);
             User patchUser = userService.modifyUser(user);
             return new BaseResponse<>(patchUser);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }*/
+    //TODO user-4 : 비밀번호 변경 : 테스트필요
+    @ResponseBody
+    @PatchMapping("/{userIdx}/password")
+    public BaseResponse<User> modifyPassword(@PathVariable("userIdx") int userIdx, @RequestBody User user) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            System.out.println(userIdx);
+            System.out.println(userIdxByJwt);
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+            User newUser = userService.modifyPassword(userIdx, user.getPassword());
+            return new BaseResponse<>(newUser);
+
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
@@ -125,8 +147,8 @@ public class UserController {
     public BaseResponse<String> deleteUser(@PathVariable("userIdx") int userIdx) {
         try {
             int delete = userService.deleteUser(userIdx);
-            if (delete == 0) {
-                return new BaseResponse<>("delete success" + userIdx);
+            if (delete == 1) {
+                return new BaseResponse<>("delete success");
             }
             return new BaseResponse<>("delete fail");
         } catch (BaseException e) {
@@ -152,6 +174,7 @@ public class UserController {
         }
     }
 
+    //user-8
     @ResponseBody
     @PatchMapping("/{userIdx}/image")
     public BaseResponse<User> modifyUserImage(@PathVariable("userIdx") int userIdx, @RequestPart MultipartFile file) throws IOException {
@@ -169,6 +192,31 @@ public class UserController {
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
+    }
+
+    //TODO user-11
+    @ResponseBody
+    @PatchMapping("/{userIdx}/phone")
+    public BaseResponse<User> modifyPhone(@PathVariable("userIdx") int userIdx, @RequestBody User user) {
+        try {
+            int userIdxByJwt = jwtService.getUserIdx();
+            if(userIdx != userIdxByJwt){
+                return new BaseResponse<>(BaseResponseStatus.INVALID_USER_JWT);
+            }
+            System.out.println(user.getPhone());
+            User newUser = userService.modifyPhone(userIdx, user.getPhone());
+            return new BaseResponse<>(newUser);
+
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    //TODO user-12
+    @ResponseBody
+    @PostMapping("/user/email")
+    public BaseResponse<String> sendEmail(@RequestBody String email) {
+        return null;
     }
 
 

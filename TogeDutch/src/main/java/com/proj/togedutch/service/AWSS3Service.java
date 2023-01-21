@@ -67,6 +67,7 @@ public class AWSS3Service {
             InputStream inputStream = file.getInputStream();
             amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
+            System.out.println(inputStream);
         } catch(AmazonServiceException e){
             e.printStackTrace();
         } catch(SdkClientException e){
