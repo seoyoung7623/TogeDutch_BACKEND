@@ -6,6 +6,7 @@ import com.proj.togedutch.config.BaseResponseStatus;
 import com.proj.togedutch.entity.Keyword;
 import com.proj.togedutch.entity.User;
 import com.proj.togedutch.service.AWSS3Service;
+import com.proj.togedutch.service.EmailService;
 import com.proj.togedutch.service.UserService;
 import com.proj.togedutch.utils.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -214,9 +215,23 @@ public class UserController {
 
     //TODO user-12
     @ResponseBody
-    @PostMapping("/user/email")
-    public BaseResponse<String> sendEmail(@RequestBody String email) {
-        return null;
+    @GetMapping("/findPwd")
+    public BaseResponse<String> findPassword(@RequestParam String email) {
+        try {
+            if (email == null || email.equals("")) {
+                return new BaseResponse<>(BaseResponseStatus.POST_USERS_EMPTY_EMAIL);
+            }
+            if (!isRegexEmail(email)) {
+                return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_EMAIL);
+            }
+            User returnUser = userService.getUserByEmail(email);
+            if (userService.sendEmail(returnUser) == 1)
+                return new BaseResponse<>("success");
+            else
+                return new BaseResponse<>("fail");
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
     }
 
 
