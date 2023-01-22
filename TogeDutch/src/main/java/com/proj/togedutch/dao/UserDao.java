@@ -195,4 +195,15 @@ public class UserDao {
         else
             throw new BaseException(DATABASE_ERROR);
     }
+
+    public User getUserByEmail(String email) throws BaseException {
+        String getUserByEmailQuery = "select email, password from User where email = ?";
+        Object[] getUserByEmailParams = new Object[]{email};
+        return this.jdbcTemplate.queryForObject(getUserByEmailQuery,
+                (rs, rowNum) -> new User(
+                        rs.getString("email"),
+                        rs.getString("password")),
+                getUserByEmailParams
+        );
+    }
 }

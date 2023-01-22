@@ -3,6 +3,7 @@ package com.proj.togedutch.service;
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.config.secret.Secret;
 import com.proj.togedutch.dao.UserDao;
+import com.proj.togedutch.entity.EmailMessage;
 import com.proj.togedutch.entity.Keyword;
 import com.proj.togedutch.entity.User;
 import com.proj.togedutch.utils.AES128;
@@ -24,6 +25,8 @@ public class UserService {
     UserDao userDao;
     @Autowired
     JwtService jwtService;
+    @Autowired
+    EmailService emailService;
 
     //user 만들기
     public User createUser(User user) throws BaseException{
@@ -199,6 +202,40 @@ public class UserService {
             return userDao.modifyPhone(userIdx, phone);
         } catch (Exception e) {
             throw new BaseException(MODIFY_FAIL_USER);
+        }
+    }
+
+    public User getUserByEmail(String email) throws BaseException {
+        try {
+            return userDao.getUserByEmail(email);
+        } catch (Exception e) {
+            throw new BaseException(FAILED_TO_FIND_USER);
+        }
+    }
+
+    //TODO 여기서부터 작성 230122
+    public int sendEmail(User user) throws BaseException{
+        try {
+            String password;
+            try {
+                password = new AES128(Secret.USER_INFO_PASSWORD_KEY).decrypt(user.getPassword());
+                System.out.println(user.getPassword());
+                System.out.println(password);
+            } catch (Exception e) {
+                System.out.println(e.getCause());
+                e.printStackTrace();
+                throw new BaseException(PASSWORD_DECRYPTION_ERROR);
+            }
+            EmailMessage emailMessage = EmailMessage.builder()
+                    .to(user.getEmail())
+                    .subject("[가치더치] 회원님의 비밀번호 안내드립니다.")
+                    .message("회원님의 비밀번호는 " + password + "입니다.")
+                    .build();
+            if (emailService.sendMail(emailMessage) == 1)
+                return 1;
+            return 0;
+        } catch (Exception e) {
+            throw new BaseException(null);
         }
     }
 }
