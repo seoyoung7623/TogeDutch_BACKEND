@@ -19,8 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-import static com.proj.togedutch.utils.ValidationRegex.isRegexEmail;
-
+import static com.proj.togedutch.utils.ValidationRegex.*;
 
 
 @RestController
@@ -49,6 +48,12 @@ public class UserController {
         }
         if (!isRegexEmail(user.getEmail())){
             return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_EMAIL);
+        }
+        if (!isRegexPassword(user.getPassword())) {
+            return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_PASSWORD);
+        }
+        if (!isRegexPhone(user.getPhone())) {
+            return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_PHONE);
         }
         try {
             String fileUrl = null;
