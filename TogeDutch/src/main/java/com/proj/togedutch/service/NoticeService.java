@@ -64,4 +64,13 @@ public class NoticeService {
         }
     }
 
+    public Notice getNoticeById(int noticeIdx) throws BaseException{
+        try{
+            Notice findNotice = noticeDao.getNoticeById(noticeIdx);
+            return findNotice;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 }
