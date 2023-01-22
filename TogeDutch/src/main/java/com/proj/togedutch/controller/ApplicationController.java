@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("")
@@ -36,8 +38,8 @@ public class ApplicationController {
 
     //TODO 공고 수락
     @ResponseBody
-    @PostMapping("application/{applicationidx}/accept")
-    public BaseResponse<Application> modifyStatus(@PathVariable("applicationidx") int applicationIdx){
+    @PostMapping("application/{applicationIdx}/accept")
+    public BaseResponse<Application> modifyStatus(@PathVariable("applicationIdx") int applicationIdx){
         try{
             Application application=applicationService.modifyStatus(applicationIdx);
             return new BaseResponse<>(application);
@@ -47,10 +49,10 @@ public class ApplicationController {
     }
 
 
-    //TODO 공고 수락
+    //TODO 공고 거절
     @ResponseBody
-    @PostMapping("application/{applicationidx}/deny")
-    public BaseResponse<Application> modifyStatus_deny(@PathVariable("applicationidx") int applicationIdx){
+    @PostMapping("application/{applicationIdx}/deny")
+    public BaseResponse<Application> modifyStatus_deny(@PathVariable("applicationIdx") int applicationIdx){
         try{
             Application application=applicationService.modifyStatus_deny(applicationIdx);
             return new BaseResponse<>(application);
@@ -59,7 +61,46 @@ public class ApplicationController {
         }
     }
 
-    // 신청상태 전체조회
+    //내가 업로드 조회
+    @ResponseBody
+    @GetMapping("user/{userIdx}/application/upload")
+    public BaseResponse<List<Application>> getApplicationBuUploadUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
+        try {
+            List<Application> getApplication = applicationService.getApplicationByUploadUserId(userIdx);
+            return new BaseResponse<>(getApplication);
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    //공고 내가 참여 조회
+    @ResponseBody
+    @GetMapping("user/{userIdx}/application/join")
+    public BaseResponse<List<Application>> getApplicationByJoinUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
+        try {
+            List<Application> getApplication = applicationService.getApplicationByJoinUserId(userIdx);
+            return new BaseResponse<>(getApplication);
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+
+
+
+
+    /*
+    // 신청상태 전체조회(내가 업로드)
+    @GetMapping("user/{userIdx}/application/upload")
+    public BaseResponse<List<Application>> getApplication(@PathVariable int userIdx) throws BaseException {
+        try{
+            List<Application> getApplicationRes = applicationService.getApplication(userIdx);
+            return new BaseResponse<>(getApplicationRes);
+        } catch(BaseException exception){
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }*/
+
 
 
 
