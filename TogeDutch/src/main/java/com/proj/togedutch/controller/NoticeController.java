@@ -26,7 +26,7 @@ public class NoticeController {
 
     // 공지사항 생성
     @PostMapping("")
-    public BaseResponse<Notice> createNotice(@RequestParam Notice notice) throws BaseException{
+    public BaseResponse<Notice> createNotice(@RequestBody Notice notice) throws BaseException{
         if(notice.getTitle() == null){
             return new BaseResponse<>(BaseResponseStatus.POST_NOTICE_EMPTY_TITLE);
         }
@@ -37,6 +37,17 @@ public class NoticeController {
         try {
             Notice newNotice = noticeService.createNotice(notice);
             return new BaseResponse<>(newNotice);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+    
+    // 특정 공지사항 조회
+    @GetMapping("/{noticeIdx}")
+    public BaseResponse<Notice> getNoticeById (@PathVariable("noticeIdx") int noticeIdx) throws BaseException {
+        try {
+            Notice findNotice = noticeService.getNoticeById(noticeIdx);
+            return new BaseResponse<>(findNotice);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
@@ -69,7 +80,7 @@ public class NoticeController {
 
     // 공지사항 수정
     @PutMapping("/{noticeIdx}")
-    public BaseResponse<Notice> modifyNotice(@PathVariable("noticeIdx") int noticeIdx, Notice notice) throws BaseException{
+    public BaseResponse<Notice> modifyNotice(@PathVariable("noticeIdx") int noticeIdx, @RequestBody Notice notice) throws BaseException{
         if(notice.getTitle() == null){
             return new BaseResponse<>(BaseResponseStatus.POST_NOTICE_EMPTY_TITLE);
         }
