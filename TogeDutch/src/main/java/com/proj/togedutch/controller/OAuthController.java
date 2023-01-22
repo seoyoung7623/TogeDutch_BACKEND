@@ -2,6 +2,8 @@ package com.proj.togedutch.controller;
 
 import com.proj.togedutch.service.OAuthService;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,6 +13,7 @@ import java.util.HashMap;
 @AllArgsConstructor
 @RequestMapping("/oauth")
 public class OAuthController {
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private OAuthService oAuthService;
 
@@ -32,8 +35,10 @@ public class OAuthController {
             -1 : 회원가입 페이지로 이동 (회원가입 페이지에 해당 email 값 띄워주기) -> return 값 변경 필요
          */
 
-        if(email == null)  // 카카오 로그인 이메일 동의 선택 안한 경우
+        if(userInfo.get("email") == null) {  // 카카오 로그인 이메일 동의 선택 안한 경우
+            logger.info("일반 로그인 페이지로 redirect");
             return 0;
+        }
 
         int loginResult = oAuthService.checkUserInfo(email);
         return loginResult;
