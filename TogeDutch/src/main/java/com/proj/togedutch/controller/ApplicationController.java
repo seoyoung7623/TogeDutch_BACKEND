@@ -3,13 +3,17 @@ package com.proj.togedutch.controller;
 
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.config.BaseResponse;
+import com.proj.togedutch.config.BaseResponseStatus;
 import com.proj.togedutch.entity.Application;
+import com.proj.togedutch.entity.ChatRoom;
+import com.proj.togedutch.entity.Notice;
 import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.service.ApplicationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -36,7 +40,7 @@ public class ApplicationController {
     }
 
 
-    //TODO 공고 수락
+    //공고 수락
     @ResponseBody
     @PostMapping("application/{applicationIdx}/accept")
     public BaseResponse<Application> modifyStatus(@PathVariable("applicationIdx") int applicationIdx){
@@ -49,7 +53,7 @@ public class ApplicationController {
     }
 
 
-    //TODO 공고 거절
+    //공고 거절
     @ResponseBody
     @PostMapping("application/{applicationIdx}/deny")
     public BaseResponse<Application> modifyStatus_deny(@PathVariable("applicationIdx") int applicationIdx){
@@ -61,7 +65,7 @@ public class ApplicationController {
         }
     }
 
-    //내가 업로드 조회
+    //신청 상태 전체 조회 (내가 업로드)
     @ResponseBody
     @GetMapping("user/{userIdx}/application/upload")
     public BaseResponse<List<Application>> getApplicationBuUploadUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
@@ -81,6 +85,39 @@ public class ApplicationController {
             List<Application> getApplication = applicationService.getApplicationByJoinUserId(userIdx);
             return new BaseResponse<>(getApplication);
         } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+
+
+    //내가 참여한 채팅방 전체조회
+    @ResponseBody
+    @GetMapping("/user/{user_id}/chatroom")
+    public BaseResponse<List<ChatRoom>> getChatRoomByJoinUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
+        try {
+            List<ChatRoom> getChatRoom = applicationService.getChatRoomByJoinUserId(userIdx);
+            return new BaseResponse<>(getChatRoom);
+        } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+
+    //공고 상태 변경
+    @PutMapping("/post/status/{application_id}")
+    public BaseResponse<Post> modifyPostStatus(@PathVariable("applicationIdx") int applicationIdx, @RequestBody Post post) throws BaseException{
+        if(post.getNum_of_recruits() == 0){
+            return new BaseResponse<>(BaseResponseStatus.NUM_Of_RECRUITS_EMPTY);
+        }
+        if(post.getRecruited_num() == 0){
+            return new BaseResponse<>(BaseResponseStatus.RECRUITED_NUM_EMPTY);
+        }
+
+        try {
+            Post modifyPostStatus = applicationService.modifyPostStatus(applicationIdx, post);
+            return new BaseResponse<>(modifyPostStatus);
+        } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
     }

@@ -52,6 +52,7 @@ public class JwtService {
     public int getUserIdx() throws BaseException {
         //1. JWT 추출
         String accessToken = getJwt();
+        System.out.println(accessToken);
         if(accessToken == null || accessToken.length() == 0){
             throw new BaseException(EMPTY_JWT);
         }
@@ -62,6 +63,7 @@ public class JwtService {
             claims = Jwts.parser()
                     .setSigningKey(Secret.JWT_SECRET_KEY)
                     .parseClaimsJws(accessToken);
+            System.out.println(claims.getBody());
         } catch (Exception ignored) {
             throw new BaseException(INVALID_JWT);
         }

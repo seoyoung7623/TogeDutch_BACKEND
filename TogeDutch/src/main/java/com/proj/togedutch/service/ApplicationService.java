@@ -3,6 +3,8 @@ package com.proj.togedutch.service;
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.dao.ApplicationDao;
 import com.proj.togedutch.entity.Application;
+import com.proj.togedutch.entity.ChatRoom;
+import com.proj.togedutch.entity.Notice;
 import com.proj.togedutch.entity.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +73,7 @@ public class ApplicationService {
         }
     }
 
-//공고 내가 업로드
+    //신청 상태 전체 조회 (내가 업로드)
     public List<Application> getApplicationByUploadUserId(int userIdx) throws BaseException {
         try{
             List<Application> UploadApplication = applicationDao.getApplicationByUploadUserId(userIdx);
@@ -80,7 +82,7 @@ public class ApplicationService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-
+    //신청 상태 전체 조회 (내가 참여한 공고)
     public List<Application> getApplicationByJoinUserId(int userIdx) throws BaseException {
         try{
             List<Application> joinApplication = applicationDao.getApplicationByJoinUserId(userIdx);
@@ -89,6 +91,26 @@ public class ApplicationService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+    //내가 참여한 채팅방 전체조회
+    public List<ChatRoom> getChatRoomByJoinUserId(int userIdx) throws BaseException {
+        try{
+            List<ChatRoom> joinChatRoom = applicationDao.getChatRoomByJoinUserId(userIdx);
+            return joinChatRoom;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    //공고 상태 변경
+    public Post modifyPostStatus(int applicationIdx, Post post) throws BaseException{
+        try{
+            Post modifyPostStatus = applicationDao.modifyPostStatus(applicationIdx, post);
+            return modifyPostStatus;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 
 
 

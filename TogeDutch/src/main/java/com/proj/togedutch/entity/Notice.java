@@ -16,7 +16,4 @@ public class Notice {
     private String content;
     private Timestamp created_at;
     private Timestamp updated_at;
-    private String status;
-
-
 }
