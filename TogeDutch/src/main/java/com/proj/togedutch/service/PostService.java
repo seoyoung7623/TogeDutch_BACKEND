@@ -105,4 +105,12 @@ public class PostService {
         }
     }
 
+    public Post getPostById(int postIdx) throws BaseException {
+        try {
+            Post newPost = postDao.getPostById(postIdx);
+            return newPost;
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
