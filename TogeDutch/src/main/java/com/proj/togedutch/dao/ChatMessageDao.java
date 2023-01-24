@@ -7,8 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.ValueOperations;
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
@@ -18,12 +16,12 @@ import java.util.List;
 public class ChatMessageDao {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Resource(name = "redisTemplate")
-    private HashOperations<String, String, ChatRoom> hashOpsChatRoom;
-    @Resource(name = "redisTemplate")
-    private HashOperations<String, String, String> hashOpsEnterInfo;
-    @Resource(name = "redisTemplate")
-    private ValueOperations<String, String> valueOps;
+//    @Resource(name = "redisTemplate")
+//    private HashOperations<String, String, ChatRoom> hashOpsChatRoom;
+//    @Resource(name = "redisTemplate")
+//    private HashOperations<String, String, String> hashOpsEnterInfo;
+//    @Resource(name = "redisTemplate")
+//    private ValueOperations<String, String> valueOps;
     private JdbcTemplate jdbcTemplate;
 
     @Autowired

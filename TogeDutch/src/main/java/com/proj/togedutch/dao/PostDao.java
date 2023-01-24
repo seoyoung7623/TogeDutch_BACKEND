@@ -28,6 +28,7 @@ public class PostDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    // 공고 생성 -> 채팅방 생성
     @Transactional(rollbackFor = Exception.class)
     public int createPost(Post post, int userIdx, String fileUrl) {
         String createPostQuery
@@ -57,7 +58,8 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
 
                 ), postIdx);
     }
@@ -81,7 +83,8 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
                 ));
     }
 
@@ -110,7 +113,8 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
                 ));
     }
 
@@ -157,10 +161,12 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
                 ), postIdx, userIdx);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public int deletePost(int postIdx, int userIdx) {
         String deletePostQuery
                 = "delete from Post WHERE post_id = ? and User_user_id = ?";
@@ -187,7 +193,8 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
                 ), userIdx);
     }
     public List<Post> getPostByUploadUserId(int userIdx) throws BaseException {
@@ -209,7 +216,8 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
                 ), userIdx);
     }
     public List<Post> getPostByTitleUserId(String title) throws BaseException {
@@ -231,8 +239,20 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
                 ), title);
     }
 
+    public Post insertChatRoom(int postIdx, int chatRoomIdx) throws BaseException {
+        String modifyPostQuery = "update Post set ChatRoom_chatRoom_id = ? where post_id = ?";
+
+        Object[] modifyPostParams = new Object[]{chatRoomIdx, postIdx};
+
+        if (this.jdbcTemplate.update(modifyPostQuery, modifyPostParams) == 1)
+            return getPostById(postIdx);
+        else {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
