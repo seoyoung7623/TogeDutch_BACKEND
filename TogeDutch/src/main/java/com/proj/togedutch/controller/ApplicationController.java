@@ -9,6 +9,7 @@ import com.proj.togedutch.entity.ChatRoom;
 import com.proj.togedutch.entity.Notice;
 import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.service.ApplicationService;
+import com.proj.togedutch.service.PostService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +26,18 @@ public class ApplicationController {
 
     @Autowired
     ApplicationService applicationService;
-
+    @Autowired
+    PostService postService;
 
     // 공고 생성
     @ResponseBody
-    @PostMapping("post/{postIdx}/application")
+    @PostMapping("/post/{postIdx}/application")
     public BaseResponse<Application> applyPost(@PathVariable("postIdx") int postIdx,@RequestBody Application application){
         try{
             Application newApplication=applicationService.applyPost(postIdx, application);
             return new BaseResponse<>(newApplication);
         }catch(BaseException e){
+            e.printStackTrace();
             return new BaseResponse<>(e.getStatus());
         }
     }
@@ -42,7 +45,7 @@ public class ApplicationController {
 
     //공고 수락
     @ResponseBody
-    @PostMapping("application/{applicationIdx}/accept")
+    @PostMapping("/application/{applicationIdx}/accept")
     public BaseResponse<Application> modifyStatus(@PathVariable("applicationIdx") int applicationIdx){
         try{
             Application application=applicationService.modifyStatus(applicationIdx);
@@ -55,7 +58,7 @@ public class ApplicationController {
 
     //공고 거절
     @ResponseBody
-    @PostMapping("application/{applicationIdx}/deny")
+    @PostMapping("/application/{applicationIdx}/deny")
     public BaseResponse<Application> modifyStatus_deny(@PathVariable("applicationIdx") int applicationIdx){
         try{
             Application application=applicationService.modifyStatus_deny(applicationIdx);
@@ -67,7 +70,7 @@ public class ApplicationController {
 
     //신청 상태 전체 조회 (내가 업로드)
     @ResponseBody
-    @GetMapping("user/{userIdx}/application/upload")
+    @GetMapping("/user/{userIdx}/application/upload")
     public BaseResponse<List<Application>> getApplicationBuUploadUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
         try {
             List<Application> getApplication = applicationService.getApplicationByUploadUserId(userIdx);
@@ -79,7 +82,7 @@ public class ApplicationController {
 
     //공고 내가 참여 조회
     @ResponseBody
-    @GetMapping("user/{userIdx}/application/join")
+    @GetMapping("/user/{userIdx}/application/join")
     public BaseResponse<List<Application>> getApplicationByJoinUserId(@PathVariable("userIdx") int userIdx) throws BaseException {
         try {
             List<Application> getApplication = applicationService.getApplicationByJoinUserId(userIdx);
@@ -105,17 +108,19 @@ public class ApplicationController {
 
 
     //공고 상태 변경
-    @PutMapping("/post/status/{application_id}")
-    public BaseResponse<Post> modifyPostStatus(@PathVariable("applicationIdx") int applicationIdx, @RequestBody Post post) throws BaseException{
-        if(post.getNum_of_recruits() == 0){
+    @PutMapping("/post/status/{postIdx}")
+    public BaseResponse<Post> modifyPostStatus(@PathVariable("postIdx") int postIdx) throws BaseException{
+        Post modifyPost=postService.getPostById(postIdx);
+
+        if(modifyPost.getNum_of_recruits() == 0){
             return new BaseResponse<>(BaseResponseStatus.NUM_Of_RECRUITS_EMPTY);
         }
-        if(post.getRecruited_num() == 0){
-            return new BaseResponse<>(BaseResponseStatus.RECRUITED_NUM_EMPTY);
+        if(modifyPost.getRecruited_num() == 0){
+            return new BaseResponse<>(BaseResponseStatus.NUM_Of_RECRUITS_EMPTY);
         }
 
         try {
-            Post modifyPostStatus = applicationService.modifyPostStatus(applicationIdx, post);
+            Post modifyPostStatus = applicationService.modifyPostStatus(postIdx);
             return new BaseResponse<>(modifyPostStatus);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());

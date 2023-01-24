@@ -2,6 +2,7 @@ package com.proj.togedutch.service;
 
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.dao.ApplicationDao;
+import com.proj.togedutch.dao.PostDao;
 import com.proj.togedutch.entity.Application;
 import com.proj.togedutch.entity.ChatRoom;
 import com.proj.togedutch.entity.Notice;
@@ -25,6 +26,8 @@ public class ApplicationService {
     ApplicationDao applicationDao;
     @Autowired
     JwtService jwtService;
+    @Autowired
+    PostDao postdao;
 
     //공고 신청
     public Application applyPost(int postIdx, Application application) throws BaseException {
@@ -32,8 +35,14 @@ public class ApplicationService {
             application.setPost_id(postIdx); // entity에있는 setter사용
             int userIdx = jwtService.getUserIdx();
             application.setUser_id(userIdx);
-            application.setStatus("수락대기"); //초기화 값임으로
-            int applicationIdx = applicationDao.applyPost(application);
+            Post newpost=postdao.getPostById(application.getPost_id());
+            application.setStatus("수락대기");
+            //logger.info(String.valueOf(application.getPost_id()));
+            //logger.info(application.getStatus());
+            //logger.info(String.valueOf(application.getUser_id()));
+
+            int applicationIdx = applicationDao.applyPost(application,newpost.getUser_id());
+            //logger.info(String.valueOf(applicationIdx));
             Application createApplication = getApplication(applicationIdx);
             return createApplication;
         } catch (Exception e) {
@@ -69,6 +78,7 @@ public class ApplicationService {
             Application application = applicationDao.getApplication(postIdx);
             return application;
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
         }
     }
@@ -102,9 +112,9 @@ public class ApplicationService {
     }
 
     //공고 상태 변경
-    public Post modifyPostStatus(int applicationIdx, Post post) throws BaseException{
+    public Post modifyPostStatus(int postIdx) throws BaseException{
         try{
-            Post modifyPostStatus = applicationDao.modifyPostStatus(applicationIdx, post);
+            Post modifyPostStatus = applicationDao.modifyPostStatus(postIdx);
             return modifyPostStatus;
         } catch(Exception e){
             throw new BaseException(DATABASE_ERROR);
@@ -113,20 +123,6 @@ public class ApplicationService {
 
 
 
-
-
-
-    /*
-    //신청상태 전체 조회(내가 업로드)
-    public List<Application> getApplicationStatus(int usserIdx) throws BaseException{
-        try{
-            applicationDao.getApplicationStatus(userIdx);
-        }catch(Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-    //공고 상태 잔체 조회(내가 참여한 공고)
-*/
 
 
 

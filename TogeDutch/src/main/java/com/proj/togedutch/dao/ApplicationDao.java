@@ -20,13 +20,16 @@ public class ApplicationDao {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
+    private PostDao postdao;
+
+    @Autowired
     public void setDataSource(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public int applyPost(Application application){
-        String createApplicationQuery="insert into Application(status,post_id,user_id,chatRoom_id) VALUES(?,?,?,?,?)";
-        Object[] createApplicationParams = new Object[]{ application.getStatus(), application.getPost_id(), application.getUser_id(), application.getChatRoom_id()};
+    public int applyPost(Application application,int userIdx){
+        String createApplicationQuery="insert into Application(status,Post_post_id,User_user_id,ChatRoom_chatRoom_id,Post_User_user_id) VALUES(?,?,?,?,?)";
+        Object[] createApplicationParams = new Object[]{ application.getStatus(), application.getPost_id(), application.getUser_id(), application.getChatRoom_id(),userIdx};
         this.jdbcTemplate.update(createApplicationQuery, createApplicationParams);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
@@ -35,8 +38,8 @@ public class ApplicationDao {
     //공고 수락
     @Transactional(rollbackFor=Exception.class)
     public Application modifyStatus(int applicationIdx) throws BaseException {
-        String modifyStatusQuery="update Application set status =? where applicationIdx= ?";
-        Object[] modifyStatusParams = new Object[]{applicationIdx};
+        String modifyStatusQuery="update Application set status =? where application_id= ?";
+        Object[] modifyStatusParams = new Object[]{"수락완료",applicationIdx};
         if(this.jdbcTemplate.update(modifyStatusQuery,modifyStatusParams)==1)
             return getApplication(applicationIdx);
         else
@@ -45,8 +48,8 @@ public class ApplicationDao {
     //공고 거절
     @Transactional(rollbackFor=Exception.class)
     public Application modifyStatus_deny(int applicationIdx) throws BaseException {
-        String modifyStatusQuery="update Application set status =? where applicationIdx= ?";
-        Object[] modifyStatusParams = new Object[]{applicationIdx};
+        String modifyStatusQuery="update Application set status =? where application_id= ?";
+        Object[] modifyStatusParams = new Object[]{"수락거절",applicationIdx};
         if(this.jdbcTemplate.update(modifyStatusQuery,modifyStatusParams)==1)
             return getApplication(applicationIdx);
         else
@@ -63,10 +66,10 @@ public class ApplicationDao {
                 (rs, rowNum) -> new Application(
                         rs.getInt("application_id"),
                         rs.getString("status"),
-                        rs.getInt("post_id"),
-                        rs.getInt("user_id"),
-                        rs.getInt("chatRoom_id")),
-                        getApplicationParams //컬럼을 다 써주는 이유가 있는가?
+                        rs.getInt("Post_post_id"),
+                        rs.getInt("User_user_id"),
+                        rs.getInt("ChatRoom_chatRoom_id")),
+                        getApplicationParams
         );
     }
 
@@ -107,20 +110,21 @@ public class ApplicationDao {
 
         return this.jdbcTemplate.query(getChatRoomQuery,
                 (rs, rowNum) -> new ChatRoom(
-                        rs.getInt("chatRoomIdx"),
+                        rs.getInt("chatRoom_id"),
                         rs.getTimestamp("created_at")
                 ), userIdx);
     }
 
     //공고 상태 변경
     @Transactional(rollbackFor = Exception.class)
-    public Post modifyPostStatus(int applicationIdx, Post post) throws BaseException {
-        String modifyPostQuery = "update Post , set title = ?,url=?,delivery_tips=?,minimum=?,order_time=?,num_of_recruits=?,recruited_num=?,status=?,created_at=?,updated_at=?,user_id=?,image=?,latitude=?,longitude=?,where post.num_of_recruits=? == post.recruited_num=?";
+    public Post modifyPostStatus(int postIdx) throws BaseException {
+        String modifyPostQuery = "update Post \n" + "set status = \"모집완료\"\n" + "where num_of_recruits = recruited_num and post_id=?";
 
-        Object[] modifyPostParams = new Object[]{post.getTitle(), post.getUrl(), post.getDelivery_tips(), post.getMinimum(), post.getOrder_time(), post.getNum_of_recruits(),post.getRecruited_num(),post.getStatus(),post.getCreated_at(),post.getUser_id(),post.getImage(),post.getLatitude(),post.getLongitude(),post.getNum_of_recruits(),post.getRecruited_num()};
+        Object[] modifyPostParams = new Object[]{postIdx};
         if (this.jdbcTemplate.update(modifyPostQuery, modifyPostParams) == 1){
-            post.setStatus("모집완료");
-            return post;}
+            Post modifyPost=postdao.getPostById(postIdx);
+            return modifyPost;
+        }
         else{
             throw new BaseException(DATABASE_ERROR);
         }
@@ -129,35 +133,4 @@ public class ApplicationDao {
 
 
 
-
-
-    /*
-    public List<Application> getApplicationStatus(int userIdx) {
-        List<Post> getPostRes;
-
-        String getquery = "select * where post_user_id = ?";
-        Object[] modifyStatusParams = new Object[]{userIdx};
-        int getuserParams = userIdx;
-        return this.jdbcTemplate.query(getquery,userIdx
-                (rs.rowNum) -> new Post(
-                        rs.getInt("post_id"),
-                        rs.getString("title"),
-                        rs.getString("url"),
-                        rs.getInt("delivery_tips"),
-                        rs.getInt("minimum"),
-                        rs.getTimestamp("order_time"),
-                        rs.getInt("num_of_recruits"),
-                        rs.getInt("recruited_num"),
-                        rs.getString("status"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at"),
-                        rs.getInt("User_user_id"),
-                        rs.getString("image"),
-                        rs.getDouble("latitude"),
-                        rs.getDouble("longitude"),
-                        getuserParams
-
-                ));
-        // userIdx랑 Post의 user_id가 일치하는 Post 객체들을 다 담는 것
-    }*/   //getPostres. 하나씩 PostId 추출 -> Application post_id 인거 Application 추출
 }
