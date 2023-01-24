@@ -3,9 +3,11 @@ package com.proj.togedutch.controller;
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.config.BaseResponse;
 import com.proj.togedutch.config.BaseResponseStatus;
+import com.proj.togedutch.entity.ChatRoom;
 import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.entity.User;
 import com.proj.togedutch.service.AWSS3Service;
+import com.proj.togedutch.service.ChatRoomService;
 import com.proj.togedutch.service.PostService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,8 @@ public class PostController {
     PostService postService;
     @Autowired
     AWSS3Service awsS3Service;
+    @Autowired
+    ChatRoomService chatRoomService;
 
     @Value("${cloud.aws.url}")
     private String url;
@@ -58,7 +62,13 @@ public class PostController {
 
         try {
             Post newPost = postService.createPost(post, user, fileUrl);
-            return new BaseResponse<>(newPost);
+
+            logger.info("chatRoom 생성");
+            ChatRoom newChatRoom = chatRoomService.createChatRoom();
+            logger.info("chatRoom_id : " + String.valueOf(newChatRoom.getChatRoomIdx()));
+
+            Post modifyPost = postService.insertChatRoom(newPost.getPost_id(), newChatRoom.getChatRoomIdx());
+            return new BaseResponse<>(modifyPost);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }

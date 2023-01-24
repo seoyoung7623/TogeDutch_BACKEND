@@ -23,6 +23,7 @@ public class PostService {
     public Post createPost(Post post, int userIdx, String fileUrl) throws BaseException {
         try {
             int postIdx = postDao.createPost(post, userIdx, fileUrl);
+            logger.info("PostService 26라인 : " + String.valueOf(postIdx));
             Post createPost = postDao.getPostById(postIdx);
             return createPost;
         } catch (Exception e) {
@@ -109,6 +110,15 @@ public class PostService {
         try {
             Post newPost = postDao.getPostById(postIdx);
             return newPost;
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public Post insertChatRoom(int postIdx, int chatRoomIdx) throws BaseException{
+        try{
+            Post modifyPost = postDao.insertChatRoom(postIdx, chatRoomIdx);
+            return modifyPost;
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
