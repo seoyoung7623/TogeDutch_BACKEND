@@ -23,7 +23,6 @@ public class PostService {
     public Post createPost(Post post, int userIdx, String fileUrl) throws BaseException {
         try {
             int postIdx = postDao.createPost(post, userIdx, fileUrl);
-            logger.info("PostService 26라인 : " + String.valueOf(postIdx));
             Post createPost = postDao.getPostById(postIdx);
             return createPost;
         } catch (Exception e) {
