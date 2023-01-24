@@ -49,4 +49,5 @@ public class ChatMessageDao {
         return this.jdbcTemplate.queryForObject(sql,String.class,userId); //String.class
     }
 
+
 }
