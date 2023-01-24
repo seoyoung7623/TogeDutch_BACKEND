@@ -1,6 +1,5 @@
 package com.proj.togedutch.dao;
 
-import com.proj.togedutch.dto.ChatMessageDetailDto;
 import com.proj.togedutch.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 import java.util.List;
 
@@ -29,10 +27,10 @@ public class ChatMessageDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public List<ChatMessageDetailDto> findAllChatByRoomId(String roomId){
-        String sql = "SELECT * from Chat where ChatRoom_chatRoom_id = ?";
+    public List<ChatMessage> findAllChatByRoomId(String roomId){
+        String sql = "SELECT chat_id,ChatRoom_chatRoom_id,User_user_id,created_at,content from Chat where ChatRoom_chatRoom_id = ?";
 
-        return this.jdbcTemplate.query(sql,(rs,rowNum) -> new ChatMessageDetailDto(
+        return this.jdbcTemplate.query(sql,(rs,rowNum) -> new ChatMessage(
                 rs.getInt("chat_id"),
                 rs.getInt("ChatRoom_chatRoom_id"),
                 rs.getInt("User_user_id"),
@@ -45,6 +43,12 @@ public class ChatMessageDao {
         String sql = "SELECT name from User where user_id = ?";
 
         return this.jdbcTemplate.queryForObject(sql,String.class,userId); //String.class
+    }
+
+    public void save(ChatMessage message){
+        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `created_at`, `content`) VALUES (?,?,now(),?)";
+        Object[] createMessageParams = new Object[]{message.getRoomId(),message.getWriter(),message.getContent()};
+        this.jdbcTemplate.update(sql, createMessageParams);
     }
 
 

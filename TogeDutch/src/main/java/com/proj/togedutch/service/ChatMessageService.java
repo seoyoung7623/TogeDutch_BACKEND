@@ -1,7 +1,6 @@
 package com.proj.togedutch.service;
 
 import com.proj.togedutch.dao.ChatMessageDao;
-import com.proj.togedutch.dto.ChatMessageDetailDto;
 import com.proj.togedutch.entity.ChatMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
@@ -27,25 +26,25 @@ public class ChatMessageService {
     public <T> void sendMessage(WebSocketSession session, T message) {
     }
 
-    public List<ChatMessageDetailDto> findAllChatByRoomId(String roomId){
+    public List<ChatMessage> findAllChatByRoomId(String roomId){
         return chatMessageDao.findAllChatByRoomId(roomId);
     }
 
 
-/*
-    // 채팅방에 메시지 전송
-    public void sendChatMessage(ChatMessage chatMessage) {
-        // chatMessage.setUserCount(chatRoomRepository.getUserCount(chatMessage.getRoomId()));
-        if (ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
-            //chatMessage.setContent(chatMessage.getSender() + "님이 방에 입장했습니다.");
-            chatMessage.setContent("[알림]");
-        } else if (ChatMessage.MessageType.QUIT.equals(chatMessage.getType())) {
-            chatMessage.setContent(chatMessage.getSender() + "님이 방에서 나갔습니다.");
-            chatMessage.setContent("[알림]");
-        }
-        redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);
-    }
 
+    // 채팅방에 메시지 전송
+//    public void sendChatMessage(ChatMessage chatMessage) {
+//        // chatMessage.setUserCount(chatRoomRepository.getUserCount(chatMessage.getRoomId()));
+//        if (ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
+//            //chatMessage.setContent(chatMessage.getSender() + "님이 방에 입장했습니다.");
+//            chatMessage.setContent("[알림]");
+//        } else if (ChatMessage.MessageType.QUIT.equals(chatMessage.getType())) {
+//            chatMessage.setContent(chatMessage.getSender() + "님이 방에서 나갔습니다.");
+//            chatMessage.setContent("[알림]");
+//        }
+//        redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);
+//    }
+/*
     // Post_id를 통해서 채팅방 가져오기 (미완)
     public int getChatRoomId(int post_id){
         return 1;
