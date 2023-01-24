@@ -1,14 +1,20 @@
 package com.proj.togedutch.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSocketMessageBroker //SimpleMessage broker를 사용하기 위해
 public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
+
+    private final WebSockChatHandler webSockChatHandler;
+
 
     // configureMessageBroker는 한 클라이언트에서 다른 클라이언트로 메시지를 라우팅 할 때 사용하는 브로커를 구성한다.
     // 첫번째 라인에서 정의된 /app로 시작하는 메시지만 메시지 헨들러로 라우팅한다고 정의한다.
@@ -30,5 +36,10 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
     public void registerStompEndpoints(StompEndpointRegistry registry){
         registry.addEndpoint("/ws-stomp").setAllowedOrigins("*")
                 .withSockJS();
+    }
+
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(webSockChatHandler);
     }
 }
