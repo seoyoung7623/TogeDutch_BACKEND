@@ -26,4 +26,5 @@ public class Post {
     private String image;
     private Double latitude;
     private Double longitude;
+    private int chatRoom_id;
 }
