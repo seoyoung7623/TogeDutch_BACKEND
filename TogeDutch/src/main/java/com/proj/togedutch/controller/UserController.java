@@ -92,6 +92,12 @@ public class UserController {
             if (user.getEmail() == null || user.getPassword() == null) {
                 return new BaseResponse<>(BaseResponseStatus.FAILED_TO_LOGIN);
             }
+            if (!isRegexEmail(user.getEmail())){
+                return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_EMAIL);
+            }
+            if (!isRegexPassword(user.getPassword())) {
+                return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_PASSWORD);
+            }
             User loginUser = userService.login(user);
             return new BaseResponse<>(loginUser);
         } catch (BaseException e) {
