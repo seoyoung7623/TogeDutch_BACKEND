@@ -1,5 +1,6 @@
 package com.proj.togedutch.dao;
 
+import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,5 +52,17 @@ public class ChatMessageDao {
         this.jdbcTemplate.update(sql, createMessageParams);
     }
 
+    public int deleteChat(int chatRoomIdx) throws BaseException {
+        String deleteChatQuery
+                = "delete from Chat where ChatRoom_chatRoom_id = ?";
+        Object[] deleteChatParams = new Object[]{chatRoomIdx};
+        return this.jdbcTemplate.update(deleteChatQuery, deleteChatParams);
+    }
 
+    public int deleteChatPhoto(int chatRoomIdx) throws BaseException {
+        String deleteChatPhotoQuery
+                = "delete from ChatPhoto where ChatRoom_chatRoom_id = ?";
+        Object[] deleteChatPhotoParams = new Object[]{chatRoomIdx};
+        return this.jdbcTemplate.update(deleteChatPhotoQuery, deleteChatPhotoParams);
+    }
 }

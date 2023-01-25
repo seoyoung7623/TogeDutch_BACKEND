@@ -244,6 +244,7 @@ public class PostDao {
                 ), title);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public Post insertChatRoom(int postIdx, int chatRoomIdx) throws BaseException {
         String modifyPostQuery = "update Post set ChatRoom_chatRoom_id = ? where post_id = ?";
 
@@ -254,5 +255,13 @@ public class PostDao {
         else {
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int modifyPostByChatRoomId(int chatRoomIdx) throws BaseException {
+        String modifyPostQuery = "update Post set ChatRoom_chatRoom_id=null where ChatRoom_chatRoom_id = ?";
+        Object[] modifyPostParams = new Object[]{chatRoomIdx};
+
+        return this.jdbcTemplate.update(modifyPostQuery, modifyPostParams);
     }
 }

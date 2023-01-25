@@ -1,7 +1,9 @@
 package com.proj.togedutch.service;
 
+import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.dao.ChatMessageDao;
 import com.proj.togedutch.entity.ChatMessage;
+import com.proj.togedutch.entity.Post;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.List;
+
+import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
 
 
 @Slf4j
@@ -50,6 +54,24 @@ public class ChatMessageService {
         return 1;
     }
 */
+    // 채팅 메시지 삭제
+    public int deleteChat(int chatRoomIdx) throws BaseException {
+        try{
+            int result = chatMessageDao.deleteChat(chatRoomIdx);
+            return result;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
+    // 채팅 이미지 삭제
+    public int deleteChatPhoto(int chatRoomIdx) throws BaseException {
+        try{
+            int result = chatMessageDao.deleteChatPhoto(chatRoomIdx);
+            return result;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
 }
