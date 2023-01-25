@@ -105,4 +105,21 @@ public class PostService {
         }
     }
 
+    public Post getPostById(int postIdx) throws BaseException {
+        try {
+            Post newPost = postDao.getPostById(postIdx);
+            return newPost;
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public Post insertChatRoom(int postIdx, int chatRoomIdx) throws BaseException{
+        try{
+            Post modifyPost = postDao.insertChatRoom(postIdx, chatRoomIdx);
+            return modifyPost;
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
