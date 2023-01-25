@@ -264,4 +264,18 @@ public class PostDao {
 
         return this.jdbcTemplate.update(modifyPostQuery, modifyPostParams);
     }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Post modifyPostStatus(int postIdx) throws BaseException {
+        String modifyPostQuery = "update Post set status=\"시간만료\" where post_id = ? and order_time < current_timestamp and num_of_recruits != recruited_num";
+
+        Object[] modifyPostParams = new Object[]{ postIdx };
+
+        if (this.jdbcTemplate.update(modifyPostQuery, modifyPostParams) == 1)
+            return getPostById(postIdx);
+        else {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
 }

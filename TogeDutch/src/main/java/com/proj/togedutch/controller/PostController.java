@@ -164,6 +164,7 @@ public class PostController {
             return deletePost;
 
     }
+
     //공고 내가 참여 조회
     @ResponseBody
     @GetMapping("/join/{userIdx}")
@@ -175,6 +176,7 @@ public class PostController {
             return new BaseResponse<>(e.getStatus());
         }
     }
+
     //공고 내가 업로드
     @ResponseBody
     @GetMapping("/all/{userIdx}")
@@ -186,10 +188,11 @@ public class PostController {
             return new BaseResponse<>(e.getStatus());
         }
     }
+
     //공고 검색어
     @ResponseBody
     @GetMapping("/search")
-    public BaseResponse <List<Post>> getPostByTitleUserId(@RequestParam String keyword) throws BaseException {
+    public BaseResponse<List<Post>> getPostByTitleUserId(@RequestParam String keyword) throws BaseException {
         try {
             List<Post> getPost = postService.getPostByTitleUserId(keyword);
             return new BaseResponse<>(getPost);
@@ -198,5 +201,15 @@ public class PostController {
         }
     }
 
+    // 공고 상태 변경
+    @PutMapping("/status/{postIdx}")
+    public BaseResponse<Post> modifyPostStatus(@PathVariable("postIdx") int postIdx) throws BaseException {
+        try{
+            Post modifyPost = postService.modifyPostStatus(postIdx);
+            return new BaseResponse<>(modifyPost);
+        } catch(BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 
 }
