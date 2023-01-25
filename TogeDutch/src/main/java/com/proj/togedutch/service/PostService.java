@@ -122,4 +122,13 @@ public class PostService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public int modifyPostByChatRoomId(int chatRoomIdx) throws BaseException {
+        try{
+            int modifyPost = postDao.modifyPostByChatRoomId(chatRoomIdx);
+            return modifyPost;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

@@ -46,7 +46,7 @@ public class ChatRoomDao {
     }
 
     public int deleteChatRoom(int chatRoomIdx) {
-        String deleteChatRoomQuery = "delete from ChatRoom WHERE chatRoom_id = ?";
+        String deleteChatRoomQuery = "delete from ChatRoom where chatRoom_id = ?";
         Object[] deleteChatRoomParams = new Object[]{chatRoomIdx};
         return this.jdbcTemplate.update(deleteChatRoomQuery, deleteChatRoomParams);
     }
