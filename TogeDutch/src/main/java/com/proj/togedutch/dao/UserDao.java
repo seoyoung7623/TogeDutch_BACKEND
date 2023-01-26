@@ -31,10 +31,11 @@ public class UserDao {
     }
     @Transactional(rollbackFor = Exception.class)
     public int createUser(User user) {
-        String createUserQuery = "insert into User (Keyword_keyword_id, name, role, email, password, phone, location, status, image, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String createUserQuery = "insert into User (Keyword_keyword_id, name, role, email, password, phone, status, image, latitude, longitude) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         Object[] createUserParams = new Object[]{user.getKeywordIdx(), user.getName(), user.getRole(), user.getEmail(), user.getPassword(), user.getPhone(), user.getStatus(), user.getImage(), user.getLatitude(), user.getLongitude()};
         int row = this.jdbcTemplate.update(createUserQuery, createUserParams);
         logger.debug(String.valueOf(row));
+        System.out.println(row);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
@@ -60,11 +61,12 @@ public class UserDao {
                         rs.getString("email"),
                         rs.getString("password"),
                         rs.getString("phone"),
-                        rs.getDouble("latitude"),
-                        rs.getDouble("longitude"),
-                        rs.getString("status"),
                         rs.getString("image"),
-                        rs.getString("jwt")),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude")),
                         getUserParams
                 );
     }
@@ -95,12 +97,11 @@ public class UserDao {
                         rs.getString("password"),
                         rs.getString("phone"),
                         rs.getString("image"),
-                        rs.getDouble("latitude"),
-                        rs.getDouble("longitude"),
                         rs.getString("status"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
-                        rs.getString("jwt"))
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude"))
                 );
     }
 
@@ -117,12 +118,11 @@ public class UserDao {
                         rs.getString("password"),
                         rs.getString("phone"),
                         rs.getString("image"),
-                        rs.getDouble("latitude"),
-                        rs.getDouble("longitude"),
                         rs.getString("status"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
-                        rs.getString("jwt")),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude")),
                 getPwdParams
                 );
     }
@@ -176,4 +176,34 @@ public class UserDao {
             throw new BaseException(DATABASE_ERROR);
     }
 
+    @Transactional(rollbackFor = Exception.class)
+    public User modifyPassword(int userIdx, String password) throws BaseException {
+        String modifyPasswordQuery = "update User set password = ? where user_id = ?";
+        Object[] modifyPasswordParams = new Object[]{password, userIdx};
+        if (this.jdbcTemplate.update(modifyPasswordQuery, modifyPasswordParams) == 1)
+            return getUser(userIdx);
+        else
+            throw new BaseException(DATABASE_ERROR);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public User modifyPhone(int userIdx, String phone) throws BaseException {
+        String modifyPhoneQuery = "update User set phone = ? where user_id = ?";
+        Object[] modifyPhoneParams = new Object[]{phone, userIdx};
+        if (this.jdbcTemplate.update(modifyPhoneQuery, modifyPhoneParams) == 1)
+            return getUser(userIdx);
+        else
+            throw new BaseException(DATABASE_ERROR);
+    }
+
+    public User getUserByEmail(String email) throws BaseException {
+        String getUserByEmailQuery = "select email, password from User where email = ?";
+        Object[] getUserByEmailParams = new Object[]{email};
+        return this.jdbcTemplate.queryForObject(getUserByEmailQuery,
+                (rs, rowNum) -> new User(
+                        rs.getString("email"),
+                        rs.getString("password")),
+                getUserByEmailParams
+        );
+    }
 }

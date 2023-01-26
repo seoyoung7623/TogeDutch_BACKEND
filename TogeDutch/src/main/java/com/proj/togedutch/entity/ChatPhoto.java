@@ -6,14 +6,13 @@ import lombok.Setter;
 
 import java.sql.Timestamp;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
-public class Notice {
-    private int notice_id;
-    private String title;
-    private String content;
+public class ChatPhoto {
+    private int chatPhoto_id;
     private Timestamp created_at;
-    private Timestamp updated_at;
+    private int chatRoom_id;
+    private int user_id;
+    private String image;
 }

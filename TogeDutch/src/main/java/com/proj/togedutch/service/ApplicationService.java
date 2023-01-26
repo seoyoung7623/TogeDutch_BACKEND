@@ -73,9 +73,13 @@ public class ApplicationService {
     //공고 상태 잔체 조회(내가 참여한 공고)
 
 
-
-
-
-
-
+    // 채팅방 삭제 후 Application의 chatRoom_id로 null로 변경
+    public int modifyApplicationByChatRoomId(int chatRoomIdx) throws BaseException {
+        try{
+            int result = applicationDao.modifyApplicationByChatRoomId(chatRoomIdx);
+            return result;
+        } catch(BaseException e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

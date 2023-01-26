@@ -63,7 +63,15 @@ public class ApplicationDao {
                         rs.getInt("post_id"),
                         rs.getInt("user_id"),
                         rs.getInt("chatRoom_id")),
-                        getApplicationParams //컬럼을 다 써주는 이유가 있는가?
+                getApplicationParams //컬럼을 다 써주는 이유가 있는가?
         );
+    }
+
+    @Transactional(rollbackFor=Exception.class)
+    public int modifyApplicationByChatRoomId(int chatRoomIdx) throws BaseException {
+        String modifyChatRoomQuery="update Application set ChatRoom_chatRoom_id=null where ChatRoom_chatRoom_id = ?";
+        Object[] modifyChatRoomParams = new Object[]{chatRoomIdx};
+
+        return this.jdbcTemplate.update(modifyChatRoomQuery, modifyChatRoomParams);
     }
 }

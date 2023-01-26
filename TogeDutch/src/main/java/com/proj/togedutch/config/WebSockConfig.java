@@ -1,12 +1,15 @@
 package com.proj.togedutch.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 @Configuration
+@RequiredArgsConstructor
 @EnableWebSocketMessageBroker //SimpleMessage broker를 사용하기 위해
 public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
 
@@ -18,17 +21,18 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
     //        registry.enableSimpleBroker("/topic");
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/sub");
-        config.setApplicationDestinationPrefixes("/pub");
+        config.enableSimpleBroker("/sub"); //수신
+        config.setApplicationDestinationPrefixes("/pub"); //송신
     }
 
-    // 클라이언트에서 websocket에 접속하는 endpoint를 등록
     // 메소드 이름에 STOMP(Simple Text Oriented Messaging Protocol)라는 단어가 있다. 이는 스프링프레임워크의 STOMP 구현체를 사용한다는 의미다.
     // STOMP가 필요 한 이유는 websocket은 통신 프로토콜이지 특정 주제에 가입한 사용자에게 메시지를 전송하는 기능을 제공하지 않는다.
     // 이를 쉽게 사용하기 위해 STOMP를 사용한다.
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry){
-        registry.addEndpoint("/ws-stomp").setAllowedOrigins("*")
+        registry.addEndpoint("/stomp/chat")
+                .setAllowedOrigins("http://localhost:9000")
                 .withSockJS();
     }
+
 }

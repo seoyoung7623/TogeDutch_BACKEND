@@ -3,6 +3,8 @@ package com.proj.togedutch.service;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.proj.togedutch.dao.UserDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -12,6 +14,9 @@ import java.util.HashMap;
 
 @Service
 public class OAuthService {
+    @Autowired
+    UserDao userDao;
+    
     public String getKakaoAccessToken (String code) {
         String access_Token = "";
         String refresh_Token = "";
@@ -85,8 +90,6 @@ public class OAuthService {
 
             int responseCode = conn.getResponseCode();
             System.out.println("responseCode : " + responseCode);
-
-            // UTF-8 적용했는데 왜 깨지냐고
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 
             String line = "";
@@ -95,7 +98,7 @@ public class OAuthService {
             while ((line = br.readLine()) != null) {
                 result += line;
             }
-            System.out.println("response body : " + result);        // 여기서 이미 한글이 깨짐
+            System.out.println("response body : " + result);
 
             JsonParser parser = new JsonParser();
             JsonElement element = parser.parse(result);
@@ -104,11 +107,16 @@ public class OAuthService {
             JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
 
             String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-            String email = kakao_account.getAsJsonObject().get("email").getAsString();
+            String email;
 
-            // 한글 왤케 깨지냐 진짜 ㅠㅠㅠㅠㅠ
+            try{
+                email = kakao_account.getAsJsonObject().get("email").getAsString();
+            } catch(NullPointerException e){
+                email = null;
+            }
+
             userInfo.put("nickname", nickname);
-            userInfo.put("email", email);           // 이메일 가져오기 설정 X -> 아마 NullPointException 뜨는게 정상
+            userInfo.put("email", email);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -116,4 +124,8 @@ public class OAuthService {
         return userInfo;
     }
 
+    public int checkUserInfo(String email){
+        int result = userDao.checkEmail(email);        // 1이면 해당하는 회원이 존재한다는 의미
+        return (result==1 ? 1 : -1);                    // 회원 존재하면 1 리턴 없으면 -1 리턴
+    }
 }

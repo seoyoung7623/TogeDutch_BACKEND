@@ -24,12 +24,16 @@ public enum BaseResponseStatus {
 
     // users
     USERS_EMPTY_USER_ID(false, 2010, "유저 아이디 값을 확인해주세요."),
+    USERS_EMPTY_PASSWORD(false, 2011, "비밀번호 값을 확인해주세요."),
+    POST_USERS_INVALID_PASSWORD(false, 2012, "숫자, 문자, 특수문자를 모두 포함한 7글자 이상의 비밀번호를 입력해주세요."),
+    POST_USERS_INVALID_PHONE(false, 2013, "숫자로만 구성된 전화번호를 입력해주세요"),
 
     // [POST] /users
     POST_USERS_EMPTY_EMAIL(false, 2015, "이메일을 입력해주세요."),
-    POST_USERS_INVALID_EMAIL(false, 2016, "이메일 형식을 확인해주세요."),
+    POST_USERS_INVALID_EMAIL(false, 2016, "정확한 이메일 주소를 입력해주세요"),
     POST_USERS_EXISTS_EMAIL(false,2017,"중복된 이메일입니다."),
     POST_USERS_EMPTY_PASSWORD(false, 2018, "비밀번호를 입력해주세요."),
+
 
     // [POST] /post
     POST_POST_EMPTY_TITLE(false, 2019, "공고 제목을 입력해주세요."),
@@ -45,6 +49,11 @@ public enum BaseResponseStatus {
     POST_AD_EMPTY_MAINMENU(false, 2027, "메인 메뉴를 입력해주세요."),
     POST_AD_EMPTY_TIP(false, 2028, "배달팁을 입력해주세요."),
     POST_AD_EMPTY_LOCATION(false, 2029, "약속 장소를 설정해주세요."),
+
+    // [POST] /notice
+    POST_NOTICE_EMPTY_TITLE(false, 2030, "공지 제목을 설정해주세요."),
+    POST_NOTICE_EMPTY_CONTENT(false, 2031, "공지 내용을 설정해주세요."),
+
     /**
      * 3000 : Response 오류
      */
@@ -54,10 +63,12 @@ public enum BaseResponseStatus {
     // [POST] /users
     DUPLICATED_EMAIL(false, 3013, "중복된 이메일입니다."),
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
-
+    FAILED_TO_FIND_USER(false, 3015, "존재하지 않는 회원입니다. 회원가입이 필요합니다."),
 
     // Post
     DELETE_POST_FAIL(false, 5000, "삭제에 실패했습니다."),
+    NUM_Of_RECRUITS_EMPTY(false, 5001, "모집된 인원이 없습니다."),
+
 
     /**
      * 4000 : Database, Server 오류
