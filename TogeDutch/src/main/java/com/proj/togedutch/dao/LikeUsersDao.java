@@ -88,7 +88,8 @@ public class LikeUsersDao {
                         rs.getString("image"),
                         rs.getDouble("latitude"),
                         rs.getDouble("longitude"),
-                        rs.getInt("ChatRoom_chatRoom_id")
+                        rs.getInt("ChatRoom_chatRoom_id"),
+                        rs.getString("category")
                 ), userIdx);
     }
 }
