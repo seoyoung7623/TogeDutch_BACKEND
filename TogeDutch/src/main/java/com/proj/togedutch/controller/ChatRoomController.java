@@ -59,4 +59,9 @@ public class ChatRoomController {
         return chatRoomService.deleteChatRoom(chatRoomIdx);
 
     }
+    @GetMapping("/helloWorld/{name}")
+    public String test(Model model, @PathVariable("name") String name){
+        model.addAttribute("name",name);
+        return "room";
+    }
 }

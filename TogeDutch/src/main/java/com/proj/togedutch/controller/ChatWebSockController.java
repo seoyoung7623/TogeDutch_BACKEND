@@ -4,6 +4,7 @@ package com.proj.togedutch.controller;
 import com.proj.togedutch.dao.ChatMessageDao;
 import com.proj.togedutch.dao.ChatRoomDao;
 import com.proj.togedutch.entity.ChatMessage;
+import com.proj.togedutch.entity.ChatPhoto;
 import com.proj.togedutch.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,6 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
-@Slf4j
 public class ChatWebSockController {
     private final SimpMessagingTemplate simpMessagingTemplate;
     private final ChatMessageService chatMessageService;
@@ -25,7 +25,7 @@ public class ChatWebSockController {
 
     // 채팅 입장
     //"/pub/chat/enter"
-    @MessageMapping(value = "/chat/enter")
+    @MessageMapping(value = "/enter")
     public void enter(ChatMessage message){
         String roomIdName = Integer.toString(message.getChatRoom_id());
         message.setRoomId(roomIdName);
@@ -49,7 +49,7 @@ public class ChatWebSockController {
 
     // 채팅 퇴장
     //"/pub/chat/quit"
-    @MessageMapping(value = "/chat/quit")
+    @MessageMapping(value = "/quit")
     public void quit(ChatMessage message){
         String roomIdName = Integer.toString(message.getChatRoom_id());
         message.setRoomId(roomIdName);
@@ -62,12 +62,17 @@ public class ChatWebSockController {
 
     // 채팅 메시지
     // websocket "/pub/chat/message"로 들어오는 메시징을 처리한다.
-    @MessageMapping("/chat/message")
+    @MessageMapping("/message")
     public void message(ChatMessage message) {
         String roomIdName = Integer.toString(message.getChatRoom_id());
         message.setRoomId(roomIdName);
         simpMessagingTemplate.convertAndSend("/sub/chat/room/" + roomIdName, message);
-        log.info("전송완료");
         chatMessageDao.save(message);
+    }
+
+    // 채팅 이미지 전송
+    @MessageMapping("/image")
+    public void image(ChatPhoto chatPhoto){
+
     }
 }

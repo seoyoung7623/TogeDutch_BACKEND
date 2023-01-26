@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -46,8 +48,10 @@ public class ChatMessageDao {
     }
 
     public void save(ChatMessage message){
-        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `created_at`, `content`) VALUES (?,?,now(),?)";
-        Object[] createMessageParams = new Object[]{message.getRoomId(),message.getWriter(),message.getContent()};
+        Date currentTime = new Date();
+        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `created_at`, `content`) VALUES (?,?,?,?)";
+        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentTime);
+        Object[] createMessageParams = new Object[]{message.getRoomId(),message.getWriter(),datetime,message.getContent()};
         this.jdbcTemplate.update(sql, createMessageParams);
     }
 
