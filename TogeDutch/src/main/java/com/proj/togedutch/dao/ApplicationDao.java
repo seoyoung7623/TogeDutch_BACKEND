@@ -63,7 +63,7 @@ public class ApplicationDao {
                         rs.getInt("post_id"),
                         rs.getInt("user_id"),
                         rs.getInt("chatRoom_id")),
-                        getApplicationParams //컬럼을 다 써주는 이유가 있는가?
+                getApplicationParams //컬럼을 다 써주는 이유가 있는가?
         );
     }
 

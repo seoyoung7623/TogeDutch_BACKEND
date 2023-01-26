@@ -77,7 +77,6 @@ public class ApplicationController {
             return new BaseResponse<>(e.getStatus());
         }
     }
-
     //공고 상태 잔체 조회(내가 참여한 공고)
     @ResponseBody
     @GetMapping("{postIdx}/application/join")
@@ -89,7 +88,6 @@ public class ApplicationController {
             return new BaseResponse<>(e.getStatus());
         }
     }
-
     //채팅방 전체 조회(내가 참여)
     @ResponseBody
     @GetMapping("{postIdx}/chatroom")

@@ -67,6 +67,8 @@ public enum BaseResponseStatus {
 
     // Post
     DELETE_POST_FAIL(false, 5000, "삭제에 실패했습니다."),
+    NUM_Of_RECRUITS_EMPTY(false, 5001, "모집된 인원이 없습니다."),
+
 
     /**
      * 4000 : Database, Server 오류
