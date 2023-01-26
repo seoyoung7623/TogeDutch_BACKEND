@@ -17,7 +17,7 @@ public class User {
     private String password;
     private String phone;
     private String image;
-    private String status;
+    private String status; //일반 사용자 or 음식점 사장님
     private Timestamp created_at;
     private Timestamp updated_at;
     private double latitude;

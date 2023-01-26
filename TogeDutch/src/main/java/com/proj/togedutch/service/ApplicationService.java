@@ -14,7 +14,7 @@ import static com.proj.togedutch.config.BaseResponseStatus.MODIFY_FAIL_USER;
 
 @Service
 public class ApplicationService {
-    final Logger logger = LoggerFactory.getLogger(this.getClass());
+    final Logger logger= LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     ApplicationDao applicationDao;
@@ -38,31 +38,47 @@ public class ApplicationService {
     }
 
     //공고 수락
-    public Application modifyStatus(int applicationIdx) throws BaseException {
-        try {
+    public Application modifyStatus(int applicationIdx) throws BaseException{
+        try{
             return applicationDao.modifyStatus(applicationIdx);
-        } catch (Exception e) {
+        }catch(Exception e){
             throw new BaseException(MODIFY_FAIL_USER);
         }
     }
 
 
     //공고 거절
-    public Application modifyStatus_deny(int applicationIdx) throws BaseException {
-        try {
+    public Application modifyStatus_deny(int applicationIdx) throws BaseException{
+        try{
             return applicationDao.modifyStatus_deny(applicationIdx);
-        } catch (Exception e) {
+        }catch(Exception e){
             throw new BaseException(MODIFY_FAIL_USER);
         }
     }
 
 
+
     //TODO 공고 전체 조회
-    public Application getApplication(int postIdx) throws BaseException {
+    public Application getApplication(int postIdx) throws BaseException{
         try {
             Application application = applicationDao.getApplication(postIdx);
             return application;
         } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+
+
+    //공고 상태 잔체 조회(내가 참여한 공고)
+
+
+    // 채팅방 삭제 후 Application의 chatRoom_id로 null로 변경
+    public int modifyApplicationByChatRoomId(int chatRoomIdx) throws BaseException {
+        try{
+            int result = applicationDao.modifyApplicationByChatRoomId(chatRoomIdx);
+            return result;
+        } catch(BaseException e){
             throw new BaseException(DATABASE_ERROR);
         }
     }

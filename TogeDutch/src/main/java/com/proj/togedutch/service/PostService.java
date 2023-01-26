@@ -114,4 +114,30 @@ public class PostService {
         }
     }
 
+    public Post insertChatRoom(int postIdx, int chatRoomIdx) throws BaseException{
+        try{
+            Post modifyPost = postDao.insertChatRoom(postIdx, chatRoomIdx);
+            return modifyPost;
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public int modifyPostByChatRoomId(int chatRoomIdx) throws BaseException {
+        try{
+            int modifyPost = postDao.modifyPostByChatRoomId(chatRoomIdx);
+            return modifyPost;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public Post modifyPostStatus(int postIdx) throws BaseException {
+        try{
+            Post modifyPost = postDao.modifyPostStatus(postIdx);
+            return modifyPost;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

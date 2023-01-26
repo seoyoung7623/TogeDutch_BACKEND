@@ -28,6 +28,7 @@ public class PostDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    // 공고 생성 -> 채팅방 생성
     @Transactional(rollbackFor = Exception.class)
     public int createPost(Post post, int userIdx, String fileUrl) {
         String createPostQuery
@@ -57,7 +58,8 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
 
                 ), postIdx);
     }
@@ -81,7 +83,8 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
                 ));
     }
 
@@ -110,7 +113,8 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
                 ));
     }
 
@@ -157,7 +161,8 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
                 ), postIdx, userIdx);
     }
 
@@ -188,7 +193,8 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
                 ), userIdx);
     }
     public List<Post> getPostByUploadUserId(int userIdx) throws BaseException {
@@ -210,7 +216,8 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
                 ), userIdx);
     }
     public List<Post> getPostByTitleUserId(String title) throws BaseException {
@@ -232,8 +239,43 @@ public class PostDao {
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
                         rs.getDouble("latitude"),
-                        rs.getDouble("longitude")
+                        rs.getDouble("longitude"),
+                        rs.getInt("ChatRoom_chatRoom_id")
                 ), title);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Post insertChatRoom(int postIdx, int chatRoomIdx) throws BaseException {
+        String modifyPostQuery = "update Post set ChatRoom_chatRoom_id = ? where post_id = ?";
+
+        Object[] modifyPostParams = new Object[]{chatRoomIdx, postIdx};
+
+        if (this.jdbcTemplate.update(modifyPostQuery, modifyPostParams) == 1)
+            return getPostById(postIdx);
+        else {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public int modifyPostByChatRoomId(int chatRoomIdx) throws BaseException {
+        String modifyPostQuery = "update Post set ChatRoom_chatRoom_id=null where ChatRoom_chatRoom_id = ?";
+        Object[] modifyPostParams = new Object[]{chatRoomIdx};
+
+        return this.jdbcTemplate.update(modifyPostQuery, modifyPostParams);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public Post modifyPostStatus(int postIdx) throws BaseException {
+        String modifyPostQuery = "update Post set status=\"시간만료\" where post_id = ? and order_time < current_timestamp and num_of_recruits != recruited_num";
+
+        Object[] modifyPostParams = new Object[]{ postIdx };
+
+        if (this.jdbcTemplate.update(modifyPostQuery, modifyPostParams) == 1)
+            return getPostById(postIdx);
+        else {
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 
 }
