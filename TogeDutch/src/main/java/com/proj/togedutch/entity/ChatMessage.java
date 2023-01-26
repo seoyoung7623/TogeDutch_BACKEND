@@ -8,7 +8,9 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class ChatMessage {
-    public ChatMessage(){    }
+    public ChatMessage(){
+
+    }
 
     private int chat_id;
     private int chatRoom_id;
