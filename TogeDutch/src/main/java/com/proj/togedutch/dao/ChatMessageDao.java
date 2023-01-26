@@ -1,5 +1,6 @@
 package com.proj.togedutch.dao;
 
+import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ public class ChatMessageDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
+    // 채팅 전체 조회
     public List<ChatMessage> findAllChatByRoomId(String roomId){
         String sql = "SELECT chat_id,ChatRoom_chatRoom_id,User_user_id,created_at,content from Chat where ChatRoom_chatRoom_id = ?";
 
@@ -49,11 +51,50 @@ public class ChatMessageDao {
 
     public void save(ChatMessage message){
         Date currentTime = new Date();
+        String roomIdName = Integer.toString(message.getChatRoom_id());
         String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `created_at`, `content`) VALUES (?,?,?,?)";
         String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentTime);
-        Object[] createMessageParams = new Object[]{message.getRoomId(),message.getWriter(),datetime,message.getContent()};
+        Object[] createMessageParams = new Object[]{roomIdName,message.getWriter(),datetime,message.getContent()};
         this.jdbcTemplate.update(sql, createMessageParams);
     }
 
+    public List<ChatMessage> getChatMessages(int chatRoom_id) throws BaseException {
+        String getMessagesQuery = "select Chat.*,User.name from Chat join User on Chat.User_user_id = User.user_id where ChatRoom_chatRoom_id = ?";
 
+        return this.jdbcTemplate.query(getMessagesQuery,(rs, rowNum) -> new ChatMessage(
+                rs.getInt("User_user_id"),
+                rs.getTimestamp("created_at"),
+                rs.getString("content"),
+                rs.getString("name")
+        ),chatRoom_id);
+    }
+
+    public String getImageUrl(int chatPhotoId){
+        String getImageUrlQuery = "select image from ChatPhoto where chatPhoto_id = ?";
+        return this.jdbcTemplate.queryForObject(getImageUrlQuery, String.class, chatPhotoId);
+    }
+
+    public ChatPhoto getChatPhoto(int chatPhotoid){
+        String sql = "select * from ChatPhoto where chatPhoto_id = ?";
+        return this.jdbcTemplate.queryForObject(sql,
+                (rs, rowNum) -> new ChatPhoto(
+                rs.getInt("chatPhoto_id"),
+                rs.getInt("ChatRoom_chatRoom_id"),
+                rs.getInt("User_user_id"),
+                rs.getString("image"),
+                rs.getTimestamp("created_at")
+        ),chatPhotoid);
+    }
+
+
+    public int createChatPhoto(int chatRoomId,int userId,String file) {
+        Date currentTime = new Date();
+        String ChatPhotoQuery = "insert into ChatPhoto (ChatRoom_chatRoom_id,User_user_id,image,created_at) Values (?,?,?,?)";
+
+        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentTime);
+        Object[] createChatPhoto = new Object[]{chatRoomId,userId,file,datetime};
+        this.jdbcTemplate.update(ChatPhotoQuery, createChatPhoto);
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class); // post_id 반환
+    }
 }

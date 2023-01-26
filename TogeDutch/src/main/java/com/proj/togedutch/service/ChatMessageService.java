@@ -1,7 +1,9 @@
 package com.proj.togedutch.service;
 
+import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.dao.ChatMessageDao;
 import com.proj.togedutch.entity.ChatMessage;
+import com.proj.togedutch.entity.ChatPhoto;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.List;
+
+import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
 
 
 @Slf4j
@@ -30,7 +34,33 @@ public class ChatMessageService {
         return chatMessageDao.findAllChatByRoomId(roomId);
     }
 
+    //채팅내역 전체조회
+    public List<ChatMessage> getChatMessages (int chatRoom_id) throws BaseException {
+        try {
+            List<ChatMessage> chatMessages = chatMessageDao.getChatMessages(chatRoom_id);
+            return chatMessages;
+        }catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
+    public String getImageUrl(int chatPhotoId) throws BaseException {
+        try{
+            return chatMessageDao.getImageUrl(chatPhotoId);
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public ChatPhoto createChatPhoto(int chatRoomId,int user,String file) throws BaseException{
+        try {
+            int chatPhoto_id = chatMessageDao.createChatPhoto(chatRoomId,user,file);
+            ChatPhoto chatPhoto = chatMessageDao.getChatPhoto(chatPhoto_id);
+            return chatPhoto;
+        } catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
     // 채팅방에 메시지 전송
 //    public void sendChatMessage(ChatMessage chatMessage) {

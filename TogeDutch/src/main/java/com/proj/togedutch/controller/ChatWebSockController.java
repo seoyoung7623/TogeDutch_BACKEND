@@ -28,19 +28,18 @@ public class ChatWebSockController {
     @MessageMapping(value = "/enter")
     public void enter(ChatMessage message){
         String roomIdName = Integer.toString(message.getChatRoom_id());
-        message.setRoomId(roomIdName);
         String userName = chatMessageDao.userName(message.getUserId());
         message.setContent(userName + "님이 채팅방에 참여하였습니다.");
 
         //채팅리스트
-        List<ChatMessage> chatList = chatMessageService.findAllChatByRoomId(message.getRoomId());
+        List<ChatMessage> chatList = chatMessageService.findAllChatByRoomId(roomIdName);
         if(chatList != null) {
             for (ChatMessage c : chatList) {
                 message.setWriter(c.getWriter());
                 message.setContent(c.getContent());
             }
         }
-        simpMessagingTemplate.convertAndSend("/sub/chat/room/"+ message.getRoomId(),message);
+        simpMessagingTemplate.convertAndSend("/sub/chat/room/"+ roomIdName,message);
 
         //ChatRoom chatRoom = chatRoomDao.getChatRoomById(message.getChatRoom_id());
         //ChatMessageSaveDto chatMessageSaveDto = new ChatMessageSaveDto(message.getRoomId(),message.getWriter(),message.getContent());
@@ -52,10 +51,9 @@ public class ChatWebSockController {
     @MessageMapping(value = "/quit")
     public void quit(ChatMessage message){
         String roomIdName = Integer.toString(message.getChatRoom_id());
-        message.setRoomId(roomIdName);
         String userName = chatMessageDao.userName(message.getUserId());
         message.setContent(userName + "님이 채팅방에서 나갔습니다.");
-        simpMessagingTemplate.convertAndSend("/sub/chat/room/"+ message.getRoomId(),message);
+        simpMessagingTemplate.convertAndSend("/sub/chat/room/"+ roomIdName,message);
         chatMessageDao.save(message);
     }
 
@@ -65,7 +63,6 @@ public class ChatWebSockController {
     @MessageMapping("/message")
     public void message(ChatMessage message) {
         String roomIdName = Integer.toString(message.getChatRoom_id());
-        message.setRoomId(roomIdName);
         simpMessagingTemplate.convertAndSend("/sub/chat/room/" + roomIdName, message);
         chatMessageDao.save(message);
     }

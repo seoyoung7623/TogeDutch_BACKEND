@@ -15,4 +15,6 @@ public class ChatPhoto {
     private int userId;
     private String image;
     private Timestamp createAt;
+
+
 }
