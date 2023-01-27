@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/ad")
@@ -48,7 +49,7 @@ public class AdController {
             return new BaseResponse<>(BaseResponseStatus.POST_AD_EMPTY_LOCATION);
         }
         String fileUrl = null;
-        if(file != null)
+        if(!file.isEmpty())
             fileUrl = url + awsS3Service.uploadAdFile(file, ad, userIdx);
 
         try {
@@ -59,13 +60,37 @@ public class AdController {
         }
 
     }
-    /*//광고 전체 조회
-    @GetMapping("/{userIdx}")
+    //광고 전체 조회
+    @GetMapping("")
+    public BaseResponse<List<Advertisement>> getAllAds(@RequestParam int userIdx) throws BaseException {
+        try {
+            List<Advertisement> getAds = adService.getAdsByUserId(userIdx);
+            return new BaseResponse<>(getAds);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
     //광고 조회(랜덤 하나)
     @GetMapping("/random")
+    public BaseResponse<Advertisement> getRandomAd() throws BaseException {
+        try {
+            Advertisement randomAd = adService.getRandomAd();
+            return new BaseResponse<>(randomAd);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 
     //광고 상세 조회
-    @GetMapping("{adIdx}")*/
+    @GetMapping("{adIdx}")
+    public BaseResponse<Advertisement> getAdById(@PathVariable("adIdx") int adIdx) throws BaseException {
+        try {
+            Advertisement getAd = adService.getAdById(adIdx);
+            return new BaseResponse<>(getAd);
+        } catch (BaseException exception) {
+            return new BaseResponse<>(exception.getStatus());
+        }
+    }
 }
 
