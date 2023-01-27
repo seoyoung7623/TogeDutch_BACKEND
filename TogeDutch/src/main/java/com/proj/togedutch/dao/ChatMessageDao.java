@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -74,8 +75,8 @@ public class ChatMessageDao {
         return this.jdbcTemplate.queryForObject(getImageUrlQuery, String.class, chatPhotoId);
     }
 
-    public ChatPhoto getChatPhoto(int chatPhotoid){
-        String sql = "select * from ChatPhoto where chatPhoto_id = ?";
+    public ChatPhoto getChatPhoto(int chatRoomId,int chatPhotoId){
+        String sql = "select * from ChatPhoto where chatPhoto_id = ? and ChatRoom_chatRoom_id = ?";
         return this.jdbcTemplate.queryForObject(sql,
                 (rs, rowNum) -> new ChatPhoto(
                 rs.getInt("chatPhoto_id"),
@@ -83,7 +84,7 @@ public class ChatMessageDao {
                 rs.getInt("User_user_id"),
                 rs.getString("image"),
                 rs.getTimestamp("created_at")
-        ),chatPhotoid);
+        ),chatPhotoId,chatRoomId);
     }
 
 
@@ -95,6 +96,25 @@ public class ChatMessageDao {
         Object[] createChatPhoto = new Object[]{chatRoomId,userId,file,datetime};
         this.jdbcTemplate.update(ChatPhotoQuery, createChatPhoto);
         String lastInsertIdQuery = "select last_insert_id()";
-        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class); // post_id 반환
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
+    }
+
+    public int createChatMeetTime(int chatRoom_id, int user, Timestamp time) {
+        String chatMeetTimeQuery = "insert into ChatMeetTime (ChatRoom_chatRoom_id,User_user_id,meetTime) values (?,?,?)";
+        Object[] MeetTimeParams = new Object[]{chatRoom_id,user,time};
+        this.jdbcTemplate.update(chatMeetTimeQuery,chatMeetTimeQuery);
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
+    }
+
+    public ChatMeetTime getChatMeetTime(int chatRoom_id, int chatMeetTime_id) {
+        String sql = "select * from ChatMeetTime where chatMeetTime_id = ? and ChatRoom_chatRoom_id = ?";
+        return this.jdbcTemplate.queryForObject(sql,
+                (rs, rowNum) -> new ChatMeetTime(
+                        rs.getInt("chatMeetTime_id"),
+                        rs.getInt("ChatRoom_chatRoom_id"),
+                        rs.getInt("User_user_id"),
+                        rs.getTimestamp("meetTime")
+                ),chatMeetTime_id,chatRoom_id);
     }
 }
