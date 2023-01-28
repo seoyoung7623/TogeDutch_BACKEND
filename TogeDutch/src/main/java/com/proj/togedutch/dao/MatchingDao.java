@@ -40,7 +40,8 @@ public class MatchingDao {
                         rs.getString("image"),
                         rs.getDouble("latitude"),
                         rs.getDouble("longitude"),
-                        rs.getInt("ChatRoom_chatRoom_id")
+                        rs.getInt("ChatRoom_chatRoom_id"),
+                        rs.getString("category")
 
                 ), postIdx);
 
@@ -107,8 +108,8 @@ public class MatchingDao {
                         rs.getString("image"),
                         rs.getDouble("latitude"),
                         rs.getDouble("longitude"),
-                        rs.getInt("ChatRoom_chatRoom_id")
-
+                        rs.getInt("ChatRoom_chatRoom_id"),
+                        rs.getString("category")
                 ), postIdx);
 
         logger.info(String.valueOf(post.getStatus()));
@@ -224,7 +225,8 @@ public class MatchingDao {
                         rs.getString("image"),
                         rs.getDouble("latitude"),
                         rs.getDouble("longitude"),
-                        rs.getInt("ChatRoom_chatRoom_id")
+                        rs.getInt("ChatRoom_chatRoom_id"),
+                        rs.getString("category")
 
                 ), postIdx);
         String getAcceptQuery = "Insert into Application (status, Post_post_id ,Post_User_user_id ,ChatRoom_chatRoom_id ,User_user_id) values (?,?,?,?,?)";
@@ -253,7 +255,8 @@ public class MatchingDao {
                         rs.getString("image"),
                         rs.getDouble("latitude"),
                         rs.getDouble("longitude"),
-                        rs.getInt("ChatRoom_chatRoom_id")
+                        rs.getInt("ChatRoom_chatRoom_id"),
+                        rs.getString("category")
 
                 ), postIdx);
         String getAcceptQuery = "Insert into Application (status, Post_post_id ,Post_User_user_id ,ChatRoom_chatRoom_id ,User_user_id) values (?,?,?,?,?)";
