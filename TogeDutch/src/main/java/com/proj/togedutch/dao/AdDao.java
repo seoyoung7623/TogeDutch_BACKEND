@@ -22,11 +22,11 @@ public class AdDao {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int createAd(Advertisement ad, int userIdx, String fileUrl) {
+    public int createAd(Advertisement ad, int userIdx, String fileUrl, String tid) {
         String createAdQuery
-                = "insert into Advertisement (store, information, main_menu, delivery_tips, location, request, User_user_id, image) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        Object[] createAdParams = new Object[]{ad.getStore(), ad.getInformation(), ad.getMainMenu(), ad.getDeliveryTips(), ad.getLocation(), ad.getRequest(), userIdx, fileUrl};
+                = "insert into Advertisement (store, information, main_menu, delivery_tips, location, request, User_user_id, image, tid) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Object[] createAdParams = new Object[]{ad.getStore(), ad.getInformation(), ad.getMainMenu(), ad.getDeliveryTips(), ad.getLocation(), ad.getRequest(), userIdx, fileUrl, tid};
         this.jdbcTemplate.update(createAdQuery, createAdParams);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class); // post_id 반환
@@ -47,7 +47,8 @@ public class AdDao {
                         rs.getTimestamp("updated_at"),
                         rs.getString("status"),
                         rs.getInt("User_user_id"),
-                        rs.getString("image")
+                        rs.getString("image"),
+                        rs.getString("tid")
                 ), adIdx);
     }
 
@@ -66,7 +67,8 @@ public class AdDao {
                         rs.getTimestamp("updated_at"),
                         rs.getString("status"),
                         rs.getInt("User_user_id"),
-                        rs.getString("image")
+                        rs.getString("image"),
+                        rs.getString("tid")
                 ), userIdx);
     }
 
@@ -85,7 +87,8 @@ public class AdDao {
                         rs.getTimestamp("updated_at"),
                         rs.getString("status"),
                         rs.getInt("User_user_id"),
-                        rs.getString("image")
+                        rs.getString("image"),
+                        rs.getString("tid")
                 ));
     }
 

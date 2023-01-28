@@ -24,8 +24,9 @@ public class Advertisement {
     private String status;
     private int userIdx;
     private String image;
+    private String tid;
 
-    public Advertisement(int adIdx, String store, String information, String mainMenu, int deliveryTips, String location, String status, int userIdx) {
+    public Advertisement(int adIdx, String store, String information, String mainMenu, int deliveryTips, String location, String status, int userIdx, String tid) {
         this.adIdx = adIdx;
         this.store = store;
         this.information = information;
@@ -34,5 +35,6 @@ public class Advertisement {
         this.location = location;
         this.status = status;
         this.userIdx = userIdx;
+        this.tid = tid;
     }
 }
