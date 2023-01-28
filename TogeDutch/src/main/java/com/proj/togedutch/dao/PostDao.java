@@ -174,6 +174,7 @@ public class PostDao {
         return this.jdbcTemplate.update(deletePostQuery, deletePostParams);
 
     }
+
     public List<Post> getPostByJoinUserId(int userIdx) throws BaseException {
         String getPostQuery = "select * From Post where post_id In( select Post_post_id from Application where User_user_id = ? )";
 
@@ -197,6 +198,7 @@ public class PostDao {
                         rs.getInt("ChatRoom_chatRoom_id")
                 ), userIdx);
     }
+
     public List<Post> getPostByUploadUserId(int userIdx) throws BaseException {
         String getPostQuery = "select * from Post where User_user_id = ? ";
 
@@ -220,6 +222,7 @@ public class PostDao {
                         rs.getInt("ChatRoom_chatRoom_id")
                 ), userIdx);
     }
+
     public List<Post> getPostByTitleUserId(String title) throws BaseException {
         String getPostQuery = "select * from Post where title = ? ";
 
