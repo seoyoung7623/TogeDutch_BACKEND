@@ -55,6 +55,9 @@ public class PostController {
         if (post.getLatitude() == null || post.getLongitude() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_LOCATION);
         }
+        if(post.getCategory() == null){
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_CATEGORY);
+        }
 
         String fileUrl = null;
 
@@ -120,6 +123,9 @@ public class PostController {
         if (post.getLatitude() == null || post.getLongitude() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_LOCATION);
         }
+        if(post.getCategory() == null){
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_CATEGORY);
+        }
 
         String fileUrl = postService.getImageUrl(postIdx);
         if(fileUrl != null) {           // 기존에 서버에 등록된 이미지 삭제
@@ -129,7 +135,7 @@ public class PostController {
         }
         
         // 이미지 파일이 있으면 서버에 등록
-        if(file != null)
+        if(!file.isEmpty())
             fileUrl = url + awsS3Service.uploadFile(file, post, user);
 
         // 공고 내용 수정

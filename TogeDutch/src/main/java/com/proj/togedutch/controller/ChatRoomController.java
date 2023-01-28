@@ -58,4 +58,5 @@ public class ChatRoomController {
     public int deleteChatRoom (@PathVariable("chatRoom_id") int chatRoomIdx) throws Exception{
         return chatRoomService.deleteChatRoom(chatRoomIdx);
     }
+
 }

@@ -2,8 +2,10 @@ package com.proj.togedutch.service;
 
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.dao.ChatMessageDao;
+import com.proj.togedutch.entity.ChatLocation;
+import com.proj.togedutch.entity.ChatMeetTime;
 import com.proj.togedutch.entity.ChatMessage;
-import com.proj.togedutch.entity.Post;
+import com.proj.togedutch.entity.ChatPhoto;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
@@ -34,6 +37,52 @@ public class ChatMessageService {
         return chatMessageDao.findAllChatByRoomId(roomId);
     }
 
+    //채팅내역 전체조회
+    public List<ChatMessage> getChatMessages (int chatRoom_id) throws BaseException {
+        try {
+            List<ChatMessage> chatMessages = chatMessageDao.getChatMessages(chatRoom_id);
+            return chatMessages;
+        }catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public ChatPhoto createChatPhoto(int chatRoomId,int user,String file) throws BaseException{
+        try {
+            int chatPhoto_id = chatMessageDao.createChatPhoto(chatRoomId,user,file);
+            ChatPhoto chatPhoto = chatMessageDao.getChatPhoto(chatRoomId,chatPhoto_id);
+            return chatPhoto;
+        } catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public ChatPhoto getChatPhoto(int chatRoomId, int chatPhotoId) throws BaseException{
+        try{
+            ChatPhoto getChatPhoto = chatMessageDao.getChatPhoto(chatRoomId,chatPhotoId);
+            return getChatPhoto;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public ChatMeetTime createChatMeetTime(int chatRoom_id, int user, String time) throws BaseException{
+        try {
+            int chatMeetTime_id = chatMessageDao.createChatMeetTime(chatRoom_id,user,time);
+            ChatMeetTime chatMeetTime = chatMessageDao.getChatMeetTime(chatRoom_id,chatMeetTime_id);
+            return chatMeetTime;
+        } catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public String getImageUrl(int chatPhotoId) throws BaseException {
+        try{
+            return chatMessageDao.getImageUrl(chatPhotoId);
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
 
     // 채팅방에 메시지 전송
@@ -74,4 +123,31 @@ public class ChatMessageService {
         }
     }
 
+    public ChatLocation createChatLocation(int chatRoom_id, int user, BigDecimal latitude, BigDecimal longitude) throws BaseException {
+        try {
+            int chatLocationIdx = chatMessageDao.createChatLocation(chatRoom_id, user, latitude, longitude);
+            ChatLocation chatLocation = chatMessageDao.getChatLocation(chatRoom_id,chatLocationIdx);
+            return chatLocation;
+        } catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public ChatLocation getChatLocationById(int chatRoom_id, int chatLocationIdx) throws BaseException {
+        try{
+            ChatLocation getChatLocation = chatMessageDao.getChatLocation(chatRoom_id, chatLocationIdx);
+            return getChatLocation;
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public ChatLocation putChatLocation(int chatRoom_id, int chatLocationIdx, BigDecimal latitude, BigDecimal longitude) throws BaseException {
+        try {
+            chatMessageDao.putChatLocation(chatRoom_id, chatLocationIdx, latitude, longitude);
+            return getChatLocationById(chatRoom_id, chatLocationIdx);
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
