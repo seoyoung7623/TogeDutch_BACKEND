@@ -9,6 +9,7 @@ import com.proj.togedutch.entity.ChatPhoto;
 import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.service.AWSS3Service;
 import com.proj.togedutch.service.ChatMessageService;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -67,7 +68,7 @@ public class ChatController {
     //만남시간 설정
     //RequestParam로 timestamp 받는방법?
     @PostMapping("/chatMeetTime")
-    public BaseResponse<ChatMeetTime> postChatMeetTime(@PathVariable("chatRoom_id")int chatRoom_id, @RequestParam int user, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Timestamp time) throws BaseException{
+    public BaseResponse<ChatMeetTime> postChatMeetTime(@PathVariable("chatRoom_id")int chatRoom_id, @RequestParam int user, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") String time) throws BaseException{
         try {
             ChatMeetTime chatMeetTime = chatMessageService.createChatMeetTime(chatRoom_id,user,time);
             return new BaseResponse<>(chatMeetTime);

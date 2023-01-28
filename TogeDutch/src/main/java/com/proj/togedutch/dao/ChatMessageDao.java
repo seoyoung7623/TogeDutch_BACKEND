@@ -99,10 +99,10 @@ public class ChatMessageDao {
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
 
-    public int createChatMeetTime(int chatRoom_id, int user, Timestamp time) {
+    public int createChatMeetTime(int chatRoom_id, int user, String time) {
         String chatMeetTimeQuery = "insert into ChatMeetTime (ChatRoom_chatRoom_id,User_user_id,meetTime) values (?,?,?)";
         Object[] MeetTimeParams = new Object[]{chatRoom_id,user,time};
-        this.jdbcTemplate.update(chatMeetTimeQuery,chatMeetTimeQuery);
+        this.jdbcTemplate.update(chatMeetTimeQuery,MeetTimeParams);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
@@ -114,7 +114,7 @@ public class ChatMessageDao {
                         rs.getInt("chatMeetTime_id"),
                         rs.getInt("ChatRoom_chatRoom_id"),
                         rs.getInt("User_user_id"),
-                        rs.getTimestamp("meetTime")
+                        rs.getString("meetTime")
                 ),chatMeetTime_id,chatRoom_id);
     }
 }

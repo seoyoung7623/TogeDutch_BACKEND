@@ -74,7 +74,7 @@ public class ChatMessageService {
         }
     }
 
-    public ChatMeetTime createChatMeetTime(int chatRoom_id, int user, Timestamp time) throws BaseException{
+    public ChatMeetTime createChatMeetTime(int chatRoom_id, int user, String time) throws BaseException{
         try {
             int chatMeetTime_id = chatMessageDao.createChatMeetTime(chatRoom_id,user,time);
             ChatMeetTime chatMeetTime = chatMessageDao.getChatMeetTime(chatRoom_id,chatMeetTime_id);
