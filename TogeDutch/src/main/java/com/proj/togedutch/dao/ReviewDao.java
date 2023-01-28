@@ -22,7 +22,7 @@ public class ReviewDao {
     @Transactional(rollbackFor = Exception.class)
     public int createReview(int applicationId, Review review) {
         String InsertReviewQuery = "insert into Review (emotion_status, content, Application_application_Id, Apllication_Post_post_id, Application_Post_User_user_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                "VALUES (?, ?, ?, ?, ?)";
         Object[] createReviewParams = new Object[]{review.getEmotionStatus(), review.getContent(), applicationId, review.getPostId(), review.getUserId()};
         return this.jdbcTemplate.update(InsertReviewQuery, createReviewParams);
 
