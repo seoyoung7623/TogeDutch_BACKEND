@@ -1,7 +1,10 @@
 package com.proj.togedutch.dao;
 
 import com.proj.togedutch.config.BaseException;
-import com.proj.togedutch.entity.*;
+import com.proj.togedutch.entity.ChatLocation;
+import com.proj.togedutch.entity.ChatMeetTime;
+import com.proj.togedutch.entity.ChatMessage;
+import com.proj.togedutch.entity.ChatPhoto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +12,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Timestamp;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -130,5 +133,31 @@ public class ChatMessageDao {
                         rs.getInt("User_user_id"),
                         rs.getString("meetTime")
                 ),chatMeetTime_id,chatRoom_id);
+    }
+
+    public int createChatLocation(int chatRoom_id, int user, BigDecimal latitude, BigDecimal longitude) {
+        String createChatLocationQuery = "insert into ChatLocation (ChatRoom_chatRoom_id,User_user_id, latitude, longitude) values (?,?,?,?)";
+        Object[] createChatLocationParams = new Object[]{chatRoom_id,user,latitude, longitude};
+        this.jdbcTemplate.update(createChatLocationQuery,createChatLocationParams);
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
+    }
+
+    public ChatLocation getChatLocation(int chatRoom_id, int chatLocationIdx) {
+        String sql = "select * from ChatLocation where chatLocation_id = ? and ChatRoom_chatRoom_id = ?";
+        return this.jdbcTemplate.queryForObject(sql,
+                (rs, rowNum) -> new ChatLocation(
+                        rs.getInt("chatLocationIdx"),
+                        rs.getInt("ChatRoom_chatRoom_id"),
+                        rs.getInt("User_user_id"),
+                        rs.getBigDecimal("latitude"),
+                        rs.getBigDecimal("longitude")
+                ),chatLocationIdx, chatRoom_id);
+    }
+
+    public void putChatLocation(int chatRoom_id, int chatLocationIdx, BigDecimal latitude, BigDecimal longitude) {
+        String updateCLQuery = "update ChatLocation set latitude=?, longitude=? where chatLocation_id = ? and ChatRoom_chatRoom_id = ?";
+        Object[] putChatLocationParams = new Object[]{chatRoom_id,chatLocationIdx,latitude, longitude};
+        this.jdbcTemplate.update(updateCLQuery,putChatLocationParams);
     }
 }

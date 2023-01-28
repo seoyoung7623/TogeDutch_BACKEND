@@ -4,6 +4,7 @@ import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.dao.AdDao;
 import com.proj.togedutch.entity.Advertisement;
 import com.proj.togedutch.utils.JwtService;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import java.util.List;
 import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Service
+@Slf4j
 public class AdService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
