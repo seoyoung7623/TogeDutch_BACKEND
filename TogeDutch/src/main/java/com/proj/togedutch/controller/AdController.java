@@ -25,10 +25,10 @@ import java.util.List;
 public class AdController {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private KakaoPayService kakaoPayService;
-    private KakaoPayController kakaoPayController;
-    private AdService adService;
-    private AWSS3Service awsS3Service;
+    private final KakaoPayService kakaoPayService;
+    private final KakaoPayController kakaoPayController;
+    private final AdService adService;
+    private final AWSS3Service awsS3Service;
 
     @Autowired
     AdController(KakaoPayService kakaoPayService, KakaoPayController kakaoPayController, AdService adService, AWSS3Service awsS3Service){
@@ -43,7 +43,7 @@ public class AdController {
     // 광고 생성
     @PostMapping("/{userIdx}")
     public BaseResponse<?> createAd(@PathVariable("userIdx") int userIdx, @RequestPart Advertisement ad,
-                                                @RequestPart MultipartFile file) throws IOException{
+                                                @RequestPart(value = "file" , required = false) MultipartFile file) throws IOException{
         if (ad.getStore() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_AD_EMPTY_STORE);
         }

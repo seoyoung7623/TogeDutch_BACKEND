@@ -5,15 +5,15 @@ import com.proj.togedutch.config.BaseResponse;
 import com.proj.togedutch.config.BaseResponseStatus;
 import com.proj.togedutch.entity.Advertisement;
 import com.proj.togedutch.entity.KakaoApproveRes;
+import com.proj.togedutch.entity.KakaoCancelRes;
 import com.proj.togedutch.entity.KakaoReadyRes;
 import com.proj.togedutch.service.AdService;
 import com.proj.togedutch.service.KakaoPayService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 
@@ -52,20 +52,24 @@ public class KakaoPayController {
         log.info("kakaoPaySuccess pg_token : " + pg_token);
         KakaoApproveRes kakaoApproveRes = kakaoPayService.payApprove(pg_token);
         try{
-            Advertisement newAd = adService.createAd(ad, userIdx, fileUrl);
-            return new BaseResponse<>(newAd);
+            Advertisement newAd = adService.createAd(ad, userIdx, fileUrl, kakaoApproveRes.getTid());
+            return new BaseResponse<>(newAd); // 광고 신청 현황 페이지로 redirect
         }catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
     }
-
-
     @GetMapping("/cancel")
     public void kakaoPayCancel() throws BaseException {
-        throw  new BaseException(BaseResponseStatus.POST_AD_EMPTY_MAINMENU);
+        throw new BaseException(BaseResponseStatus.POST_AD_EMPTY_MAINMENU); // 결제 취소화면 redirect
     }
     @GetMapping("/fail")
     public void kakaoPayFail() throws BaseException {
-        throw  new BaseException(BaseResponseStatus.POST_AD_EMPTY_MAINMENU);
+        throw new BaseException(BaseResponseStatus.POST_AD_EMPTY_MAINMENU); // 결제 실패화면 redirect
+    }
+
+    @PostMapping("/refund")
+    public ResponseEntity kakaoPayRefund(@RequestParam("tid") String tid){
+        KakaoCancelRes kakaoCancelRes = kakaoPayService.payCancel(tid);
+        return new ResponseEntity<>(kakaoCancelRes, HttpStatus.OK);
     }
 }

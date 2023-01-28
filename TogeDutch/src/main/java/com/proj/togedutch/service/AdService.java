@@ -27,9 +27,9 @@ public class AdService {
         this.jwtService = jwtService; // JWT부분은 7주차에 다루므로 모르셔도 됩니다!
     }
 
-    public Advertisement createAd(Advertisement ad, int userIdx, String fileUrl) throws BaseException {
+    public Advertisement createAd(Advertisement ad, int userIdx, String fileUrl, String tid) throws BaseException {
         try {
-            int adIdx = adDao.createAd(ad, userIdx, fileUrl);
+            int adIdx = adDao.createAd(ad, userIdx, fileUrl, tid);
             return adDao.getAdById(adIdx);
         }catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
