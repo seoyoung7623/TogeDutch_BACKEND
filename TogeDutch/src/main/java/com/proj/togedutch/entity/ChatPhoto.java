@@ -10,11 +10,9 @@ import java.sql.Timestamp;
 @Setter
 @AllArgsConstructor
 public class ChatPhoto {
-    private int chatPhotoId;
-    private int chatRoomId;
-    private int userId;
+    private int chatPhoto_id;
+    private Timestamp created_at;
+    private int chatRoom_id;
+    private int user_id;
     private String image;
-    private Timestamp createAt;
-
-
 }

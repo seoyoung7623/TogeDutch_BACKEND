@@ -55,6 +55,9 @@ public class PostController {
         if (post.getLatitude() == null || post.getLongitude() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_LOCATION);
         }
+        if(post.getCategory() == null){
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_CATEGORY);
+        }
 
         String fileUrl = null;
 
@@ -120,6 +123,9 @@ public class PostController {
         if (post.getLatitude() == null || post.getLongitude() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_LOCATION);
         }
+        if(post.getCategory() == null){
+            return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_CATEGORY);
+        }
 
         String fileUrl = postService.getImageUrl(postIdx);
         if(fileUrl != null) {           // 기존에 서버에 등록된 이미지 삭제
@@ -129,7 +135,7 @@ public class PostController {
         }
         
         // 이미지 파일이 있으면 서버에 등록
-        if(file != null)
+        if(!file.isEmpty())
             fileUrl = url + awsS3Service.uploadFile(file, post, user);
 
         // 공고 내용 수정
@@ -164,6 +170,7 @@ public class PostController {
             return deletePost;
 
     }
+
     //공고 내가 참여 조회
     @ResponseBody
     @GetMapping("/join/{userIdx}")
@@ -175,6 +182,7 @@ public class PostController {
             return new BaseResponse<>(e.getStatus());
         }
     }
+
     //공고 내가 업로드
     @ResponseBody
     @GetMapping("/all/{userIdx}")
@@ -186,10 +194,11 @@ public class PostController {
             return new BaseResponse<>(e.getStatus());
         }
     }
+
     //공고 검색어
     @ResponseBody
     @GetMapping("/search")
-    public BaseResponse <List<Post>> getPostByTitleUserId(@RequestParam String keyword) throws BaseException {
+    public BaseResponse<List<Post>> getPostByTitleUserId(@RequestParam String keyword) throws BaseException {
         try {
             List<Post> getPost = postService.getPostByTitleUserId(keyword);
             return new BaseResponse<>(getPost);
@@ -198,5 +207,15 @@ public class PostController {
         }
     }
 
+    // 공고 상태 변경
+    @PutMapping("/status/{postIdx}")
+    public BaseResponse<Post> modifyPostStatus(@PathVariable("postIdx") int postIdx) throws BaseException {
+        try{
+            Post modifyPost = postService.modifyPostStatus(postIdx);
+            return new BaseResponse<>(modifyPost);
+        } catch(BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 
 }

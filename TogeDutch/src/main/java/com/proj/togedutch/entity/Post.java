@@ -27,4 +27,5 @@ public class Post {
     private Double latitude;
     private Double longitude;
     private int chatRoom_id;
+    private String category;
 }

@@ -59,6 +59,20 @@ public class ChatMessageDao {
         this.jdbcTemplate.update(sql, createMessageParams);
     }
 
+    public int deleteChat(int chatRoomIdx) throws BaseException {
+        String deleteChatQuery
+                = "delete from Chat where ChatRoom_chatRoom_id = ?";
+        Object[] deleteChatParams = new Object[]{chatRoomIdx};
+        return this.jdbcTemplate.update(deleteChatQuery, deleteChatParams);
+    }
+
+    public int deleteChatPhoto(int chatRoomIdx) throws BaseException {
+        String deleteChatPhotoQuery
+                = "delete from ChatPhoto where ChatRoom_chatRoom_id = ?";
+        Object[] deleteChatPhotoParams = new Object[]{chatRoomIdx};
+        return this.jdbcTemplate.update(deleteChatPhotoQuery, deleteChatPhotoParams);
+    }
+
     public List<ChatMessage> getChatMessages(int chatRoom_id) throws BaseException {
         String getMessagesQuery = "select Chat.*,User.name from Chat join User on Chat.User_user_id = User.user_id where ChatRoom_chatRoom_id = ?";
 
@@ -79,12 +93,12 @@ public class ChatMessageDao {
         String sql = "select * from ChatPhoto where chatPhoto_id = ? and ChatRoom_chatRoom_id = ?";
         return this.jdbcTemplate.queryForObject(sql,
                 (rs, rowNum) -> new ChatPhoto(
-                rs.getInt("chatPhoto_id"),
-                rs.getInt("ChatRoom_chatRoom_id"),
-                rs.getInt("User_user_id"),
-                rs.getString("image"),
-                rs.getTimestamp("created_at")
-        ),chatPhotoId,chatRoomId);
+                        rs.getInt("chatPhoto_id"),
+                        rs.getInt("ChatRoom_chatRoom_id"),
+                        rs.getInt("User_user_id"),
+                        rs.getString("image"),
+                        rs.getTimestamp("created_at")
+                ),chatPhotoId,chatRoomId);
     }
 
 

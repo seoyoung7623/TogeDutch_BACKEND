@@ -4,6 +4,7 @@ import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.dao.ChatMessageDao;
 import com.proj.togedutch.entity.ChatMeetTime;
 import com.proj.togedutch.entity.ChatMessage;
+import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.entity.ChatPhoto;
 import com.proj.togedutch.entity.Post;
 import lombok.extern.slf4j.Slf4j;
@@ -55,34 +56,6 @@ public class ChatMessageService {
         }
     }
 
-    public ChatPhoto createChatPhoto(int chatRoomId,int user,String file) throws BaseException{
-        try {
-            int chatPhoto_id = chatMessageDao.createChatPhoto(chatRoomId,user,file);
-            ChatPhoto chatPhoto = chatMessageDao.getChatPhoto(chatRoomId,chatPhoto_id);
-            return chatPhoto;
-        } catch (Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    public ChatPhoto getChatPhoto(int chatRoomId, int chatPhotoId) throws BaseException{
-        try{
-            ChatPhoto getChatPhoto = chatMessageDao.getChatPhoto(chatRoomId,chatPhotoId);
-            return getChatPhoto;
-        } catch(Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    public ChatMeetTime createChatMeetTime(int chatRoom_id, int user, String time) throws BaseException{
-        try {
-            int chatMeetTime_id = chatMessageDao.createChatMeetTime(chatRoom_id,user,time);
-            ChatMeetTime chatMeetTime = chatMessageDao.getChatMeetTime(chatRoom_id,chatMeetTime_id);
-            return chatMeetTime;
-        } catch (Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
 
     // 채팅방에 메시지 전송
 //    public void sendChatMessage(ChatMessage chatMessage) {
@@ -102,6 +75,24 @@ public class ChatMessageService {
         return 1;
     }
 */
+    // 채팅 메시지 삭제
+    public int deleteChat(int chatRoomIdx) throws BaseException {
+        try{
+            int result = chatMessageDao.deleteChat(chatRoomIdx);
+            return result;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
+    // 채팅 이미지 삭제
+    public int deleteChatPhoto(int chatRoomIdx) throws BaseException {
+        try{
+            int result = chatMessageDao.deleteChatPhoto(chatRoomIdx);
+            return result;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
 }

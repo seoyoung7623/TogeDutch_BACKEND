@@ -57,7 +57,6 @@ public class ChatRoomController {
     @DeleteMapping("/{chatRoom_id}")
     public int deleteChatRoom (@PathVariable("chatRoom_id") int chatRoomIdx) throws Exception{
         return chatRoomService.deleteChatRoom(chatRoomIdx);
-
     }
 
 }

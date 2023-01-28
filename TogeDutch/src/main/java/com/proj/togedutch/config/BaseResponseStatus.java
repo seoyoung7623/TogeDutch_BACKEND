@@ -42,17 +42,18 @@ public enum BaseResponseStatus {
     POST_POST_EMPTY_MINIMUM(false, 2022, "최소 주문 금액을 입력해주세요."),
     POST_POST_EMPTY_RECRUIT(false, 2023, "모집 인원을 선택해주세요."),
     POST_POST_EMPTY_LOCATION(false, 2024, "약속 장소를 설정해주세요."),
-
+    POST_POST_EMPTY_CATEGORY(false, 2025, "카테고리를 설정해주세요."),
+    
     // [POST] /Advertisement
-    POST_AD_EMPTY_STORE(false, 2025, "가게 이름을 입력해주세요."),
-    POST_AD_EMPTY_INFORMATION(false, 2026, "가게 정보를 입력해주세요."),
-    POST_AD_EMPTY_MAINMENU(false, 2027, "메인 메뉴를 입력해주세요."),
-    POST_AD_EMPTY_TIP(false, 2028, "배달팁을 입력해주세요."),
-    POST_AD_EMPTY_LOCATION(false, 2029, "약속 장소를 설정해주세요."),
+    POST_AD_EMPTY_STORE(false, 2026, "가게 이름을 입력해주세요."),
+    POST_AD_EMPTY_INFORMATION(false, 2027, "가게 정보를 입력해주세요."),
+    POST_AD_EMPTY_MAINMENU(false, 2028, "메인 메뉴를 입력해주세요."),
+    POST_AD_EMPTY_TIP(false, 2029, "배달팁을 입력해주세요."),
+    POST_AD_EMPTY_LOCATION(false, 2030, "약속 장소를 설정해주세요."),
 
     // [POST] /notice
-    POST_NOTICE_EMPTY_TITLE(false, 2030, "공지 제목을 설정해주세요."),
-    POST_NOTICE_EMPTY_CONTENT(false, 2031, "공지 내용을 설정해주세요."),
+    POST_NOTICE_EMPTY_TITLE(false, 2031, "공지 제목을 설정해주세요."),
+    POST_NOTICE_EMPTY_CONTENT(false, 2032, "공지 내용을 설정해주세요."),
 
     /**
      * 3000 : Response 오류
@@ -67,6 +68,8 @@ public enum BaseResponseStatus {
 
     // Post
     DELETE_POST_FAIL(false, 5000, "삭제에 실패했습니다."),
+    NUM_Of_RECRUITS_EMPTY(false, 5001, "모집된 인원이 없습니다."),
+
 
     /**
      * 4000 : Database, Server 오류
