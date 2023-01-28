@@ -48,6 +48,35 @@ public class ChatMessageService {
         }
     }
 
+    public ChatPhoto createChatPhoto(int chatRoomId,int user,String file) throws BaseException{
+        try {
+            int chatPhoto_id = chatMessageDao.createChatPhoto(chatRoomId,user,file);
+            ChatPhoto chatPhoto = chatMessageDao.getChatPhoto(chatRoomId,chatPhoto_id);
+            return chatPhoto;
+        } catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public ChatPhoto getChatPhoto(int chatRoomId, int chatPhotoId) throws BaseException{
+        try{
+            ChatPhoto getChatPhoto = chatMessageDao.getChatPhoto(chatRoomId,chatPhotoId);
+            return getChatPhoto;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public ChatMeetTime createChatMeetTime(int chatRoom_id, int user, String time) throws BaseException{
+        try {
+            int chatMeetTime_id = chatMessageDao.createChatMeetTime(chatRoom_id,user,time);
+            ChatMeetTime chatMeetTime = chatMessageDao.getChatMeetTime(chatRoom_id,chatMeetTime_id);
+            return chatMeetTime;
+        } catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     public String getImageUrl(int chatPhotoId) throws BaseException {
         try{
             return chatMessageDao.getImageUrl(chatPhotoId);

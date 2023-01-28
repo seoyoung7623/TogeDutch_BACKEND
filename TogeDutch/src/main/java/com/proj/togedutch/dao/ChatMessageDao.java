@@ -94,10 +94,10 @@ public class ChatMessageDao {
         return this.jdbcTemplate.queryForObject(sql,
                 (rs, rowNum) -> new ChatPhoto(
                         rs.getInt("chatPhoto_id"),
+                        rs.getTimestamp("created_at"),
                         rs.getInt("ChatRoom_chatRoom_id"),
                         rs.getInt("User_user_id"),
-                        rs.getString("image"),
-                        rs.getTimestamp("created_at")
+                        rs.getString("image")
                 ),chatPhotoId,chatRoomId);
     }
 
