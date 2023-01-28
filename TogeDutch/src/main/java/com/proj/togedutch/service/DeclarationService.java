@@ -7,6 +7,8 @@ import com.proj.togedutch.entity.Declaration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class DeclarationService {
     @Autowired
@@ -26,6 +28,24 @@ public class DeclarationService {
             Declaration findDeclaration = declarationDao.getDeclarationById(declarationIdx);
             return findDeclaration;
         } catch (Exception e) {
+            throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public List<Declaration> getAllDeclarations() throws BaseException {
+        try{
+            List<Declaration> getAllDeclarations = declarationDao.getAllDeclarations();
+            return getAllDeclarations;
+        } catch(Exception e){
+            throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
+        }
+    }
+
+    public List<Declaration> getDeclarationByChatRoomId(int chatRoomIdx) throws BaseException {
+        try{
+            List<Declaration> getDeclaration = declarationDao.getDeclarationByChatRoomId(chatRoomIdx);
+            return getDeclaration;
+        } catch(Exception e){
             throw new BaseException(BaseResponseStatus.DATABASE_ERROR);
         }
     }
