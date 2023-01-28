@@ -2,6 +2,7 @@ package com.proj.togedutch.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
@@ -9,6 +10,7 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @AllArgsConstructor
+@NoArgsConstructor
 public class Advertisement {
     private int adIdx;
     private String store;
@@ -21,9 +23,9 @@ public class Advertisement {
     private Timestamp updatedAt;
     private String status;
     private int userIdx;
-    private int fileIdx;
+    private String image;
 
-    public Advertisement(int adIdx, String store, String information, String mainMenu, int deliveryTips, String location, String status, int userIdx, int fileIdx) {
+    public Advertisement(int adIdx, String store, String information, String mainMenu, int deliveryTips, String location, String status, int userIdx) {
         this.adIdx = adIdx;
         this.store = store;
         this.information = information;
@@ -32,6 +34,5 @@ public class Advertisement {
         this.location = location;
         this.status = status;
         this.userIdx = userIdx;
-        this.fileIdx = fileIdx;
     }
 }

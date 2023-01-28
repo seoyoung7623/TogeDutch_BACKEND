@@ -1,21 +1,17 @@
 package com.proj.togedutch.service;
 
 import com.proj.togedutch.config.BaseException;
-import com.proj.togedutch.config.secret.Secret;
 import com.proj.togedutch.dao.AdDao;
-import com.proj.togedutch.dao.PostDao;
-import com.proj.togedutch.dao.UserDao;
 import com.proj.togedutch.entity.Advertisement;
-import com.proj.togedutch.entity.Post;
-import com.proj.togedutch.entity.User;
-import com.proj.togedutch.utils.AES128;
 import com.proj.togedutch.utils.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static com.proj.togedutch.config.BaseResponseStatus.*;
+import java.util.List;
+
+import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Service
 public class AdService {
@@ -36,6 +32,33 @@ public class AdService {
             int adIdx = adDao.createAd(ad, userIdx, fileUrl);
             return adDao.getAdById(adIdx);
         }catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public List<Advertisement> getAdsByUserId(int userIdx) throws BaseException {
+        try{
+            List<Advertisement> adsByUserId = adDao.getAdsByUserId(userIdx);
+            return adsByUserId;
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public Advertisement getRandomAd() throws BaseException {
+        try {
+            Advertisement randomAd = adDao.getRandomAd();
+            return randomAd;
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public Advertisement getAdById(int adIdx) throws BaseException {
+        try {
+            Advertisement getAd = adDao.getAdById(adIdx);
+            return getAd;
+        }catch(Exception e){
             throw new BaseException(DATABASE_ERROR);
         }
     }
