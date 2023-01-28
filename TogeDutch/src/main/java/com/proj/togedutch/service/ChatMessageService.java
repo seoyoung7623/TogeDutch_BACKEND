@@ -2,11 +2,10 @@ package com.proj.togedutch.service;
 
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.dao.ChatMessageDao;
+import com.proj.togedutch.entity.ChatLocation;
 import com.proj.togedutch.entity.ChatMeetTime;
 import com.proj.togedutch.entity.ChatMessage;
-import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.entity.ChatPhoto;
-import com.proj.togedutch.entity.Post;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.sql.Timestamp;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
@@ -124,4 +123,31 @@ public class ChatMessageService {
         }
     }
 
+    public ChatLocation createChatLocation(int chatRoom_id, int user, BigDecimal latitude, BigDecimal longitude) throws BaseException {
+        try {
+            int chatLocationIdx = chatMessageDao.createChatLocation(chatRoom_id, user, latitude, longitude);
+            ChatLocation chatLocation = chatMessageDao.getChatLocation(chatRoom_id,chatLocationIdx);
+            return chatLocation;
+        } catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public ChatLocation getChatLocationById(int chatRoom_id, int chatLocationIdx) throws BaseException {
+        try{
+            ChatLocation getChatLocation = chatMessageDao.getChatLocation(chatRoom_id, chatLocationIdx);
+            return getChatLocation;
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public ChatLocation putChatLocation(int chatRoom_id, int chatLocationIdx, BigDecimal latitude, BigDecimal longitude) throws BaseException {
+        try {
+            chatMessageDao.putChatLocation(chatRoom_id, chatLocationIdx, latitude, longitude);
+            return getChatLocationById(chatRoom_id, chatLocationIdx);
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }
