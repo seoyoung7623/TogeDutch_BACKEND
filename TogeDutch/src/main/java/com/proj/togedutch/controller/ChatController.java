@@ -10,7 +10,6 @@ import com.proj.togedutch.service.AWSS3Service;
 import com.proj.togedutch.service.ChatMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -64,16 +63,36 @@ public class ChatController {
     }
 
     //만남시간 설정
-    //RequestParam로 timestamp 받는방법?
     @PostMapping("/chatMeetTime")
-    public BaseResponse<ChatMeetTime> postChatMeetTime(@PathVariable("chatRoom_id")int chatRoom_id, @RequestParam int user, @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") String time) throws BaseException{
+    public BaseResponse<ChatMeetTime> postChatMeetTime(@PathVariable("chatRoom_id") int chatRoomId, @RequestParam int user, @RequestParam String time) throws BaseException{
         try {
-            ChatMeetTime chatMeetTime = chatMessageService.createChatMeetTime(chatRoom_id,user,time);
+            ChatMeetTime chatMeetTime = chatMessageService.createChatMeetTime(chatRoomId,user,time);
             return new BaseResponse<>(chatMeetTime);
         }catch (BaseException e){
             return new BaseResponse<>(e.getStatus());
         }
     }
+
+    @GetMapping("/chatMeetTime/{chatMeetTime_id}")
+    public BaseResponse<ChatMeetTime> getChatMeetTime(@PathVariable("chatRoom_id") int chatRoomId,@PathVariable("chatMeetTime_id") int chatMeetTimeId) throws BaseException{
+        try{
+            ChatMeetTime getChatMeetTime = chatMessageService.getChatMeetTime(chatRoomId,chatMeetTimeId);
+            return new BaseResponse<>(getChatMeetTime);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    @PutMapping("/chatMeetTime/{chatMeetTime_id}")
+    public BaseResponse<ChatMeetTime> putChatMeetTime(@PathVariable("chatRoom_id") int chatRoom_id,@PathVariable("chatMeetTime_id") int chatMeetTime_id,@RequestParam String time) throws BaseException{
+        try {
+            ChatMeetTime chatMeetTime = chatMessageService.putChatMeetTime(chatRoom_id, chatMeetTime_id, time);
+            return new BaseResponse<>(chatMeetTime);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
     // 위도경도 위치 저장
     @PostMapping("/chatLocation")
     public BaseResponse<ChatLocation> postChatLocation(@PathVariable("chatRoom_id")int chatRoom_id, @RequestParam int user,
