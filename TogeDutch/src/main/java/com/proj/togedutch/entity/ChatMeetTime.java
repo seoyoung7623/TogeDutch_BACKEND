@@ -3,7 +3,8 @@ package com.proj.togedutch.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.joda.time.DateTime;
+
+import java.sql.Timestamp;
 
 
 @Getter
