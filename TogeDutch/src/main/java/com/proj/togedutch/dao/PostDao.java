@@ -94,9 +94,9 @@ public class PostDao {
         String getPostQuery;
 
         if(sort.equals("latest"))   // 최신순
-            getPostQuery = "select * from Post order by created_at desc";
+            getPostQuery = "select * from Post where status!=\"모집완료\" and status!=\"시간만료\" order by created_at desc";
         else                        // 주문 임박
-            getPostQuery = "select * from Post where order_time between now() and DATE_ADD(NOW(), INTERVAL 10 MINUTE) order by order_time asc";
+            getPostQuery = "select * from Post where order_time between now() and DATE_ADD(NOW(), INTERVAL 10 MINUTE) and status!=\"모집완료\" and status!=\"시간만료\" order by order_time asc";
 
         return this.jdbcTemplate.query(getPostQuery,
                 (rs, rowNum) -> new Post(
