@@ -60,7 +60,7 @@ public class AdController {
             return new BaseResponse<>(BaseResponseStatus.POST_AD_EMPTY_LOCATION);
         }
         String fileUrl = null;
-        if(!file.isEmpty())
+        if(file!=null && !file.isEmpty())
             fileUrl = url + awsS3Service.uploadAdFile(file, ad, userIdx);
 
         // 카카오 결제 준비 - 결제 요청 service 실행

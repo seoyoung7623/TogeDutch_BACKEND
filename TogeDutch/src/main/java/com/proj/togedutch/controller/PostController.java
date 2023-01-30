@@ -62,7 +62,7 @@ public class PostController {
         String fileUrl = null;
 
         // 파일 없는 경우 오류 처리 다시 하기 (01.24 : 파일 없어도 uploadFile 메소드 실행됨)
-        if(!file.isEmpty())
+        if(file!=null && !file.isEmpty())
             fileUrl = url + awsS3Service.uploadFile(file, post, user);
 
         try {
