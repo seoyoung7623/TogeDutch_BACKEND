@@ -56,7 +56,7 @@ public class UserController {
             return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_PHONE);
         }
         String fileUrl = null;
-        if(!file.isEmpty()) {
+        if(file != null && !file.isEmpty()) {
             fileUrl = url + awsS3Service.uploadUserFile(file);
         }
         try {
