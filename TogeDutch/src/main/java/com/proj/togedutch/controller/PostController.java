@@ -189,7 +189,7 @@ public class PostController {
     }
 
     @ResponseBody
-    @GetMapping("/{postIdx}")
+    @GetMapping("/postId/{postIdx}")
     public BaseResponse <Post> getPostByPostId(@PathVariable("postIdx") int postIdx) throws BaseException {
         try {
             Post getPost = postService.getPostByPostId(postIdx);
