@@ -67,7 +67,9 @@ public class PostController {
 
         try {
             logger.info("fileUrl은 " + fileUrl);
-            Post newPost = postService.createPost(post, user, fileUrl);
+            post.setImage(fileUrl);
+
+            Post newPost = postService.createPost(post, user);
             ChatRoom newChatRoom = chatRoomService.createChatRoom();
             Post modifyPost = postService.insertChatRoom(newPost.getPost_id(), newChatRoom.getChatRoomIdx());
             return new BaseResponse<>(modifyPost);

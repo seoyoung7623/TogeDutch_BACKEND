@@ -30,11 +30,11 @@ public class PostDao {
 
     // 공고 생성 -> 채팅방 생성
     @Transactional(rollbackFor = Exception.class)
-    public int createPost(Post post, int userIdx, String fileUrl) {
+    public int createPost(Post post, int userIdx) {
         String createPostQuery
                 = "insert into Post (title, url, delivery_tips, minimum, order_time, num_of_recruits, User_user_id, image, latitude, longitude, category) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Object[] createPostParams = new Object[]{post.getTitle(), post.getUrl(), post.getDelivery_tips(), post.getMinimum(), post.getOrder_time(), post.getNum_of_recruits(), userIdx, fileUrl, post.getLatitude(), post.getLongitude(), post.getCategory()};
+        Object[] createPostParams = new Object[]{post.getTitle(), post.getUrl(), post.getDelivery_tips(), post.getMinimum(), post.getOrder_time(), post.getNum_of_recruits(), userIdx, post.getImage(), post.getLatitude(), post.getLongitude(), post.getCategory()};
         this.jdbcTemplate.update(createPostQuery, createPostParams);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class); // post_id 반환
