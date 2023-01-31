@@ -78,7 +78,7 @@ public class LikeUsersDao {
                         rs.getString("url"),
                         rs.getInt("delivery_tips"),
                         rs.getInt("minimum"),
-                        rs.getTimestamp("order_time"),
+                        rs.getString("order_time"),
                         rs.getInt("num_of_recruits"),
                         rs.getInt("recruited_num"),
                         rs.getString("status"),
