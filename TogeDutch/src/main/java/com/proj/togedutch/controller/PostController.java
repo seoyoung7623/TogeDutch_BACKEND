@@ -35,8 +35,9 @@ public class PostController {
     private String url;
 
     // 공고 등록
+    @ResponseBody
     @PostMapping("")
-    public BaseResponse<Post> createPost(@RequestPart Post post, @RequestParam int user, @RequestPart(value="file", required = false)  MultipartFile file) throws IOException, NullPointerException{
+    public BaseResponse<Post> createPost(@RequestPart Post post, @RequestParam int user, @RequestPart(value="file",required = false)  MultipartFile file) throws IOException, NullPointerException{
         if (post.getTitle() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_POST_EMPTY_TITLE);
         }
