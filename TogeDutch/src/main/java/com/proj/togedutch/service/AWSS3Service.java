@@ -3,14 +3,10 @@ package com.proj.togedutch.service;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.proj.togedutch.config.BaseResponse;
-import com.proj.togedutch.entity.Advertisement;
-import com.proj.togedutch.entity.ChatPhoto;
 import com.proj.togedutch.entity.Post;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -80,7 +76,7 @@ public class AWSS3Service {
         // S3 이미지 서버에 등록한 파일명을 반환
         return fileName;
     }
-    public String uploadAdFile(MultipartFile file, Advertisement ad, int userIdx) throws IOException {
+    public String uploadAdFile(MultipartFile file) throws IOException {
         String fileName = createFileName(file.getOriginalFilename());
 
         try{

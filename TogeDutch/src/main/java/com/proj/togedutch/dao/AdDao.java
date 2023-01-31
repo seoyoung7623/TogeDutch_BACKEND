@@ -92,4 +92,9 @@ public class AdDao {
                 ));
     }
 
+    public void deleteAd(String tid) {
+        String deleteAdQuery = "delete from Advertisement where tid = ?";
+        Object[] deleteAdParams = new Object[]{tid};
+        this.jdbcTemplate.update(deleteAdQuery, deleteAdParams);
+    }
 }
