@@ -135,6 +135,12 @@ public class ChatMessageDao {
                 ),chatMeetTime_id,chatRoom_id);
     }
 
+    public void putChatMeetTime(int chatRoom_id,int chatMeetTime_id,String time){
+        String updateMeetTimeQuery = "update ChatMeetTime set meetTime=? where chatMeetTime_id = ? and ChatRoom_chatRoom_id = ?";
+        Object[] putMeetTimeParams = new Object[]{time,chatMeetTime_id,chatRoom_id};
+        this.jdbcTemplate.update(updateMeetTimeQuery,putMeetTimeParams);
+    }
+
     public int createChatLocation(int chatRoom_id, int user, BigDecimal latitude, BigDecimal longitude) {
         String createChatLocationQuery = "insert into ChatLocation (ChatRoom_chatRoom_id,User_user_id, latitude, longitude) values (?,?,?,?)";
         Object[] createChatLocationParams = new Object[]{chatRoom_id,user,latitude, longitude};
@@ -157,7 +163,7 @@ public class ChatMessageDao {
 
     public void putChatLocation(int chatRoom_id, int chatLocationIdx, BigDecimal latitude, BigDecimal longitude) {
         String updateCLQuery = "update ChatLocation set latitude=?, longitude=? where chatLocation_id = ? and ChatRoom_chatRoom_id = ?";
-        Object[] putChatLocationParams = new Object[]{chatRoom_id,chatLocationIdx,latitude, longitude};
+        Object[] putChatLocationParams = new Object[]{latitude,longitude,chatLocationIdx,chatRoom_id};
         this.jdbcTemplate.update(updateCLQuery,putChatLocationParams);
     }
 }

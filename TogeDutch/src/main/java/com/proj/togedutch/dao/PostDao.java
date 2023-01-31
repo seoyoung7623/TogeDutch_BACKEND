@@ -30,11 +30,11 @@ public class PostDao {
 
     // 공고 생성 -> 채팅방 생성
     @Transactional(rollbackFor = Exception.class)
-    public int createPost(Post post, int userIdx, String fileUrl) {
+    public int createPost(Post post, int userIdx) {
         String createPostQuery
                 = "insert into Post (title, url, delivery_tips, minimum, order_time, num_of_recruits, User_user_id, image, latitude, longitude, category) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Object[] createPostParams = new Object[]{post.getTitle(), post.getUrl(), post.getDelivery_tips(), post.getMinimum(), post.getOrder_time(), post.getNum_of_recruits(), userIdx, fileUrl, post.getLatitude(), post.getLongitude(), post.getCategory()};
+        Object[] createPostParams = new Object[]{post.getTitle(), post.getUrl(), post.getDelivery_tips(), post.getMinimum(), post.getOrder_time(), post.getNum_of_recruits(), userIdx, post.getImage(), post.getLatitude(), post.getLongitude(), post.getCategory()};
         this.jdbcTemplate.update(createPostQuery, createPostParams);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class); // post_id 반환
@@ -49,7 +49,7 @@ public class PostDao {
                         rs.getString("url"),
                         rs.getInt("delivery_tips"),
                         rs.getInt("minimum"),
-                        rs.getTimestamp("order_time"),
+                        rs.getString("order_time"),
                         rs.getInt("num_of_recruits"),
                         rs.getInt("recruited_num"),
                         rs.getString("status"),
@@ -74,7 +74,7 @@ public class PostDao {
                         rs.getString("url"),
                         rs.getInt("delivery_tips"),
                         rs.getInt("minimum"),
-                        rs.getTimestamp("order_time"),
+                        rs.getString("order_time"),
                         rs.getInt("num_of_recruits"),
                         rs.getInt("recruited_num"),
                         rs.getString("status"),
@@ -94,9 +94,9 @@ public class PostDao {
         String getPostQuery;
 
         if(sort.equals("latest"))   // 최신순
-            getPostQuery = "select * from Post order by created_at desc";
+            getPostQuery = "select * from Post where status!=\"모집완료\" and status!=\"시간만료\" order by created_at desc";
         else                        // 주문 임박
-            getPostQuery = "select * from Post where order_time between now() and DATE_ADD(NOW(), INTERVAL 10 MINUTE) order by order_time asc";
+            getPostQuery = "select * from Post where order_time between now() and DATE_ADD(NOW(), INTERVAL 10 MINUTE) and status!=\"모집완료\" and status!=\"시간만료\" order by order_time asc";
 
         return this.jdbcTemplate.query(getPostQuery,
                 (rs, rowNum) -> new Post(
@@ -105,7 +105,7 @@ public class PostDao {
                         rs.getString("url"),
                         rs.getInt("delivery_tips"),
                         rs.getInt("minimum"),
-                        rs.getTimestamp("order_time"),
+                        rs.getString("order_time"),
                         rs.getInt("num_of_recruits"),
                         rs.getInt("recruited_num"),
                         rs.getString("status"),
@@ -154,7 +154,7 @@ public class PostDao {
                         rs.getString("url"),
                         rs.getInt("delivery_tips"),
                         rs.getInt("minimum"),
-                        rs.getTimestamp("order_time"),
+                        rs.getString("order_time"),
                         rs.getInt("num_of_recruits"),
                         rs.getInt("recruited_num"),
                         rs.getString("status"),
@@ -188,7 +188,7 @@ public class PostDao {
                         rs.getString("url"),
                         rs.getInt("delivery_tips"),
                         rs.getInt("minimum"),
-                        rs.getTimestamp("order_time"),
+                        rs.getString("order_time"),
                         rs.getInt("num_of_recruits"),
                         rs.getInt("recruited_num"),
                         rs.getString("status"),
@@ -213,7 +213,7 @@ public class PostDao {
                         rs.getString("url"),
                         rs.getInt("delivery_tips"),
                         rs.getInt("minimum"),
-                        rs.getTimestamp("order_time"),
+                        rs.getString("order_time"),
                         rs.getInt("num_of_recruits"),
                         rs.getInt("recruited_num"),
                         rs.getString("status"),
@@ -238,7 +238,7 @@ public class PostDao {
                         rs.getString("url"),
                         rs.getInt("delivery_tips"),
                         rs.getInt("minimum"),
-                        rs.getTimestamp("order_time"),
+                        rs.getString("order_time"),
                         rs.getInt("num_of_recruits"),
                         rs.getInt("recruited_num"),
                         rs.getString("status"),

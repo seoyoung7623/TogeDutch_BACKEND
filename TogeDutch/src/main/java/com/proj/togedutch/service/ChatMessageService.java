@@ -150,4 +150,22 @@ public class ChatMessageService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public ChatMeetTime getChatMeetTime(int chatRoomId, int chatMeetTimeId) throws BaseException {
+        try{
+            ChatMeetTime getChatMeetTime = chatMessageDao.getChatMeetTime(chatRoomId, chatMeetTimeId);
+            return getChatMeetTime;
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public ChatMeetTime putChatMeetTime(int chatRoom_id, int chatMeetTime_id, String time) throws BaseException{
+        try {
+            chatMessageDao.putChatMeetTime(chatRoom_id, chatMeetTime_id, time);
+            return getChatMeetTime(chatRoom_id, chatMeetTime_id);
+        }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

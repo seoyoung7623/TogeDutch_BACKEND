@@ -42,7 +42,7 @@ public class UserController {
     //user-1
     @ResponseBody
     @PostMapping("/signup")
-    public BaseResponse<User> createUser(@RequestPart User user, @RequestPart(value="file",required = false)  MultipartFile file) throws IOException {
+    public BaseResponse<User> createUser(@RequestPart User user, @RequestPart(value="file",required = false)  MultipartFile file) throws IOException, NullPointerException {
         if (user.getEmail() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_USERS_EMPTY_EMAIL);
         }
@@ -55,11 +55,11 @@ public class UserController {
         if (!isRegexPhone(user.getPhone())) {
             return new BaseResponse<>(BaseResponseStatus.POST_USERS_INVALID_PHONE);
         }
+        String fileUrl = null;
+        if(file != null && !file.isEmpty()) {
+            fileUrl = url + awsS3Service.uploadUserFile(file);
+        }
         try {
-            String fileUrl = null;
-            if(file != null) {
-                fileUrl = url + awsS3Service.uploadUserFile(file);
-            }
             user.setImage(fileUrl);
             User newUser = userService.createUser(user);
             return new BaseResponse<>(newUser);
