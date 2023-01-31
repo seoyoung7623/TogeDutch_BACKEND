@@ -62,18 +62,21 @@ public class PostController {
         String fileUrl = null;
 
         // 파일 없는 경우 오류 처리 다시 하기 (01.24 : 파일 없어도 uploadFile 메소드 실행됨)
-        if(file!=null && !file.isEmpty())
+        if(file != null && !file.isEmpty())
             fileUrl = url + awsS3Service.uploadFile(file, post, user);
 
         try {
+            logger.info("fileUrl은 " + fileUrl);
             Post newPost = postService.createPost(post, user, fileUrl);
             ChatRoom newChatRoom = chatRoomService.createChatRoom();
             Post modifyPost = postService.insertChatRoom(newPost.getPost_id(), newChatRoom.getChatRoomIdx());
             return new BaseResponse<>(modifyPost);
         } catch (BaseException e) {
+            logger.debug("에러로그 : " + e.getCause());
+            System.out.println("에러로그 : " + e.getCause());
+            e.printStackTrace();
             return new BaseResponse<>(e.getStatus());
         }
-
     }
 
     // 공고 전체 조회
