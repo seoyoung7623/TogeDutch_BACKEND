@@ -54,6 +54,8 @@ public class PostService {
         }
     }
 
+
+
     public Post modifyPost(int postIdx, Post post, int userIdx, String fileUrl) throws BaseException {
         try{
             Post modifyPost = postDao.modifyPost(postIdx, post, userIdx, fileUrl);
@@ -86,6 +88,16 @@ public class PostService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public Post getPostByPostId(int postIdx) throws BaseException {
+        try{
+            Post getPost = postDao.getPostById(postIdx);
+            return getPost;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
     public List<Post> getPostByTitleUserId(String title) throws BaseException {
         try{
             List<Post> TitlePost = postDao.getPostByTitleUserId(title);

@@ -64,6 +64,7 @@ public class PostDao {
                 ), postIdx);
     }
 
+
     // 공고 전체 조회
     public List<Post> getAllPosts(){
         String getPostQuery = "select * from Post where status != \"공고사용불가\" ";
