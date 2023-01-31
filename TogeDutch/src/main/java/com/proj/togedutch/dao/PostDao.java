@@ -66,7 +66,7 @@ public class PostDao {
 
     // 공고 전체 조회
     public List<Post> getAllPosts(){
-        String getPostQuery = "select * from Post";
+        String getPostQuery = "select * from Post where status != \"공고사용불가\" ";
         return this.jdbcTemplate.query(getPostQuery,
                 (rs, rowNum) -> new Post(
                         rs.getInt("post_id"),
@@ -94,9 +94,9 @@ public class PostDao {
         String getPostQuery;
 
         if(sort.equals("latest"))   // 최신순
-            getPostQuery = "select * from Post where status!=\"모집완료\" and status!=\"시간만료\" order by created_at desc";
+            getPostQuery = "select * from Post where status!=\"모집완료\" and status!=\"시간만료\" and status != \"공고사용불가\" order by created_at desc";
         else                        // 주문 임박
-            getPostQuery = "select * from Post where order_time between now() and DATE_ADD(NOW(), INTERVAL 10 MINUTE) and status!=\"모집완료\" and status!=\"시간만료\" order by order_time asc";
+            getPostQuery = "select * from Post where order_time between now() and DATE_ADD(NOW(), INTERVAL 10 MINUTE) and status!=\"모집완료\" and status!=\"시간만료\" and status != \"공고사용불가\" order by order_time asc";
 
         return this.jdbcTemplate.query(getPostQuery,
                 (rs, rowNum) -> new Post(
@@ -229,7 +229,7 @@ public class PostDao {
     }
 
     public List<Post> getPostByTitleUserId(String title) throws BaseException {
-        String getPostQuery = "select * from Post where title = ? ";
+        String getPostQuery = "select * from Post where title = ? and status != \"공고사용불가\" ";
 
         return this.jdbcTemplate.query(getPostQuery,
                 (rs, rowNum) -> new Post(
