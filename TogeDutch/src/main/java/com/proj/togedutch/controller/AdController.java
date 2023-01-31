@@ -61,7 +61,7 @@ public class AdController {
         }
         String fileUrl = null;
         if(file!=null && !file.isEmpty())
-            fileUrl = url + awsS3Service.uploadAdFile(file, ad, userIdx);
+            fileUrl = url + awsS3Service.uploadAdFile(file);
 
         // 카카오 결제 준비 - 결제 요청 service 실행
         KakaoReadyRes kakaoReadyRes = kakaoPayController.kakaoPayReady(ad, userIdx, fileUrl);
