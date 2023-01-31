@@ -17,8 +17,7 @@ public class Post {
     private String url;
     private int delivery_tips;
     private int minimum;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
-    private Timestamp order_time;
+    private String order_time;
     private int num_of_recruits;
     private int recruited_num;
     private String status;
