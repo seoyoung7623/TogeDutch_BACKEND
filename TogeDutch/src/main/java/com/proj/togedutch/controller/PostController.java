@@ -167,11 +167,10 @@ public class PostController {
 
     //공고삭제
     @ResponseBody
-    @DeleteMapping("/{postIdx}/user")
-    public int deletePost(@PathVariable("postIdx") int postIdx,
-                                         @RequestParam int user) throws Exception {
+    @DeleteMapping("/delete/{postIdx}")
+    public int deletePost(@PathVariable("postIdx") int postIdx) throws Exception {
 
-            int deletePost = postService.deletePost(postIdx, user);
+            int deletePost = postService.deletePost(postIdx);
             logger.info("Delete success");
             return deletePost;
 
