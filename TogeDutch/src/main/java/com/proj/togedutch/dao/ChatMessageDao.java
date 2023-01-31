@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -62,6 +63,30 @@ public class ChatMessageDao {
         this.jdbcTemplate.update(sql, createMessageParams);
     }
 
+    public void saveImg(ChatPhoto chatPhoto) {
+        String roomIdName = Integer.toString(chatPhoto.getChatRoom_id());
+        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
+        Object[] createMessageImgParams = new Object[]{roomIdName,chatPhoto.getUser_id(),chatPhoto.getImage()};
+        this.jdbcTemplate.update(sql,createMessageImgParams);
+    }
+
+    public void saveLocation(ChatLocation chatLocation) {
+        String roomIdName = Integer.toString(chatLocation.getChatRoomId());
+        ArrayList<BigDecimal> locationList = new ArrayList<BigDecimal>();
+        locationList.add(chatLocation.getLongitude());
+        locationList.add(chatLocation.getLatitude());
+        String locationLL = locationList.toString();
+        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
+        Object[] createMessageImgParams = new Object[]{roomIdName,chatLocation.getUserId(),locationLL};
+        this.jdbcTemplate.update(sql,createMessageImgParams);
+    }
+
+    public void saveMeetTime(ChatMeetTime chatMeetTime){
+        String roomIdName = Integer.toString(chatMeetTime.getChatRoomId());
+        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
+       // object
+
+    }
     public int deleteChat(int chatRoomIdx) throws BaseException {
         String deleteChatQuery
                 = "delete from Chat where ChatRoom_chatRoom_id = ?";
@@ -166,4 +191,5 @@ public class ChatMessageDao {
         Object[] putChatLocationParams = new Object[]{latitude,longitude,chatLocationIdx,chatRoom_id};
         this.jdbcTemplate.update(updateCLQuery,putChatLocationParams);
     }
+
 }

@@ -3,6 +3,8 @@ package com.proj.togedutch.controller;
 
 import com.proj.togedutch.dao.ChatMessageDao;
 import com.proj.togedutch.dao.ChatRoomDao;
+import com.proj.togedutch.entity.ChatLocation;
+import com.proj.togedutch.entity.ChatMeetTime;
 import com.proj.togedutch.entity.ChatMessage;
 import com.proj.togedutch.entity.ChatPhoto;
 import com.proj.togedutch.service.ChatMessageService;
@@ -31,18 +33,8 @@ public class ChatWebSockController {
         String userName = chatMessageDao.userName(message.getUserId());
         message.setContent(userName + "님이 채팅방에 참여하였습니다.");
 
-        //채팅리스트
-        List<ChatMessage> chatList = chatMessageService.findAllChatByRoomId(roomIdName);
-        if(chatList != null) {
-            for (ChatMessage c : chatList) {
-                message.setWriter(c.getWriter());
-                message.setContent(c.getContent());
-            }
-        }
         simpMessagingTemplate.convertAndSend("/sub/chat/room/"+ roomIdName,message);
 
-        //ChatRoom chatRoom = chatRoomDao.getChatRoomById(message.getChatRoom_id());
-        //ChatMessageSaveDto chatMessageSaveDto = new ChatMessageSaveDto(message.getRoomId(),message.getWriter(),message.getContent());
         chatMessageDao.save(message);
     }
 
@@ -70,6 +62,24 @@ public class ChatWebSockController {
     // 채팅 이미지 전송
     @MessageMapping("/image")
     public void image(ChatPhoto chatPhoto){
+        String roomIdName = Integer.toString(chatPhoto.getChatRoom_id());
+        simpMessagingTemplate.convertAndSend("sub/chat/room/"+roomIdName,chatPhoto);
+        chatMessageDao.saveImg(chatPhoto);
+    }
 
+    // 채팅 위치 전송
+    @MessageMapping("/Location")
+    public void location(ChatLocation location){
+        String roomIdName = Integer.toString(location.getChatRoomId());
+        simpMessagingTemplate.convertAndSend("sub/chat/room/"+roomIdName,location);
+        chatMessageDao.saveLocation(location);
+    }
+
+    //채팅 만남시간 전송
+    @MessageMapping("/MeetTime")
+    public void meetTime(ChatMeetTime meetTime){
+        String roomIdName = Integer.toString(meetTime.getChatRoomId());
+        simpMessagingTemplate.convertAndSend("sub/chat/room/"+roomIdName,meetTime);
+        chatMessageDao.saveMeetTime(meetTime);
     }
 }
