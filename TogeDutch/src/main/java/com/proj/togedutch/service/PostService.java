@@ -62,9 +62,9 @@ public class PostService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-    public int deletePost(int postIdx, int userIdx) throws BaseException {
+    public int deletePost(int postIdx) throws BaseException {
         try{
-            int deletePost = postDao.deletePost(postIdx, userIdx);
+            int deletePost = postDao.deletePost(postIdx);
             return deletePost;
         } catch(Exception e){
             throw new BaseException(DATABASE_ERROR);

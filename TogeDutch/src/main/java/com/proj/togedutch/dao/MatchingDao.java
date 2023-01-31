@@ -229,10 +229,13 @@ public class MatchingDao {
                         rs.getString("category")
 
                 ), postIdx);
+
         String getAcceptQuery = "Insert into Application (status, Post_post_id ,Post_User_user_id ,ChatRoom_chatRoom_id ,User_user_id) values (?,?,?,?,?)";
         Object[] getAcceptParams = new Object[]{"매칭 성공", postIdx, post.getUser_id(),
                 post.getChatRoom_id(), userIdx};
-        return this.jdbcTemplate.update(getAcceptQuery, getAcceptParams);
+        this.jdbcTemplate.update(getAcceptQuery, getAcceptParams);
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
 
     //DB에 저장할 거 없이 그냥 매칭 실패 보여주기

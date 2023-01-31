@@ -170,11 +170,11 @@ public class PostDao {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public int deletePost(int postIdx, int userIdx) {
+    public int deletePost(int postIdx) {
         String deletePostQuery
-                = "delete from Post WHERE post_id = ? and User_user_id = ?";
-        Object[] deletePostParams = new Object[]{postIdx,userIdx};
-        return this.jdbcTemplate.update(deletePostQuery, deletePostParams);
+                = "UPDATE Post SET status = \"공고사용불가\" WHERE post_id = ?";
+        //Object[] deletePostParams = new Object[]{postIdx};
+        return this.jdbcTemplate.update(deletePostQuery, postIdx);
 
     }
 
