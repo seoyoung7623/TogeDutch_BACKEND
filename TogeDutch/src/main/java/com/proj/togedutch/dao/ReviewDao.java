@@ -1,5 +1,6 @@
 package com.proj.togedutch.dao;
 
+import com.proj.togedutch.entity.Application;
 import com.proj.togedutch.entity.Keyword;
 import com.proj.togedutch.entity.Review;
 import com.proj.togedutch.entity.User;
@@ -21,9 +22,23 @@ public class ReviewDao {
 
     @Transactional(rollbackFor = Exception.class)
     public int createReview(int applicationId, Review review) {
-        String InsertReviewQuery = "insert into Review (emotion_status, content, Application_application_Id, Apllication_Post_post_id, Application_Post_User_user_id) " +
+        String getApplicationQuery = "select * from Application where application_id = ?";
+        int getApplicationParams = applicationId;
+        Application application = this.jdbcTemplate.queryForObject(getApplicationQuery,
+                (rs, rowNum) -> new Application(
+                        rs.getInt("application_id"),
+                        rs.getString("status"),
+                        rs.getInt("Post_post_id"),
+                        rs.getInt("User_user_id"),
+                        rs.getInt("ChatRoom_chatRoom_id")),
+                getApplicationParams
+        );
+
+        String InsertReviewQuery = "insert into Review (emotion_status, content, Application_application_Id, Application_Post_post_id, Application_Post_User_user_id) " +
                 "VALUES (?, ?, ?, ?, ?)";
-        Object[] createReviewParams = new Object[]{review.getEmotionStatus(), review.getContent(), applicationId, review.getPostId(), review.getUserId()};
+
+
+        Object[] createReviewParams = new Object[]{review.getEmotionStatus(), review.getContent(), applicationId, application.getPost_id(), application.getUser_id()};
         return this.jdbcTemplate.update(InsertReviewQuery, createReviewParams);
 
     }
