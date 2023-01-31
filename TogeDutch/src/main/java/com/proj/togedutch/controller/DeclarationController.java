@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/declaration")
+@RequestMapping("/chatRoom")
 public class DeclarationController {
     @Autowired
     DeclarationService declarationService;
 
     // 신고 생성 (채팅방 안)
     @ResponseBody
-    @PostMapping(value = "/{chatRoomIdx}")
+    @PostMapping(value = "/{chatRoomIdx}/declaration")
     public BaseResponse<Declaration> createDeclaration(@PathVariable("chatRoomIdx") int chatRoomIdx, @RequestBody Declaration declaration) {
         try {
             Declaration de = declarationService.createDeclaration(declaration, chatRoomIdx);
@@ -28,7 +28,7 @@ public class DeclarationController {
     }
 
     // 신고 전체 조회
-    @GetMapping("")
+    @GetMapping("/declaration")
     public BaseResponse<List<Declaration>> getAllDeclarations() throws BaseException {
         try{
             List<Declaration> declarations = declarationService.getAllDeclarations();
@@ -38,10 +38,10 @@ public class DeclarationController {
         }
     }
 
-    @GetMapping("/")
-    public BaseResponse<List<Declaration>> getDeclarationByChatRoomId(@RequestParam int chatRoom_id) throws BaseException {
+    @GetMapping("/{chatRoomIdx}/declaration")
+    public BaseResponse<List<Declaration>> getDeclarationByChatRoomId(@PathVariable("chatRoomIdx") int chatRoomIdx) throws BaseException {
         try{
-            List<Declaration> declarations = declarationService.getDeclarationByChatRoomId(chatRoom_id);
+            List<Declaration> declarations = declarationService.getDeclarationByChatRoomId(chatRoomIdx);
             return new BaseResponse<>(declarations);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());

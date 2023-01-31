@@ -34,7 +34,7 @@ public class ReviewController {
     private String url;
 
     @ResponseBody
-    @PostMapping("/application/{applicationId}")
+    @PostMapping("/{applicationId}")
     public BaseResponse<Integer> createReview(@RequestPart Review review, @PathVariable("applicationId") int applicationId) {
         try {
             int createReview = reviewService.createReview(applicationId,review);

@@ -44,7 +44,7 @@ public class LikeUsersDao {
     }
 
     public LikeUsers getLikePostById(int likeIdx){
-        String getLikePostQuery = "select * from LikeUsers where like_id = ?";
+        String getLikePostQuery = "select * from LikeUsers where like_id = ? and status != \"공고사용불가\" ";
         return this.jdbcTemplate.queryForObject(getLikePostQuery,
                 (rs, rowNum) -> new LikeUsers(
                         rs.getInt("like_id"),
@@ -68,7 +68,7 @@ public class LikeUsersDao {
 
     // userIdx가 누른 관심 목록 리스트로 반환
     public List<Post> getLikePosts(int userIdx) throws BaseException {
-        String getLikePostsQuery = "select * from Post where post_id IN (select Post_post_id from LikeUsers where User_user_id = ?)";
+        String getLikePostsQuery = "select * from Post where post_id IN (select Post_post_id from LikeUsers where User_user_id = ? and status != \"공고사용불가\" )";
 
         // LikeUsers의 userIdx와 같은 user_id를 가진 놈의 post_id를 가진 Post를 List를 반환
         return this.jdbcTemplate.query(getLikePostsQuery,
@@ -78,7 +78,7 @@ public class LikeUsersDao {
                         rs.getString("url"),
                         rs.getInt("delivery_tips"),
                         rs.getInt("minimum"),
-                        rs.getTimestamp("order_time"),
+                        rs.getString("order_time"),
                         rs.getInt("num_of_recruits"),
                         rs.getInt("recruited_num"),
                         rs.getString("status"),
