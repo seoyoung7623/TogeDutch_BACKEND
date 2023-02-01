@@ -94,6 +94,7 @@ public class PostDao {
     public List<Post> getSortingPosts(String sort){
         String getPostQuery;
 
+        this.jdbcTemplate.update("set time_zone = 'Asia/Seoul'");
         if(sort.equals("latest"))   // 최신순
             getPostQuery = "select * from Post where status!=\"모집완료\" and status!=\"시간만료\" and status != \"공고사용불가\" order by created_at desc";
         else                        // 주문 임박
