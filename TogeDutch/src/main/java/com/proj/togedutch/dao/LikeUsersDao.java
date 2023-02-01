@@ -3,6 +3,8 @@ package com.proj.togedutch.dao;
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.entity.LikeUsers;
 import com.proj.togedutch.entity.Post;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -18,6 +20,8 @@ import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
 
 @Repository
 public class LikeUsersDao {
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
+
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -40,11 +44,12 @@ public class LikeUsersDao {
         Object[] createLikePostParams = new Object[]{postIdx, Uploader_userIdx, userIdx};
         this.jdbcTemplate.update(createLikePostQuery, createLikePostParams);
         String lastInsertIdQuery = "select last_insert_id()";
+
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
 
     public LikeUsers getLikePostById(int likeIdx){
-        String getLikePostQuery = "select * from LikeUsers where like_id = ? and status != \"공고사용불가\" ";
+        String getLikePostQuery = "select * from LikeUsers where like_id = ?";
         return this.jdbcTemplate.queryForObject(getLikePostQuery,
                 (rs, rowNum) -> new LikeUsers(
                         rs.getInt("like_id"),
