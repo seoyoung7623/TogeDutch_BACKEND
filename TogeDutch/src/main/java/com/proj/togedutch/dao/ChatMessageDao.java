@@ -54,39 +54,13 @@ public class ChatMessageDao {
         return this.jdbcTemplate.queryForObject(sql,String.class,userId); //String.class
     }
 
-    public void save(ChatMessage message){
-        Date currentTime = new Date();
+    public void saveMessage(ChatMessage message){
         String roomIdName = Integer.toString(message.getChatRoom_id());
-        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `created_at`, `content`) VALUES (?,?,?,?)";
-        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentTime);
-        Object[] createMessageParams = new Object[]{roomIdName,message.getWriter(),datetime,message.getContent()};
+        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
+        Object[] createMessageParams = new Object[]{message.getChatRoom_id(),message.getUserId(),message.getContent()};
         this.jdbcTemplate.update(sql, createMessageParams);
     }
 
-    public void saveImg(ChatPhoto chatPhoto) {
-        String roomIdName = Integer.toString(chatPhoto.getChatRoom_id());
-        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
-        Object[] createMessageImgParams = new Object[]{roomIdName,chatPhoto.getUser_id(),chatPhoto.getImage()};
-        this.jdbcTemplate.update(sql,createMessageImgParams);
-    }
-
-    public void saveLocation(ChatLocation chatLocation) {
-        String roomIdName = Integer.toString(chatLocation.getChatRoomId());
-        ArrayList<BigDecimal> locationList = new ArrayList<BigDecimal>();
-        locationList.add(chatLocation.getLongitude());
-        locationList.add(chatLocation.getLatitude());
-        String locationLL = locationList.toString();
-        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
-        Object[] createMessageImgParams = new Object[]{roomIdName,chatLocation.getUserId(),locationLL};
-        this.jdbcTemplate.update(sql,createMessageImgParams);
-    }
-
-    public void saveMeetTime(ChatMeetTime chatMeetTime){
-        String roomIdName = Integer.toString(chatMeetTime.getChatRoomId());
-        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
-       // object
-
-    }
     public int deleteChat(int chatRoomIdx) throws BaseException {
         String deleteChatQuery
                 = "delete from Chat where ChatRoom_chatRoom_id = ?";
@@ -110,11 +84,6 @@ public class ChatMessageDao {
                 rs.getString("content"),
                 rs.getString("name")
         ),chatRoom_id);
-    }
-
-    public String getImageUrl(int chatPhotoId){
-        String getImageUrlQuery = "select image from ChatPhoto where chatPhoto_id = ?";
-        return this.jdbcTemplate.queryForObject(getImageUrlQuery, String.class, chatPhotoId);
     }
 
     public ChatPhoto getChatPhoto(int chatRoomId,int chatPhotoId){
