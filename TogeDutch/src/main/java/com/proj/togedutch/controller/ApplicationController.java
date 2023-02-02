@@ -30,7 +30,7 @@ public class ApplicationController {
     PostService postService;
 
     // 공고 신청
-    @ResponseBody
+   /* @ResponseBody
     @PostMapping("/post/{postIdx}/application")
     public BaseResponse<Application> applyPost(@PathVariable("postIdx") int postIdx){
         try{
@@ -40,7 +40,7 @@ public class ApplicationController {
             e.printStackTrace();
             return new BaseResponse<>(e.getStatus());
         }
-    }
+    }*/
 
 
     //신청 수락

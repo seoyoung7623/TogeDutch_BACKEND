@@ -29,14 +29,14 @@ public class ApplicationDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    //공고 신청
+   /* //공고 신청
     public int applyPost(Application application,int userIdx){
         String createApplicationQuery="insert into Application(status,Post_post_id,User_user_id,ChatRoom_chatRoom_id,Post_User_user_id) VALUES(?,?,?,?,?)";
         Object[] createApplicationParams = new Object[]{ application.getStatus(), application.getPost_id(), application.getUser_id(), application.getChatRoom_id(),userIdx};
         this.jdbcTemplate.update(createApplicationQuery, createApplicationParams);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
-    }
+    }*/
 
     //신청 수락
     @Transactional(rollbackFor=Exception.class)
