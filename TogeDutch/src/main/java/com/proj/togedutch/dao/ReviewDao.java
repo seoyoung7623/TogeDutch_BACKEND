@@ -49,8 +49,8 @@ public class ReviewDao {
         return this.jdbcTemplate.update(InsertReviewQuery, createReviewParams);
 
     }
-    public List<Review> getTextReview(int reviewId, int postId) {
-        String getTextReviewQuery = "select * from Review where review_id = ? and Application_Post_post_id = ? ";
+    public List<Review> getTextReview(int postId) {
+        String getTextReviewQuery = "select * from Review where Application_Post_post_id = ? ";
         return this.jdbcTemplate.query(getTextReviewQuery,
                 (rs, rowNum) -> new Review(
                         rs.getInt("review_id"),
@@ -60,7 +60,7 @@ public class ReviewDao {
                         rs.getInt("Application_application_id"),
                         rs.getInt("Application_Post_post_id"),
                         rs.getInt("Application_Post_User_user_id")),
-                reviewId, postId);
+                postId);
     }
 
 }
