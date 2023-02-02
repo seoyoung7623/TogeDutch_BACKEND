@@ -4,6 +4,8 @@ import com.proj.togedutch.entity.Application;
 import com.proj.togedutch.entity.Keyword;
 import com.proj.togedutch.entity.Review;
 import com.proj.togedutch.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -13,6 +15,7 @@ import javax.sql.DataSource;
 import java.util.List;
 @Repository
 public class ReviewDao {
+    final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private JdbcTemplate jdbcTemplate;
     @Autowired
@@ -22,6 +25,7 @@ public class ReviewDao {
 
     @Transactional(rollbackFor = Exception.class)
     public int createReview(int applicationId, Review review) {
+
         String getApplicationQuery = "select * from Application where application_id = ?";
         int getApplicationParams = applicationId;
         Application application = this.jdbcTemplate.queryForObject(getApplicationQuery,
@@ -34,9 +38,12 @@ public class ReviewDao {
                 getApplicationParams
         );
 
-        String InsertReviewQuery = "insert into Review (emotion_status, content, Application_application_Id, Application_Post_post_id, Application_Post_User_user_id) " +
-                "VALUES (?, ?, ?, ?, ?)";
+        logger.info(String.valueOf(application.getStatus()));
+        System.out.println(application.getUser_id());
 
+        String InsertReviewQuery = "insert into Review (emotion_status, content, Application_application_Id, Application_Post_post_id, Application_Post_User_user_id) VALUES (?, ?, ?, ?, ?) ";
+        System.out.println(review.getEmotionStatus());
+        System.out.println(review.getContent());
 
         Object[] createReviewParams = new Object[]{review.getEmotionStatus(), review.getContent(), applicationId, application.getPost_id(), application.getUser_id()};
         return this.jdbcTemplate.update(InsertReviewQuery, createReviewParams);
