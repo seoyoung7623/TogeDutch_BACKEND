@@ -54,4 +54,13 @@ public class LikeUsersService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    public int duplicateLikePost(int userIdx, int postIdx, int Uploader_userIdx) throws BaseException {
+        try{
+            int result = likeUsersDao.duplicateLikePost(userIdx, postIdx, Uploader_userIdx);
+            return result;
+        } catch (Exception e) {
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 }

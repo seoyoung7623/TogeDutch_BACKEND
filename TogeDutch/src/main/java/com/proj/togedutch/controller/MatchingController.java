@@ -42,6 +42,7 @@ public class MatchingController {
     @ResponseBody
     @GetMapping("/rematching/{postIdx}")
     public BaseResponse<User> getReMatching(@PathVariable("postIdx") int postIdx) throws BaseException {
+
         try {
             User getMatching = matchingService.getReMatching(postIdx);
             return new BaseResponse<>(getMatching);

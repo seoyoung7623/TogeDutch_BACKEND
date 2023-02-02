@@ -35,21 +35,19 @@ public class ReviewController {
 
     @ResponseBody
     @PostMapping("/{applicationId}")
-    public BaseResponse<Integer> createReview(@RequestPart Review review, @PathVariable("applicationId") int applicationId) {
-        try {
-            int createReview = reviewService.createReview(applicationId,review);
-            return new BaseResponse<>(createReview);
-        } catch (BaseException e) {
-            return new BaseResponse<>(e.getStatus());
-        }
+    public int createReview(@RequestPart Review review, @PathVariable("applicationId") int applicationId) throws BaseException {
+
+
+            return reviewService.createReview(applicationId,review);
+
     }
 
 
     @ResponseBody
     @GetMapping("/{postId}/{reviewId}")
-    public BaseResponse<List<Review>> getTextReview(@PathVariable("postId") int postId, @PathVariable("reviewId") int reviewId) {
+    public BaseResponse<List<Review>> getTextReview(@PathVariable("postId") int postId) {
         try {
-            List<Review> getTextReview = reviewService.getTextReview(reviewId,postId);
+            List<Review> getTextReview = reviewService.getTextReview(postId);
             return new BaseResponse<>(getTextReview);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());

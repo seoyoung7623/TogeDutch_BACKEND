@@ -34,6 +34,7 @@ public class AdService {
             int adIdx = adDao.createAd(ad, userIdx, fileUrl, tid);
             return adDao.getAdById(adIdx);
         }catch (Exception e) {
+            log.info(e.toString());
             throw new BaseException(DATABASE_ERROR);
         }
     }
@@ -61,6 +62,14 @@ public class AdService {
             Advertisement getAd = adDao.getAdById(adIdx);
             return getAd;
         }catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+    public void deleteAd(String tid) throws BaseException {
+        try {
+            adDao.deleteAd(tid);
+        } catch (Exception e){
             throw new BaseException(DATABASE_ERROR);
         }
     }

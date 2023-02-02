@@ -70,6 +70,11 @@ public class KakaoPayController {
     @PostMapping("/refund")
     public ResponseEntity kakaoPayRefund(@RequestParam("tid") String tid){
         KakaoCancelRes kakaoCancelRes = kakaoPayService.payCancel(tid);
+        try {
+            adService.deleteAd(tid);
+        } catch (BaseException e) {
+            return new ResponseEntity<>(e.getStatus(), HttpStatus.BAD_GATEWAY);
+        }
         return new ResponseEntity<>(kakaoCancelRes, HttpStatus.OK);
     }
 }
