@@ -29,9 +29,9 @@ public class ReviewService {
 
     }
     //키워드 조회(키워드 id)
-    public List<Review> getTextReview(int reviewId, int postId) throws BaseException{
+    public List<Review> getTextReview(int postId) throws BaseException{
         try {
-            return reviewDao.getTextReview(reviewId,postId);
+            return reviewDao.getTextReview(postId);
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
