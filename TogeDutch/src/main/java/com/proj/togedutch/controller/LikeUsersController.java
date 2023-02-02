@@ -2,9 +2,11 @@ package com.proj.togedutch.controller;
 
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.config.BaseResponse;
+import com.proj.togedutch.config.BaseResponseStatus;
 import com.proj.togedutch.entity.LikeUsers;
 import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.service.LikeUsersService;
+import com.proj.togedutch.service.PostService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,8 @@ public class LikeUsersController {
 
     @Autowired
     LikeUsersService likeUsersService;
+    @Autowired
+    PostService postService;
 
     // 공고 관심목록에 등록
     // Post_User_userIdx : 공고 업로드 한 유저의 user_id
@@ -26,6 +30,14 @@ public class LikeUsersController {
     @PostMapping("/{postIdx}")
     public BaseResponse<LikeUsers> createLikePost(@PathVariable("userIdx") int userIdx, @PathVariable("postIdx") int postIdx) throws BaseException {
         try {
+            Post post = postService.getPostById(postIdx);
+            if(userIdx == post.getUser_id())
+                return new BaseResponse<>(BaseResponseStatus.LIKEPOST_IMPOSSIBLE);
+
+            int result = likeUsersService.duplicateLikePost(userIdx, postIdx, post.getUser_id());
+            if(result == 1)         // 중복
+                return new BaseResponse<>(BaseResponseStatus.DUPLICATE_LIKEPOST);
+
             LikeUsers likePost = likeUsersService.createLikePost(userIdx, postIdx);
             return new BaseResponse<>(likePost);
         } catch (BaseException e) {

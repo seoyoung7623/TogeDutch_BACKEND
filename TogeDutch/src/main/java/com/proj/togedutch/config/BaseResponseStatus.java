@@ -55,6 +55,10 @@ public enum BaseResponseStatus {
     POST_NOTICE_EMPTY_TITLE(false, 2031, "공지 제목을 설정해주세요."),
     POST_NOTICE_EMPTY_CONTENT(false, 2032, "공지 내용을 설정해주세요."),
 
+    // [POST] /user/{userIdx}/likePost
+    LIKEPOST_IMPOSSIBLE(false, 2033, "본인의 공고는 관심 목록에 담을 수 없습니다."),
+    DUPLICATE_LIKEPOST(false, 2034, "이미 관심목록에 담은 공고입니다."),
+
     /**
      * 3000 : Response 오류
      */

@@ -97,4 +97,25 @@ public class LikeUsersDao {
                         rs.getString("category")
                 ), userIdx);
     }
+
+    // LikeUsers 테이블에 같은 레코드 있는지 검사하는 함수
+    // 같은 값 있으면 1 반환
+    public int duplicateLikePost(int userIdx, int postIdx, int Uploader_userIdx) throws BaseException {
+        String duplicatePostQuery = "select * from LikeUsers where Post_post_id=? and Post_User_user_id=? and User_user_id=?";
+
+        LikeUsers likeUsers = this.jdbcTemplate.queryForObject(duplicatePostQuery,
+                (rs, rowNum) -> new LikeUsers(
+                        rs.getInt("like_id"),
+                        rs.getInt("Post_post_id"),
+                        rs.getInt("Post_User_user_id"),
+                        rs.getInt("User_user_id")
+                ), postIdx, Uploader_userIdx, userIdx);
+
+        if(likeUsers != null)
+            return 1;
+        else if(likeUsers == null)
+            return 0;
+        else
+            throw new BaseException(DATABASE_ERROR);
+    }
 }
