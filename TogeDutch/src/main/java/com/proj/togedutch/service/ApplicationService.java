@@ -30,12 +30,13 @@ public class ApplicationService {
     PostDao postdao;
 
     //공고 신청
-    public Application applyPost(int postIdx, Application application) throws BaseException {
+    public Application applyPost(int postIdx) throws BaseException {
         try {
-            application.setPost_id(postIdx); // entity에있는 setter사용
+            //application.setPost_id(postIdx); // entity에있는 setter사용
             int userIdx = jwtService.getUserIdx();
-            application.setUser_id(userIdx);
+            //application.setUser_id(userIdx);
             Post newpost=postdao.getPostById(application.getPost_id());
+            int chatroomIdx=newpost.getChatRoom_id();
             application.setStatus("수락대기");
             int applicationIdx = applicationDao.applyPost(application,newpost.getUser_id());
 
@@ -113,6 +114,7 @@ public class ApplicationService {
     public Post modifyPostStatusById(int postIdx) throws BaseException{
         try{
             Post modifyPostStatusById = applicationDao.modifyPostStatusById(postIdx);
+            System.out.println("postidx값"+postIdx);
             return modifyPostStatusById;
         } catch(Exception e){
             throw new BaseException(DATABASE_ERROR);

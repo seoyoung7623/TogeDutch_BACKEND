@@ -32,9 +32,9 @@ public class ApplicationController {
     // 공고 신청
     @ResponseBody
     @PostMapping("/post/{postIdx}/application")
-    public BaseResponse<Application> applyPost(@PathVariable("postIdx") int postIdx,@RequestBody Application application){
+    public BaseResponse<Application> applyPost(@PathVariable("postIdx") int postIdx){
         try{
-            Application newApplication=applicationService.applyPost(postIdx, application);
+            Application newApplication=applicationService.applyPost(postIdx);
             return new BaseResponse<>(newApplication);
         }catch(BaseException e){
             e.printStackTrace();

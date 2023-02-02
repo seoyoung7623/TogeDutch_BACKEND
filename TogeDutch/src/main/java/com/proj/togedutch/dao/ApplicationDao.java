@@ -123,7 +123,6 @@ public class ApplicationDao {
     @Transactional(rollbackFor = Exception.class)
     public Post modifyPostStatusById(int postIdx) throws BaseException {
 
-
         String modifyPostQuery = "update Post \n" + "set status = \"모집완료\"\n" + "where num_of_recruits = recruited_num and post_id=?";
 
         Object[] modifyPostParams = new Object[]{postIdx};
