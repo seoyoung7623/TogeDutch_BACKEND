@@ -24,9 +24,9 @@ public class AdDao {
     @Transactional(rollbackFor = Exception.class)
     public int createAd(Advertisement ad, int userIdx, String fileUrl, String tid) {
         String createAdQuery
-                = "insert into Advertisement (store, information, main_menu, delivery_tips, location, request, User_user_id, image, tid) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        Object[] createAdParams = new Object[]{ad.getStore(), ad.getInformation(), ad.getMainMenu(), ad.getDeliveryTips(), ad.getLocation(), ad.getRequest(), userIdx, fileUrl, tid};
+                = "insert into Advertisement (store, information, main_menu, delivery_tips, latitude, longitude, request, User_user_id, image, tid) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        Object[] createAdParams = new Object[]{ad.getStore(), ad.getInformation(), ad.getMainMenu(), ad.getDeliveryTips(), ad.getLatitude(), ad.getLongitude(), ad.getRequest(), userIdx, fileUrl, tid};
         this.jdbcTemplate.update(createAdQuery, createAdParams);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class); // post_id 반환
@@ -41,7 +41,8 @@ public class AdDao {
                         rs.getString("information"),
                         rs.getString("main_menu"),
                         rs.getInt("delivery_tips"),
-                        rs.getString("location"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude"),
                         rs.getString("request"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
@@ -61,7 +62,8 @@ public class AdDao {
                         rs.getString("information"),
                         rs.getString("main_menu"),
                         rs.getInt("delivery_tips"),
-                        rs.getString("location"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude"),
                         rs.getString("request"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
@@ -81,7 +83,8 @@ public class AdDao {
                         rs.getString("information"),
                         rs.getString("main_menu"),
                         rs.getInt("delivery_tips"),
-                        rs.getString("location"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude"),
                         rs.getString("request"),
                         rs.getTimestamp("created_at"),
                         rs.getTimestamp("updated_at"),
