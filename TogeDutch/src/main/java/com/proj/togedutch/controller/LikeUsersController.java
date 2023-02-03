@@ -36,7 +36,7 @@ public class LikeUsersController {
 
             int result = likeUsersService.duplicateLikePost(userIdx, postIdx, post.getUser_id());
             if(result == 1)         // 중복
-                return new BaseResponse<>(BaseResponseStatus.DUPLICATE_LIKEPOST);
+                return new BaseResponse<>(BaseResponseStatus.DUPLICATED_LIKEPOST);
 
             LikeUsers likePost = likeUsersService.createLikePost(userIdx, postIdx);
             return new BaseResponse<>(likePost);
