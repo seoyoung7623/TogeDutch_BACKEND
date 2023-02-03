@@ -62,6 +62,7 @@ public enum BaseResponseStatus {
     // [POST] /post/:postIdx/application
     POST_UPLOAD_MINE(false, 2035, "내가 업로드한 공고입니다."),
     DUPLICATED_APPLICATION(false, 2036, "이미 신청한 공고입니다."),
+    APPLICATION_IMPOSSIBLE(false, 2037, "신청 불가능한 공고입니다."),
 
     /**
      * 3000 : Response 오류

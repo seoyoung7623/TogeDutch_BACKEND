@@ -35,6 +35,12 @@ public class ApplicationController {
     @PostMapping("/post/{postIdx}/application")
     public BaseResponse<Application> applyPost(@PathVariable("postIdx") int postIdx) throws IOException, BaseException {
         try{
+            Post getPost = postService.getPostById(postIdx);
+
+            String status = getPost.getStatus();
+            if(status.equals("모집완료") || status.equals("공고사용불가"))
+                return new BaseResponse<>(BaseResponseStatus.APPLICATION_IMPOSSIBLE);
+
             Application newApplication = applicationService.applyPost(postIdx);
             return new BaseResponse<>(newApplication);
         } catch (BaseException e) {
