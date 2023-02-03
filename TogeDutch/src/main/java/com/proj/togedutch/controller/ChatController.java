@@ -28,7 +28,7 @@ public class ChatController {
     private String url;
 
     //채팅내용 가져오기
-    @GetMapping("/chat")
+    @GetMapping("/conversation")
     public BaseResponse<List<ChatMessage>> getChatMessages(@PathVariable("chatRoom_id") int chatRoomId) throws BaseException {
         try{
             List<ChatMessage> chatMessages = chatService.getChatMessages(chatRoomId);
@@ -62,6 +62,17 @@ public class ChatController {
         }
     }
 
+    // 채팅 이미지 내역 전체조회
+    @GetMapping("/chatPhotos")
+    public BaseResponse<List<ChatPhoto>> GetChatPhotos(@PathVariable("chatRoom_id") int chatRoomId) throws BaseException {
+        try{
+            List<ChatPhoto> getChatPhotos = chatService.getChatPhotos(chatRoomId);
+            return  new BaseResponse<>(getChatPhotos);
+        } catch (BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
     //만남시간 설정
     @PostMapping("/chatMeetTime")
     public BaseResponse<ChatMeetTime> postChatMeetTime(@PathVariable("chatRoom_id") int chatRoomId, @RequestParam int user, @RequestParam String time) throws BaseException{
@@ -73,6 +84,7 @@ public class ChatController {
         }
     }
 
+    // 만남시간 조회
     @GetMapping("/chatMeetTime/{chatMeetTime_id}")
     public BaseResponse<ChatMeetTime> getChatMeetTime(@PathVariable("chatRoom_id") int chatRoomId,@PathVariable("chatMeetTime_id") int chatMeetTimeId) throws BaseException{
         try{
@@ -82,6 +94,10 @@ public class ChatController {
             return new BaseResponse<>(e.getStatus());
         }
     }
+
+//    // 만남시간 전체조회
+//    @GetMapping("/chatMeetTimes")
+//    public BaseResponse<ChatMeetTime> getChatMeetTime(@PathVariable("chatRoom_id") int chatRoomId)
 
     @PutMapping("/chatMeetTime/{chatMeetTime_id}")
     public BaseResponse<ChatMeetTime> putChatMeetTime(@PathVariable("chatRoom_id") int chatRoom_id,@PathVariable("chatMeetTime_id") int chatMeetTime_id,@RequestParam String time) throws BaseException{

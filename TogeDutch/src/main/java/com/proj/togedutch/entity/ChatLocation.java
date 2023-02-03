@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -15,4 +16,5 @@ public class ChatLocation {
     private int userId;
     private BigDecimal latitude;
     private BigDecimal longitude;
+    private Timestamp createdAt;
 }

@@ -98,13 +98,22 @@ public class ChatMessageDao {
                 ),chatPhotoId,chatRoomId);
     }
 
+    public List<ChatPhoto> getChatPhotos (int chatRoomId) {
+        String sql = "select * from ChatPhoto where chatPhoto_id = ?";
+        return this.jdbcTemplate.query(sql,(rs,row) -> new ChatPhoto(
+                rs.getInt("chatPhoto_id"),
+                rs.getTimestamp("created_at"),
+                rs.getInt("ChatRoom_chatRoom_id"),
+                rs.getInt("User_user_id"),
+                rs.getString("image")
+        ),chatRoomId);
+    }
+
 
     public int createChatPhoto(int chatRoomId,int userId,String file) {
-        Date currentTime = new Date();
-        String ChatPhotoQuery = "insert into ChatPhoto (ChatRoom_chatRoom_id,User_user_id,image,created_at) Values (?,?,?,?)";
+        String ChatPhotoQuery = "insert into ChatPhoto (ChatRoom_chatRoom_id,User_user_id,image,created_at) Values (?,?,?)";
 
-        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentTime);
-        Object[] createChatPhoto = new Object[]{chatRoomId,userId,file,datetime};
+        Object[] createChatPhoto = new Object[]{chatRoomId,userId,file};
         this.jdbcTemplate.update(ChatPhotoQuery, createChatPhoto);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
@@ -125,7 +134,8 @@ public class ChatMessageDao {
                         rs.getInt("chatMeetTime_id"),
                         rs.getInt("ChatRoom_chatRoom_id"),
                         rs.getInt("User_user_id"),
-                        rs.getString("meetTime")
+                        rs.getString("meetTime"),
+                        rs.getTimestamp("created_at")
                 ),chatMeetTime_id,chatRoom_id);
     }
 
@@ -151,7 +161,8 @@ public class ChatMessageDao {
                         rs.getInt("ChatRoom_chatRoom_id"),
                         rs.getInt("User_user_id"),
                         rs.getBigDecimal("latitude"),
-                        rs.getBigDecimal("longitude")
+                        rs.getBigDecimal("longitude"),
+                        rs.getTimestamp("created_at")
                 ),chatLocationIdx, chatRoom_id);
     }
 
