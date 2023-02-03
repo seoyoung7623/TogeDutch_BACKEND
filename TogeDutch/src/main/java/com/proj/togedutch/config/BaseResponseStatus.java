@@ -43,7 +43,7 @@ public enum BaseResponseStatus {
     POST_POST_EMPTY_RECRUIT(false, 2023, "모집 인원을 선택해주세요."),
     POST_POST_EMPTY_LOCATION(false, 2024, "약속 장소를 설정해주세요."),
     POST_POST_EMPTY_CATEGORY(false, 2025, "카테고리를 설정해주세요."),
-    
+
     // [POST] /Advertisement
     POST_AD_EMPTY_STORE(false, 2026, "가게 이름을 입력해주세요."),
     POST_AD_EMPTY_INFORMATION(false, 2027, "가게 정보를 입력해주세요."),
@@ -77,6 +77,9 @@ public enum BaseResponseStatus {
     // Post
     DELETE_POST_FAIL(false, 5000, "삭제에 실패했습니다."),
     NUM_Of_RECRUITS_EMPTY(false, 5001, "모집된 인원이 없습니다."),
+
+    //Application
+    NOT_FULL_NUM_OF_RECRUITS(false, 3020, "모집인원이 채워지지 않았습니다."),
 
 
     /**
