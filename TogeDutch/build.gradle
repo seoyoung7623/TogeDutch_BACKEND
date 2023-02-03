@@ -29,7 +29,8 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     annotationProcessor 'org.projectlombok:lombok'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-' +
+            'starter-test'
     implementation 'mysql:mysql-connector-java:8.0.30'
     //implementation('org.springframework.boot:spring-boot-starter-security')
     compileOnly(group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1')

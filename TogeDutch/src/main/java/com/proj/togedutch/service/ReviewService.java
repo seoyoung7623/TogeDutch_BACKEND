@@ -22,18 +22,16 @@ public class ReviewService {
 
     public int createReview(int applicationId,Review review) throws BaseException {
         try {
-
-            int createReview = reviewDao.createReview(applicationId,review);
-            return createReview;
+            return reviewDao.createReview(applicationId,review);
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
 
     }
     //키워드 조회(키워드 id)
-    public List<Review> getTextReview(int reviewId, int postId) throws BaseException{
+    public List<Review> getTextReview(int postId) throws BaseException{
         try {
-            return reviewDao.getTextReview(reviewId,postId);
+            return reviewDao.getTextReview(postId);
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }

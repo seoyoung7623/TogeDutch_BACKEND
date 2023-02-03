@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -53,12 +54,10 @@ public class ChatMessageDao {
         return this.jdbcTemplate.queryForObject(sql,String.class,userId); //String.class
     }
 
-    public void save(ChatMessage message){
-        Date currentTime = new Date();
+    public void saveMessage(ChatMessage message){
         String roomIdName = Integer.toString(message.getChatRoom_id());
-        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `created_at`, `content`) VALUES (?,?,?,?)";
-        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentTime);
-        Object[] createMessageParams = new Object[]{roomIdName,message.getWriter(),datetime,message.getContent()};
+        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
+        Object[] createMessageParams = new Object[]{message.getChatRoom_id(),message.getUserId(),message.getContent()};
         this.jdbcTemplate.update(sql, createMessageParams);
     }
 
@@ -85,11 +84,6 @@ public class ChatMessageDao {
                 rs.getString("content"),
                 rs.getString("name")
         ),chatRoom_id);
-    }
-
-    public String getImageUrl(int chatPhotoId){
-        String getImageUrlQuery = "select image from ChatPhoto where chatPhoto_id = ?";
-        return this.jdbcTemplate.queryForObject(getImageUrlQuery, String.class, chatPhotoId);
     }
 
     public ChatPhoto getChatPhoto(int chatRoomId,int chatPhotoId){
@@ -166,4 +160,5 @@ public class ChatMessageDao {
         Object[] putChatLocationParams = new Object[]{latitude,longitude,chatLocationIdx,chatRoom_id};
         this.jdbcTemplate.update(updateCLQuery,putChatLocationParams);
     }
+
 }

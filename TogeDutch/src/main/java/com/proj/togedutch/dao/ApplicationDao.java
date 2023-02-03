@@ -29,14 +29,15 @@ public class ApplicationDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-   /* //공고 신청
-    public int applyPost(Application application,int userIdx){
-        String createApplicationQuery="insert into Application(status,Post_post_id,User_user_id,ChatRoom_chatRoom_id,Post_User_user_id) VALUES(?,?,?,?,?)";
-        Object[] createApplicationParams = new Object[]{ application.getStatus(), application.getPost_id(), application.getUser_id(), application.getChatRoom_id(),userIdx};
+    //공고 신청
+    @Transactional(rollbackFor=Exception.class)
+    public int applyPost(Application application, int Uploader_userIdx) throws BaseException {
+        String createApplicationQuery="insert into Application(Post_post_id, User_user_id, ChatRoom_chatRoom_id, Post_User_user_id) VALUES(?,?,?,?)";
+        Object[] createApplicationParams = new Object[]{ application.getPost_id(), application.getUser_id(), application.getChatRoom_id(), Uploader_userIdx};
         this.jdbcTemplate.update(createApplicationQuery, createApplicationParams);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
-    }*/
+    }
 
     //신청 수락
     @Transactional(rollbackFor=Exception.class)
@@ -123,6 +124,7 @@ public class ApplicationDao {
     @Transactional(rollbackFor = Exception.class)
     public Post modifyPostStatusById(int postIdx) throws BaseException {
 
+
         String modifyPostQuery = "update Post \n" + "set status = \"모집완료\"\n" + "where num_of_recruits = recruited_num and post_id=?";
 
         Object[] modifyPostParams = new Object[]{postIdx};
@@ -141,5 +143,20 @@ public class ApplicationDao {
         Object[] modifyChatRoomParams = new Object[]{chatRoomIdx};
 
         return this.jdbcTemplate.update(modifyChatRoomQuery, modifyChatRoomParams);
+    }
+
+    public Application getApplication(int userIdx, int postIdx){
+        String getApplicationQuery = "select * from Application where User_user_id=? and Post_post_id=?";
+        Object[] getApplicationParams = new Object[]{ userIdx, postIdx };
+
+        return this.jdbcTemplate.queryForObject(getApplicationQuery,
+                (rs, rowNum) -> new Application(
+                        rs.getInt("application_id"),
+                        rs.getString("status"),
+                        rs.getInt("Post_post_id"),
+                        rs.getInt("User_user_id"),
+                        rs.getInt("ChatRoom_chatRoom_id")),
+                getApplicationParams
+        );
     }
 }
