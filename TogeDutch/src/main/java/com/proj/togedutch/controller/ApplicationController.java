@@ -112,6 +112,12 @@ public class ApplicationController {
     public BaseResponse<Post> modifyPostStatusById(@PathVariable("postIdx") int postIdx) throws BaseException{
         Post modifyPost=postService.getPostById(postIdx);
 
+        int num_of_recruits = modifyPost.getNum_of_recruits();
+        int recruited_num=modifyPost.getRecruited_num();
+        if(num_of_recruits!=recruited_num){
+            return new BaseResponse<>(BaseResponseStatus.NOT_FULL_NUM_OF_RECRUITS);
+        }
+
         if(modifyPost.getNum_of_recruits() == 0){
             return new BaseResponse<>(BaseResponseStatus.NUM_Of_RECRUITS_EMPTY);
         }
