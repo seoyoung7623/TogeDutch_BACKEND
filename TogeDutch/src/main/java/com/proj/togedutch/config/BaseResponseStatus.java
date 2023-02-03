@@ -59,6 +59,10 @@ public enum BaseResponseStatus {
     LIKEPOST_IMPOSSIBLE(false, 2033, "본인의 공고는 관심 목록에 담을 수 없습니다."),
     DUPLICATE_LIKEPOST(false, 2034, "이미 관심목록에 담은 공고입니다."),
 
+    // [POST] /post/:postIdx/application
+    POST_UPLOAD_MINE(false, 2035, "내가 업로드한 공고입니다."),
+    DUPLICATED_APPLICATION(false, 2036, "이미 신청한 공고입니다."),
+
     /**
      * 3000 : Response 오류
      */

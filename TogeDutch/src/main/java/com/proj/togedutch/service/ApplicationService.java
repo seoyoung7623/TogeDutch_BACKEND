@@ -5,7 +5,7 @@ import com.proj.togedutch.dao.ApplicationDao;
 import com.proj.togedutch.dao.PostDao;
 import com.proj.togedutch.entity.Application;
 import com.proj.togedutch.entity.ChatRoom;
-import com.proj.togedutch.entity.Notice;
+
 import com.proj.togedutch.entity.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,8 +15,7 @@ import com.proj.togedutch.utils.JwtService;
 
 import java.util.List;
 
-import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
-import static com.proj.togedutch.config.BaseResponseStatus.MODIFY_FAIL_USER;
+import static com.proj.togedutch.config.BaseResponseStatus.*;
 
 @Service
 public class ApplicationService {
@@ -30,22 +29,46 @@ public class ApplicationService {
     PostDao postdao;
 
     //공고 신청
-    public Application applyPost(int postIdx, Application application) throws BaseException {
-        try {
-            application.setPost_id(postIdx); // entity에있는 setter사용
-            int userIdx = jwtService.getUserIdx();
-            application.setUser_id(userIdx);
-            Post newpost=postdao.getPostById(application.getPost_id());
-            application.setStatus("수락대기");
-            int applicationIdx = applicationDao.applyPost(application,newpost.getUser_id());
+    public Application applyPost(int postIdx) throws BaseException {
+        int userIdx;
+        Post getPost;
+        Application checkDuplicated;
 
+        try {
+            getPost = postdao.getPostById(postIdx);
+            userIdx = jwtService.getUserIdx();
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+        if(userIdx == getPost.getUser_id())
+            throw new BaseException(POST_UPLOAD_MINE);
+
+        // userIdx랑 post_id가 같은 application이 있는지 체크 이미 있으면 이미 신청한 공고임
+        try{
+            checkDuplicated = applicationDao.getApplication(userIdx, postIdx);
+        } catch(Exception e){
+            e.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+        if(checkDuplicated != null)
+            throw new BaseException(DUPLICATED_APPLICATION);
+
+        try {
+            Application application = new Application();
+            application.setPost_id(postIdx); // entity에있는 setter사용
+            application.setUser_id(userIdx);
+            application.setChatRoom_id(getPost.getChatRoom_id());
+
+            int applicationIdx = applicationDao.applyPost(application, getPost.getUser_id());
             Application createApplication = getApplication(applicationIdx);
             return createApplication;
         } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
         }
-
     }
 
     //신청 수락
