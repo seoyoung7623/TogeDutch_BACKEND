@@ -62,6 +62,15 @@ public class ChatService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+    // 채팅방에서 이미지 전체 조회
+    public List<ChatPhoto> getChatPhotos(int chatRoomId) throws  BaseException {
+        try{
+            List<ChatPhoto> getChatPhotos = chatMessageDao.getChatPhotos(chatRoomId);
+            return getChatPhotos;
+        } catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
     // 채팅 이미지 삭제
     public int deleteChatPhoto(int chatRoomIdx) throws BaseException {
