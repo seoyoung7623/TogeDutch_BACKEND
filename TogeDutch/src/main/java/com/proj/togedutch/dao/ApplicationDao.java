@@ -3,6 +3,7 @@ package com.proj.togedutch.dao;
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -149,14 +150,18 @@ public class ApplicationDao {
         String getApplicationQuery = "select * from Application where User_user_id=? and Post_post_id=?";
         Object[] getApplicationParams = new Object[]{ userIdx, postIdx };
 
-        return this.jdbcTemplate.queryForObject(getApplicationQuery,
-                (rs, rowNum) -> new Application(
-                        rs.getInt("application_id"),
-                        rs.getString("status"),
-                        rs.getInt("Post_post_id"),
-                        rs.getInt("User_user_id"),
-                        rs.getInt("ChatRoom_chatRoom_id")),
-                getApplicationParams
-        );
+        try{
+            return this.jdbcTemplate.queryForObject(getApplicationQuery,
+                    (rs, rowNum) -> new Application(
+                            rs.getInt("application_id"),
+                            rs.getString("status"),
+                            rs.getInt("Post_post_id"),
+                            rs.getInt("User_user_id"),
+                            rs.getInt("ChatRoom_chatRoom_id")),
+                    getApplicationParams
+            );
+        } catch(EmptyResultDataAccessException e){
+            return null;
+        }
     }
 }
