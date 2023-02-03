@@ -45,9 +45,9 @@ public class ReviewController {
 
     @ResponseBody
     @GetMapping("/{postId}/{reviewId}")
-    public BaseResponse<List<Review>> getTextReview(@PathVariable("postId") int postId, @PathVariable("reviewId") int reviewId) {
+    public BaseResponse<List<Review>> getTextReview(@PathVariable("postId") int postId) {
         try {
-            List<Review> getTextReview = reviewService.getTextReview(reviewId,postId);
+            List<Review> getTextReview = reviewService.getTextReview(postId);
             return new BaseResponse<>(getTextReview);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());

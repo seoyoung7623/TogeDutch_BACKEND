@@ -11,13 +11,12 @@ public class ChatMessage {
     public ChatMessage(){
 
     }
-
+    private MessageType type;
     private int chat_id;
     private int chatRoom_id;
     private int userId;
     private Timestamp createAt;
     private String content;
-    private String status; //읽음 안읽음
     private String writer;
 
     public ChatMessage(int chat_id, int chatRoom_chatRoom_id, int user_user_id, Timestamp created_at, String content) {
@@ -35,10 +34,10 @@ public class ChatMessage {
         this.writer = name;
     }
 
-//    // 메시지 타입 : 입장, 퇴장, 채팅, 파일송신
-//    public enum MessageType {
-//        ENTER, QUIT, TALK,FILE
-//    }
+    // 메시지 타입 : 입장, 퇴장, 채팅, 파일송신
+    public enum MessageType {
+        ENTER, QUIT, TALK,FILE, LOCATION, MEETTIME
+    }
 
 //    private MessageType type;
 
