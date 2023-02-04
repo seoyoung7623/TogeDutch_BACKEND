@@ -22,13 +22,35 @@ public class ChatService {
     public ChatService(ChatMessageDao chatMessageDao) {
         this.chatMessageDao = chatMessageDao;
     }
+    //채팅 메세지 조회
+    public ChatMessage getChatMessage(int chatRoomId, int chatId) throws  BaseException {
+        try {
+            ChatMessage chatMessage = chatMessageDao.getChatMessage(chatRoomId,chatId);
+            chatMessage.setType(ChatMessage.MessageType.TALK);
+            return chatMessage;
+        }catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
     //채팅내역 전체조회
     public List<ChatMessage> getChatMessages (int chatRoom_id) throws BaseException {
         try {
             List<ChatMessage> chatMessages = chatMessageDao.getChatMessages(chatRoom_id);
+            chatMessages.forEach(c->c.setType(ChatMessage.MessageType.TALK));
             return chatMessages;
         }catch (Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+    // 채팅 메세지 생성
+    public ChatMessage createChatMessage(ChatMessage chatMessage) throws BaseException {
+        try {
+            int message_id = chatMessageDao.createChatMessage(chatMessage);
+            ChatMessage newMessage = chatMessageDao.getChatMessage(chatMessage.getChatRoomId(),message_id);
+            newMessage.setType(ChatMessage.MessageType.TALK);
+            return newMessage;
+        } catch (Exception e){
             throw new BaseException(DATABASE_ERROR);
         }
     }

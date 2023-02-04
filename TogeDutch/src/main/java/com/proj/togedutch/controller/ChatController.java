@@ -2,10 +2,7 @@ package com.proj.togedutch.controller;
 
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.config.BaseResponse;
-import com.proj.togedutch.entity.ChatLocation;
-import com.proj.togedutch.entity.ChatMeetTime;
-import com.proj.togedutch.entity.ChatMessage;
-import com.proj.togedutch.entity.ChatPhoto;
+import com.proj.togedutch.entity.*;
 import com.proj.togedutch.service.AWSS3Service;
 import com.proj.togedutch.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +23,29 @@ public class ChatController {
     AWSS3Service awsS3Service;
     @Value("${cloud.aws.url}")
     private String url;
+
+    // 채팅 가져오기
+    @GetMapping("/chatmessage/{chat_id}")
+    public BaseResponse<ChatMessage> getChatMessage(@PathVariable("chatRoom_id") int chatRoomId,@PathVariable("chat_id") int chatId) throws BaseException {
+        try{
+            ChatMessage chatMessage = chatService.getChatMessage(chatRoomId,chatId);
+            return new BaseResponse<>(chatMessage);
+        } catch (BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+    
+    //채팅 저장
+    @ResponseBody
+    @PostMapping("/chatmessage")
+    public BaseResponse<ChatMessage> createChatMessage(@RequestPart ChatMessage message) throws  BaseException {
+        try {
+            ChatMessage chatMessage = chatService.createChatMessage(message);
+            return new BaseResponse<>(chatMessage);
+        } catch (BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 
     //채팅내용 가져오기
     @GetMapping("/conversation")
