@@ -1,6 +1,5 @@
 package com.proj.togedutch.service;
 
-import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.dao.ChatMessageDao;
 import com.proj.togedutch.entity.ChatLocation;
 import com.proj.togedutch.entity.ChatMeetTime;
@@ -11,10 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import java.math.BigDecimal;
-import java.util.List;
-
-import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
 
 
 @Service
@@ -31,7 +26,7 @@ public class ChatMessageService {
 
     //채팅에서 메세지 전송
     public void sendChatMessage(ChatMessage message) {
-        String roomIdName = Integer.toString(message.getChatRoom_id());
+        String roomIdName = Integer.toString(message.getChatRoomId());
         if (ChatMessage.MessageType.ENTER.equals(message.getType())){
             message.setContent(message.getWriter() + "님이 방에 입장했습니다.");
         } else if (ChatMessage.MessageType.QUIT.equals(message.getContent())) {

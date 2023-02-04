@@ -8,26 +8,19 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 public class ChatMessage {
-    public ChatMessage(){
-
-    }
-    private MessageType type;
-    private int chat_id;
-    private int chatRoom_id;
+    public ChatMessage(){}
+    private int chatId;
+    private int chatRoomId;
     private int userId;
     private Timestamp createAt;
     private String content;
     private String writer;
 
-    public ChatMessage(int chat_id, int chatRoom_chatRoom_id, int user_user_id, Timestamp created_at, String content) {
-        this.chat_id = chat_id;
-        this.chatRoom_id = chatRoom_chatRoom_id;
-        this.userId = user_user_id;
-        this.createAt = created_at;
-        this.content = content;
-    }
+    private MessageType type;
 
-    public ChatMessage(int user_user_id, Timestamp created_at, String content, String name) {
+    public ChatMessage(int chat_id, int chatRoom_chatRoom_id, int user_user_id, Timestamp created_at, String content, String name) {
+        this.chatId = chat_id;
+        this.chatRoomId = chatRoom_chatRoom_id;
         this.userId = user_user_id;
         this.createAt = created_at;
         this.content = content;
@@ -36,11 +29,8 @@ public class ChatMessage {
 
     // 메시지 타입 : 입장, 퇴장, 채팅, 파일송신
     public enum MessageType {
-        ENTER, QUIT, TALK,FILE, LOCATION, MEETTIME
+        ENTER, QUIT, TALK
     }
-
-//    private MessageType type;
-
 
 }
 
