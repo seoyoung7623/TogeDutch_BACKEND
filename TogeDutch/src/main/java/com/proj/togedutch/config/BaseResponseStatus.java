@@ -83,6 +83,8 @@ public enum BaseResponseStatus {
     NOT_FULL_NUM_OF_RECRUITS(false, 3020, "모집인원이 채워지지 않았습니다."),
 
 
+    //matching
+    COUNT_EXCEED(false, 6060,"이 공고의 카운트 횟수 초과."),
     /**
      * 4000 : Database, Server 오류
      */
