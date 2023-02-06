@@ -64,6 +64,10 @@ public enum BaseResponseStatus {
     DUPLICATED_APPLICATION(false, 2036, "이미 신청한 공고입니다."),
     APPLICATION_IMPOSSIBLE(false, 2037, "신청 불가능한 공고입니다."),
 
+    // [POST] /oauth/kakao
+    POST_EMPTY_KAKAO_EMAIL(false, 2038, "카카오 계정에 등록된 이메일이 없습니다."),
+    FAILED_TO_KAKAO_LOGIN(false, 2039, "카카오 로그인에 실패했습니다."),
+
     /**
      * 3000 : Response 오류
      */
@@ -81,7 +85,6 @@ public enum BaseResponseStatus {
 
     //Application
     NOT_FULL_NUM_OF_RECRUITS(false, 3020, "모집인원이 채워지지 않았습니다."),
-
 
     /**
      * 4000 : Database, Server 오류
