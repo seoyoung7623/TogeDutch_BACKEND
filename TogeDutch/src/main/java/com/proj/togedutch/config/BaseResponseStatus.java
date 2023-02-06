@@ -68,6 +68,9 @@ public enum BaseResponseStatus {
     POST_EMPTY_KAKAO_EMAIL(false, 2038, "카카오 계정에 등록된 이메일이 없습니다."),
     FAILED_TO_KAKAO_LOGIN(false, 2039, "카카오 로그인에 실패했습니다."),
 
+    // KakaoPay
+    KAKAO_PAY_CANCLE(false, 2040, "카카오 결제를 취소했습니다."),
+    KAKAO_PAY_FAIL(false, 2041, "카카오 결제에 실패했습니다."),
     /**
      * 3000 : Response 오류
      */
