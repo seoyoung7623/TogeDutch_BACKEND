@@ -13,8 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -34,31 +32,42 @@ public class ChatMessageDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    // 채팅 전체 조회
-    public List<ChatMessage> findAllChatByRoomId(String roomId){
-        String sql = "SELECT chat_id,ChatRoom_chatRoom_id,User_user_id,created_at,content from Chat where ChatRoom_chatRoom_id = ?";
-
-        return this.jdbcTemplate.query(sql,(rs,rowNum) -> new ChatMessage(
+    // 채팅 메세지 조회
+    public ChatMessage getChatMessage(int chatRoomId, int chatId) {
+        String sql = "select Chat.*,User.name from Chat join User on Chat.User_user_id = User.user_id where ChatRoom_chatRoom_id = ? and chat_id = ?";
+        return this.jdbcTemplate.queryForObject(sql,(rs, rowNum) -> new ChatMessage(
                 rs.getInt("chat_id"),
                 rs.getInt("ChatRoom_chatRoom_id"),
                 rs.getInt("User_user_id"),
                 rs.getTimestamp("created_at"),
-                rs.getString("content")
-        ),roomId);
+                rs.getString("content"),
+                rs.getString("name")
+        ),chatRoomId,chatId);
+    }
+    public List<ChatMessage> getChatMessages(int chatRoom_id) throws BaseException {
+        String getMessagesQuery = "select Chat.*,User.name from Chat join User on Chat.User_user_id = User.user_id where ChatRoom_chatRoom_id = ?";
+
+        return this.jdbcTemplate.query(getMessagesQuery,(rs, rowNum) -> new ChatMessage(
+                rs.getInt("chat_id"),
+                rs.getInt("ChatRoom_chatRoom_id"),
+                rs.getInt("User_user_id"),
+                rs.getTimestamp("created_at"),
+                rs.getString("content"),
+                rs.getString("name")
+        ),chatRoom_id);
+    }
+    public int createChatMessage(ChatMessage message) {
+        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
+        Object[] createChatMessage = new Object[]{message.getChatRoomId(),message.getUserId(),message.getContent()};
+        this.jdbcTemplate.update(sql, createChatMessage);
+        String lastInsertIdQuery = "select last_insert_id()";
+        return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
 
-    public String userName(int userId){
-        String sql = "SELECT name from User where user_id = ?";
-
-        return this.jdbcTemplate.queryForObject(sql,String.class,userId); //String.class
-    }
-
-    public void save(ChatMessage message){
-        Date currentTime = new Date();
-        String roomIdName = Integer.toString(message.getChatRoom_id());
-        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `created_at`, `content`) VALUES (?,?,?,?)";
-        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentTime);
-        Object[] createMessageParams = new Object[]{roomIdName,message.getWriter(),datetime,message.getContent()};
+    public void saveMessage(ChatMessage message){
+        String roomIdName = Integer.toString(message.getChatRoomId());
+        String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
+        Object[] createMessageParams = new Object[]{message.getChatRoomId(),message.getUserId(),message.getContent()};
         this.jdbcTemplate.update(sql, createMessageParams);
     }
 
@@ -76,22 +85,6 @@ public class ChatMessageDao {
         return this.jdbcTemplate.update(deleteChatPhotoQuery, deleteChatPhotoParams);
     }
 
-    public List<ChatMessage> getChatMessages(int chatRoom_id) throws BaseException {
-        String getMessagesQuery = "select Chat.*,User.name from Chat join User on Chat.User_user_id = User.user_id where ChatRoom_chatRoom_id = ?";
-
-        return this.jdbcTemplate.query(getMessagesQuery,(rs, rowNum) -> new ChatMessage(
-                rs.getInt("User_user_id"),
-                rs.getTimestamp("created_at"),
-                rs.getString("content"),
-                rs.getString("name")
-        ),chatRoom_id);
-    }
-
-    public String getImageUrl(int chatPhotoId){
-        String getImageUrlQuery = "select image from ChatPhoto where chatPhoto_id = ?";
-        return this.jdbcTemplate.queryForObject(getImageUrlQuery, String.class, chatPhotoId);
-    }
-
     public ChatPhoto getChatPhoto(int chatRoomId,int chatPhotoId){
         String sql = "select * from ChatPhoto where chatPhoto_id = ? and ChatRoom_chatRoom_id = ?";
         return this.jdbcTemplate.queryForObject(sql,
@@ -104,13 +97,22 @@ public class ChatMessageDao {
                 ),chatPhotoId,chatRoomId);
     }
 
+    public List<ChatPhoto> getChatPhotos (int chatRoomId) {
+        String sql = "select * from ChatPhoto where chatPhoto_id = ?";
+        return this.jdbcTemplate.query(sql,(rs,row) -> new ChatPhoto(
+                rs.getInt("chatPhoto_id"),
+                rs.getTimestamp("created_at"),
+                rs.getInt("ChatRoom_chatRoom_id"),
+                rs.getInt("User_user_id"),
+                rs.getString("image")
+        ),chatRoomId);
+    }
+
 
     public int createChatPhoto(int chatRoomId,int userId,String file) {
-        Date currentTime = new Date();
-        String ChatPhotoQuery = "insert into ChatPhoto (ChatRoom_chatRoom_id,User_user_id,image,created_at) Values (?,?,?,?)";
+        String ChatPhotoQuery = "insert into ChatPhoto (ChatRoom_chatRoom_id,User_user_id,image,created_at) Values (?,?,?)";
 
-        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(currentTime);
-        Object[] createChatPhoto = new Object[]{chatRoomId,userId,file,datetime};
+        Object[] createChatPhoto = new Object[]{chatRoomId,userId,file};
         this.jdbcTemplate.update(ChatPhotoQuery, createChatPhoto);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
@@ -131,7 +133,8 @@ public class ChatMessageDao {
                         rs.getInt("chatMeetTime_id"),
                         rs.getInt("ChatRoom_chatRoom_id"),
                         rs.getInt("User_user_id"),
-                        rs.getString("meetTime")
+                        rs.getString("meetTime"),
+                        rs.getTimestamp("created_at")
                 ),chatMeetTime_id,chatRoom_id);
     }
 
@@ -157,7 +160,8 @@ public class ChatMessageDao {
                         rs.getInt("ChatRoom_chatRoom_id"),
                         rs.getInt("User_user_id"),
                         rs.getBigDecimal("latitude"),
-                        rs.getBigDecimal("longitude")
+                        rs.getBigDecimal("longitude"),
+                        rs.getTimestamp("created_at")
                 ),chatLocationIdx, chatRoom_id);
     }
 

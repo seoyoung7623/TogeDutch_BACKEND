@@ -206,4 +206,26 @@ public class UserDao {
                 getUserByEmailParams
         );
     }
+
+    public User getUserInfoByEmail(String email) throws BaseException {
+        String getUserByEmailQuery = "select * from User where email = ?";
+        Object[] getUserByEmailParams = new Object[]{email};
+        return this.jdbcTemplate.queryForObject(getUserByEmailQuery,
+                (rs, rowNum) -> new User(
+                        rs.getInt("user_id"),
+                        rs.getInt("Keyword_keyword_id"),
+                        rs.getString("name"),
+                        rs.getString("role"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phone"),
+                        rs.getString("image"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude")),
+                getUserByEmailParams
+        );
+    }
 }

@@ -2,12 +2,9 @@ package com.proj.togedutch.controller;
 
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.config.BaseResponse;
-import com.proj.togedutch.entity.ChatLocation;
-import com.proj.togedutch.entity.ChatMeetTime;
-import com.proj.togedutch.entity.ChatMessage;
-import com.proj.togedutch.entity.ChatPhoto;
+import com.proj.togedutch.entity.*;
 import com.proj.togedutch.service.AWSS3Service;
-import com.proj.togedutch.service.ChatMessageService;
+import com.proj.togedutch.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
@@ -21,17 +18,40 @@ import java.util.List;
 @RequestMapping("/chatRoom/{chatRoom_id}")
 public class ChatController {
     @Autowired
-    ChatMessageService chatMessageService;
+    ChatService chatService;
     @Autowired
     AWSS3Service awsS3Service;
     @Value("${cloud.aws.url}")
     private String url;
 
+    // 채팅 가져오기
+    @GetMapping("/chatmessage/{chat_id}")
+    public BaseResponse<ChatMessage> getChatMessage(@PathVariable("chatRoom_id") int chatRoomId,@PathVariable("chat_id") int chatId) throws BaseException {
+        try{
+            ChatMessage chatMessage = chatService.getChatMessage(chatRoomId,chatId);
+            return new BaseResponse<>(chatMessage);
+        } catch (BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+    
+    //채팅 저장
+    @ResponseBody
+    @PostMapping("/chatmessage")
+    public BaseResponse<ChatMessage> createChatMessage(@RequestPart ChatMessage message) throws  BaseException {
+        try {
+            ChatMessage chatMessage = chatService.createChatMessage(message);
+            return new BaseResponse<>(chatMessage);
+        } catch (BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
     //채팅내용 가져오기
-    @GetMapping("/chat")
+    @GetMapping("/conversation")
     public BaseResponse<List<ChatMessage>> getChatMessages(@PathVariable("chatRoom_id") int chatRoomId) throws BaseException {
         try{
-            List<ChatMessage> chatMessages = chatMessageService.getChatMessages(chatRoomId);
+            List<ChatMessage> chatMessages = chatService.getChatMessages(chatRoomId);
             return new BaseResponse<>(chatMessages);
         } catch (BaseException e){
             return new BaseResponse<>(e.getStatus());
@@ -44,7 +64,7 @@ public class ChatController {
         try {
             String fileUrl = null;
             fileUrl = url + awsS3Service.uploadChatFile(file);
-            ChatPhoto chatPhoto = chatMessageService.createChatPhoto(chatRoomId,user,fileUrl);
+            ChatPhoto chatPhoto = chatService.createChatPhoto(chatRoomId,user,fileUrl);
             return new BaseResponse<>(chatPhoto);
         } catch (BaseException e){
             return new BaseResponse<>(e.getStatus());
@@ -55,9 +75,20 @@ public class ChatController {
     @GetMapping("/chatPhoto/{chatPhoto_id}")
     public BaseResponse<ChatPhoto> GetChatPhoto(@PathVariable("chatRoom_id") int chatRoomId,@PathVariable("chatPhoto_id") int chatPhotoId) throws BaseException{
         try {
-            ChatPhoto getChatPhoto = chatMessageService.getChatPhoto(chatRoomId,chatPhotoId);
+            ChatPhoto getChatPhoto = chatService.getChatPhoto(chatRoomId,chatPhotoId);
             return new BaseResponse<>(getChatPhoto);
         } catch(BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    // 채팅 이미지 내역 전체조회
+    @GetMapping("/chatPhotos")
+    public BaseResponse<List<ChatPhoto>> GetChatPhotos(@PathVariable("chatRoom_id") int chatRoomId) throws BaseException {
+        try{
+            List<ChatPhoto> getChatPhotos = chatService.getChatPhotos(chatRoomId);
+            return  new BaseResponse<>(getChatPhotos);
+        } catch (BaseException e){
             return new BaseResponse<>(e.getStatus());
         }
     }
@@ -66,27 +97,32 @@ public class ChatController {
     @PostMapping("/chatMeetTime")
     public BaseResponse<ChatMeetTime> postChatMeetTime(@PathVariable("chatRoom_id") int chatRoomId, @RequestParam int user, @RequestParam String time) throws BaseException{
         try {
-            ChatMeetTime chatMeetTime = chatMessageService.createChatMeetTime(chatRoomId,user,time);
+            ChatMeetTime chatMeetTime = chatService.createChatMeetTime(chatRoomId,user,time);
             return new BaseResponse<>(chatMeetTime);
         }catch (BaseException e){
             return new BaseResponse<>(e.getStatus());
         }
     }
 
+    // 만남시간 조회
     @GetMapping("/chatMeetTime/{chatMeetTime_id}")
     public BaseResponse<ChatMeetTime> getChatMeetTime(@PathVariable("chatRoom_id") int chatRoomId,@PathVariable("chatMeetTime_id") int chatMeetTimeId) throws BaseException{
         try{
-            ChatMeetTime getChatMeetTime = chatMessageService.getChatMeetTime(chatRoomId,chatMeetTimeId);
+            ChatMeetTime getChatMeetTime = chatService.getChatMeetTime(chatRoomId,chatMeetTimeId);
             return new BaseResponse<>(getChatMeetTime);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
     }
 
+//    // 만남시간 전체조회
+//    @GetMapping("/chatMeetTimes")
+//    public BaseResponse<ChatMeetTime> getChatMeetTime(@PathVariable("chatRoom_id") int chatRoomId)
+
     @PutMapping("/chatMeetTime/{chatMeetTime_id}")
     public BaseResponse<ChatMeetTime> putChatMeetTime(@PathVariable("chatRoom_id") int chatRoom_id,@PathVariable("chatMeetTime_id") int chatMeetTime_id,@RequestParam String time) throws BaseException{
         try {
-            ChatMeetTime chatMeetTime = chatMessageService.putChatMeetTime(chatRoom_id, chatMeetTime_id, time);
+            ChatMeetTime chatMeetTime = chatService.putChatMeetTime(chatRoom_id, chatMeetTime_id, time);
             return new BaseResponse<>(chatMeetTime);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
@@ -98,7 +134,7 @@ public class ChatController {
     public BaseResponse<ChatLocation> postChatLocation(@PathVariable("chatRoom_id")int chatRoom_id, @RequestParam int user,
                                                        @RequestParam BigDecimal latitude, @RequestParam BigDecimal longitude) {
         try {
-            ChatLocation chatLocation = chatMessageService.createChatLocation(chatRoom_id, user, latitude, longitude);
+            ChatLocation chatLocation = chatService.createChatLocation(chatRoom_id, user, latitude, longitude);
             return new BaseResponse<>(chatLocation);
         }catch (BaseException e){
             return new BaseResponse<>(e.getStatus());
@@ -109,7 +145,7 @@ public class ChatController {
     public BaseResponse<ChatLocation> getChatLocation(@PathVariable("chatRoom_id")int chatRoom_id,
                                                       @PathVariable("chatLocation_id")int chatLocationIdx) {
         try {
-            ChatLocation chatLocation = chatMessageService.getChatLocationById(chatRoom_id, chatLocationIdx);
+            ChatLocation chatLocation = chatService.getChatLocationById(chatRoom_id, chatLocationIdx);
             return new BaseResponse<>(chatLocation);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
@@ -120,7 +156,7 @@ public class ChatController {
     public BaseResponse<ChatLocation> putChatLocation(@PathVariable("chatRoom_id")int chatRoom_id, @PathVariable("chatLocation_id")int chatLocationIdx,
                                                       @RequestParam BigDecimal latitude, @RequestParam BigDecimal longitude) {
         try {
-            ChatLocation chatLocation = chatMessageService.putChatLocation(chatRoom_id, chatLocationIdx, latitude, longitude);
+            ChatLocation chatLocation = chatService.putChatLocation(chatRoom_id, chatLocationIdx, latitude, longitude);
             return new BaseResponse<>(chatLocation);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());

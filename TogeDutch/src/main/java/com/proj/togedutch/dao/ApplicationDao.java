@@ -3,6 +3,7 @@ package com.proj.togedutch.dao;
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,9 +31,10 @@ public class ApplicationDao {
     }
 
     //공고 신청
-    public int applyPost(Application application,int userIdx){
-        String createApplicationQuery="insert into Application(status,Post_post_id,User_user_id,ChatRoom_chatRoom_id,Post_User_user_id) VALUES(?,?,?,?,?)";
-        Object[] createApplicationParams = new Object[]{ application.getStatus(), application.getPost_id(), application.getUser_id(), application.getChatRoom_id(),userIdx};
+    @Transactional(rollbackFor=Exception.class)
+    public int applyPost(Application application, int Uploader_userIdx) throws BaseException {
+        String createApplicationQuery="insert into Application(Post_post_id, User_user_id, ChatRoom_chatRoom_id, Post_User_user_id) VALUES(?,?,?,?)";
+        Object[] createApplicationParams = new Object[]{ application.getPost_id(), application.getUser_id(), application.getChatRoom_id(), Uploader_userIdx};
         this.jdbcTemplate.update(createApplicationQuery, createApplicationParams);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
@@ -142,5 +144,24 @@ public class ApplicationDao {
         Object[] modifyChatRoomParams = new Object[]{chatRoomIdx};
 
         return this.jdbcTemplate.update(modifyChatRoomQuery, modifyChatRoomParams);
+    }
+
+    public Application getApplication(int userIdx, int postIdx){
+        String getApplicationQuery = "select * from Application where User_user_id=? and Post_post_id=?";
+        Object[] getApplicationParams = new Object[]{ userIdx, postIdx };
+
+        try{
+            return this.jdbcTemplate.queryForObject(getApplicationQuery,
+                    (rs, rowNum) -> new Application(
+                            rs.getInt("application_id"),
+                            rs.getString("status"),
+                            rs.getInt("Post_post_id"),
+                            rs.getInt("User_user_id"),
+                            rs.getInt("ChatRoom_chatRoom_id")),
+                    getApplicationParams
+            );
+        } catch(EmptyResultDataAccessException e){
+            return null;
+        }
     }
 }

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 
@@ -32,12 +33,17 @@ public class ApplicationController {
     // 공고 신청
     @ResponseBody
     @PostMapping("/post/{postIdx}/application")
-    public BaseResponse<Application> applyPost(@PathVariable("postIdx") int postIdx,@RequestBody Application application){
+    public BaseResponse<Application> applyPost(@PathVariable("postIdx") int postIdx) throws IOException, BaseException {
         try{
-            Application newApplication=applicationService.applyPost(postIdx, application);
+            Post getPost = postService.getPostById(postIdx);
+
+            String status = getPost.getStatus();
+            if(status.equals("모집완료") || status.equals("공고사용불가"))
+                return new BaseResponse<>(BaseResponseStatus.APPLICATION_IMPOSSIBLE);
+
+            Application newApplication = applicationService.applyPost(postIdx);
             return new BaseResponse<>(newApplication);
-        }catch(BaseException e){
-            e.printStackTrace();
+        } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
     }
@@ -111,6 +117,12 @@ public class ApplicationController {
     @PutMapping("/application/post/status/{postIdx}")
     public BaseResponse<Post> modifyPostStatusById(@PathVariable("postIdx") int postIdx) throws BaseException{
         Post modifyPost=postService.getPostById(postIdx);
+
+        int num_of_recruits = modifyPost.getNum_of_recruits();
+        int recruited_num=modifyPost.getRecruited_num();
+        if(num_of_recruits!=recruited_num){
+            return new BaseResponse<>(BaseResponseStatus.NOT_FULL_NUM_OF_RECRUITS);
+        }
 
         if(modifyPost.getNum_of_recruits() == 0){
             return new BaseResponse<>(BaseResponseStatus.NUM_Of_RECRUITS_EMPTY);

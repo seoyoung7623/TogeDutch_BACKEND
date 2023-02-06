@@ -47,9 +47,9 @@ public class KakaoPayService {
         params.add("quantity", "1"); // 상품 수량
         params.add("total_amount", "5000"); // 상품 금액
         params.add("tax_free_amount", "0"); // 상품 비과세 금액
-        params.add("approval_url", "http://localhost:9000/payment/success"); // 결제 승인 redirect url
-        params.add("cancel_url", "http://localhost:9000/payment/cancel"); // 결제 취소 redirect url
-        params.add("fail_url", "http://localhost:9000/payment/fail"); // 결제 실패 redirect url
+        params.add("approval_url", "http://ec2-3-34-255-129.ap-northeast-2.compute.amazonaws.com:9000/payment/success"); // 결제 승인 redirect url
+        params.add("cancel_url", "http://ec2-3-34-255-129.ap-northeast-2.compute.amazonaws.com:9000/payment/cancel"); // 결제 취소 redirect url
+        params.add("fail_url", "http://ec2-3-34-255-129.ap-northeast-2.compute.amazonaws.com:9000/payment/fail"); // 결제 실패 redirect url
 
         log.info("파트너 주문 아이디:"+ params.get("partner_order_id"));
         HttpEntity<MultiValueMap<String, String>> requestBody = new HttpEntity<MultiValueMap<String, String>>(params, this.getHeaders());

@@ -43,7 +43,7 @@ public enum BaseResponseStatus {
     POST_POST_EMPTY_RECRUIT(false, 2023, "모집 인원을 선택해주세요."),
     POST_POST_EMPTY_LOCATION(false, 2024, "약속 장소를 설정해주세요."),
     POST_POST_EMPTY_CATEGORY(false, 2025, "카테고리를 설정해주세요."),
-    
+
     // [POST] /Advertisement
     POST_AD_EMPTY_STORE(false, 2026, "가게 이름을 입력해주세요."),
     POST_AD_EMPTY_INFORMATION(false, 2027, "가게 정보를 입력해주세요."),
@@ -57,8 +57,20 @@ public enum BaseResponseStatus {
 
     // [POST] /user/{userIdx}/likePost
     LIKEPOST_IMPOSSIBLE(false, 2033, "본인의 공고는 관심 목록에 담을 수 없습니다."),
-    DUPLICATE_LIKEPOST(false, 2034, "이미 관심목록에 담은 공고입니다."),
+    DUPLICATED_LIKEPOST(false, 2034, "이미 관심목록에 담은 공고입니다."),
 
+    // [POST] /post/:postIdx/application
+    POST_UPLOAD_MINE(false, 2035, "내가 업로드한 공고입니다."),
+    DUPLICATED_APPLICATION(false, 2036, "이미 신청한 공고입니다."),
+    APPLICATION_IMPOSSIBLE(false, 2037, "신청 불가능한 공고입니다."),
+
+    // [POST] /oauth/kakao
+    POST_EMPTY_KAKAO_EMAIL(false, 2038, "카카오 계정에 등록된 이메일이 없습니다."),
+    FAILED_TO_KAKAO_LOGIN(false, 2039, "카카오 로그인에 실패했습니다."),
+
+    // KakaoPay
+    KAKAO_PAY_CANCLE(false, 2040, "카카오 결제를 취소했습니다."),
+    KAKAO_PAY_FAIL(false, 2041, "카카오 결제에 실패했습니다."),
     /**
      * 3000 : Response 오류
      */
@@ -74,6 +86,13 @@ public enum BaseResponseStatus {
     DELETE_POST_FAIL(false, 5000, "삭제에 실패했습니다."),
     NUM_Of_RECRUITS_EMPTY(false, 5001, "모집된 인원이 없습니다."),
 
+    //Application
+    NOT_FULL_NUM_OF_RECRUITS(false, 3020, "모집인원이 채워지지 않았습니다."),
+
+
+
+    //matching
+    COUNT_EXCEED(false, 6060,"이 공고의 카운트 횟수 초과."),
 
     /**
      * 4000 : Database, Server 오류

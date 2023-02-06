@@ -1,171 +1,58 @@
 package com.proj.togedutch.service;
 
-import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.dao.ChatMessageDao;
 import com.proj.togedutch.entity.ChatLocation;
 import com.proj.togedutch.entity.ChatMeetTime;
 import com.proj.togedutch.entity.ChatMessage;
 import com.proj.togedutch.entity.ChatPhoto;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.WebSocketSession;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
 
 
-@Slf4j
 @Service
 public class ChatMessageService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ChatMessageDao chatMessageDao;
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     @Autowired
-    public ChatMessageService(ChatMessageDao chatMessageDao){
+    public ChatMessageService(ChatMessageDao chatMessageDao, SimpMessagingTemplate simpMessagingTemplate){
         this.chatMessageDao = chatMessageDao;
+        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
-    public <T> void sendMessage(WebSocketSession session, T message) {
-    }
-
-    public List<ChatMessage> findAllChatByRoomId(String roomId){
-        return chatMessageDao.findAllChatByRoomId(roomId);
-    }
-
-    //채팅내역 전체조회
-    public List<ChatMessage> getChatMessages (int chatRoom_id) throws BaseException {
-        try {
-            List<ChatMessage> chatMessages = chatMessageDao.getChatMessages(chatRoom_id);
-            return chatMessages;
-        }catch (Exception e){
-            throw new BaseException(DATABASE_ERROR);
+    //채팅에서 메세지 전송
+    public void sendChatMessage(ChatMessage message) {
+        String roomIdName = Integer.toString(message.getChatRoomId());
+        if (ChatMessage.MessageType.ENTER.equals(message.getType())){
+            message.setContent(message.getWriter() + "님이 방에 입장했습니다.");
+        } else if (ChatMessage.MessageType.QUIT.equals(message.getContent())) {
+            message.setContent(message.getWriter() + "님이 방에서 나갔습니다.");
         }
+        simpMessagingTemplate.convertAndSend("/sub/chat/room/" + roomIdName, message); //message 전송
+        chatMessageDao.saveMessage(message);
     }
 
-    public ChatPhoto createChatPhoto(int chatRoomId,int user,String file) throws BaseException{
-        try {
-            int chatPhoto_id = chatMessageDao.createChatPhoto(chatRoomId,user,file);
-            ChatPhoto chatPhoto = chatMessageDao.getChatPhoto(chatRoomId,chatPhoto_id);
-            return chatPhoto;
-        } catch (Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
+    // 채팅에서 이미지 전송
+    public void sendChatImgFile(ChatPhoto photo){
+        String roomIdName = Integer.toString(photo.getChatRoom_id());
+        simpMessagingTemplate.convertAndSend("/sub/chat/room/" + roomIdName, photo); //photo 전송
+        chatMessageDao.createChatPhoto(photo.getChatRoom_id(),photo.getUser_id(),photo.getImage()); // DB에 이미지 저장
     }
 
-    public ChatPhoto getChatPhoto(int chatRoomId, int chatPhotoId) throws BaseException{
-        try{
-            ChatPhoto getChatPhoto = chatMessageDao.getChatPhoto(chatRoomId,chatPhotoId);
-            return getChatPhoto;
-        } catch(Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
+    // 채팅에서 위치 전송
+    public void sendChatLocation(ChatLocation location){
+        String roomIdName = Integer.toString(location.getChatRoomId());
+        simpMessagingTemplate.convertAndSend("/sub/chat/room/" + roomIdName, location); //location 전송
     }
 
-    public ChatMeetTime createChatMeetTime(int chatRoom_id, int user, String time) throws BaseException{
-        try {
-            int chatMeetTime_id = chatMessageDao.createChatMeetTime(chatRoom_id,user,time);
-            ChatMeetTime chatMeetTime = chatMessageDao.getChatMeetTime(chatRoom_id,chatMeetTime_id);
-            return chatMeetTime;
-        } catch (Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
+    // 채팅에서 만남시간 전송
+    public void sendChatMeetTime(ChatMeetTime meetTime){
+        String roomIdName = Integer.toString(meetTime.getChatRoomId());
+        simpMessagingTemplate.convertAndSend("/sub/chat/room/" + roomIdName, meetTime); //location 전송
     }
 
-    public String getImageUrl(int chatPhotoId) throws BaseException {
-        try{
-            return chatMessageDao.getImageUrl(chatPhotoId);
-        } catch(Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-
-    // 채팅방에 메시지 전송
-//    public void sendChatMessage(ChatMessage chatMessage) {
-//        // chatMessage.setUserCount(chatRoomRepository.getUserCount(chatMessage.getRoomId()));
-//        if (ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
-//            //chatMessage.setContent(chatMessage.getSender() + "님이 방에 입장했습니다.");
-//            chatMessage.setContent("[알림]");
-//        } else if (ChatMessage.MessageType.QUIT.equals(chatMessage.getType())) {
-//            chatMessage.setContent(chatMessage.getSender() + "님이 방에서 나갔습니다.");
-//            chatMessage.setContent("[알림]");
-//        }
-//        redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);
-//    }
-/*
-    // Post_id를 통해서 채팅방 가져오기 (미완)
-    public int getChatRoomId(int post_id){
-        return 1;
-    }
-*/
-    // 채팅 메시지 삭제
-    public int deleteChat(int chatRoomIdx) throws BaseException {
-        try{
-            int result = chatMessageDao.deleteChat(chatRoomIdx);
-            return result;
-        } catch(Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    // 채팅 이미지 삭제
-    public int deleteChatPhoto(int chatRoomIdx) throws BaseException {
-        try{
-            int result = chatMessageDao.deleteChatPhoto(chatRoomIdx);
-            return result;
-        } catch(Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    public ChatLocation createChatLocation(int chatRoom_id, int user, BigDecimal latitude, BigDecimal longitude) throws BaseException {
-        try {
-            int chatLocationIdx = chatMessageDao.createChatLocation(chatRoom_id, user, latitude, longitude);
-            ChatLocation chatLocation = chatMessageDao.getChatLocation(chatRoom_id,chatLocationIdx);
-            return chatLocation;
-        } catch (Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    public ChatLocation getChatLocationById(int chatRoom_id, int chatLocationIdx) throws BaseException {
-        try{
-            ChatLocation getChatLocation = chatMessageDao.getChatLocation(chatRoom_id, chatLocationIdx);
-            return getChatLocation;
-        }catch(Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    public ChatLocation putChatLocation(int chatRoom_id, int chatLocationIdx, BigDecimal latitude, BigDecimal longitude) throws BaseException {
-        try {
-            chatMessageDao.putChatLocation(chatRoom_id, chatLocationIdx, latitude, longitude);
-            return getChatLocationById(chatRoom_id, chatLocationIdx);
-        }catch(Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    public ChatMeetTime getChatMeetTime(int chatRoomId, int chatMeetTimeId) throws BaseException {
-        try{
-            ChatMeetTime getChatMeetTime = chatMessageDao.getChatMeetTime(chatRoomId, chatMeetTimeId);
-            return getChatMeetTime;
-        }catch(Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
-
-    public ChatMeetTime putChatMeetTime(int chatRoom_id, int chatMeetTime_id, String time) throws BaseException{
-        try {
-            chatMessageDao.putChatMeetTime(chatRoom_id, chatMeetTime_id, time);
-            return getChatMeetTime(chatRoom_id, chatMeetTime_id);
-        }catch(Exception e){
-            throw new BaseException(DATABASE_ERROR);
-        }
-    }
 }

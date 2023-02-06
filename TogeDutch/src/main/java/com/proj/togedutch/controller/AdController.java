@@ -56,9 +56,13 @@ public class AdController {
         if (Integer.valueOf(ad.getDeliveryTips()) == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_AD_EMPTY_TIP);
         }
-        if (ad.getLocation() == null) {
+        if (ad.getLatitude() == null) {
             return new BaseResponse<>(BaseResponseStatus.POST_AD_EMPTY_LOCATION);
         }
+        if (ad.getLongitude() == null) {
+            return new BaseResponse<>(BaseResponseStatus.POST_AD_EMPTY_LOCATION);
+        }
+
         String fileUrl = null;
         if(file!=null && !file.isEmpty())
             fileUrl = url + awsS3Service.uploadAdFile(file);

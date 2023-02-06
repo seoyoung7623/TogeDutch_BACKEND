@@ -103,6 +103,8 @@ public class LikeUsersDao {
     public int duplicateLikePost(int userIdx, int postIdx, int Uploader_userIdx) throws BaseException {
         String duplicatePostQuery = "select * from LikeUsers where Post_post_id=? and Post_User_user_id=? and User_user_id=?";
 
+        System.out.println(postIdx + " " + Uploader_userIdx + " " + userIdx);
+
         LikeUsers likeUsers = this.jdbcTemplate.queryForObject(duplicatePostQuery,
                 (rs, rowNum) -> new LikeUsers(
                         rs.getInt("like_id"),
@@ -111,8 +113,12 @@ public class LikeUsersDao {
                         rs.getInt("User_user_id")
                 ), postIdx, Uploader_userIdx, userIdx);
 
-        if(likeUsers != null)
+        System.out.println(likeUsers.getLike_userIdx());
+
+        if(likeUsers != null) {
+            System.out.println("중복됩니다");
             return 1;
+        }
         else if(likeUsers == null)
             return 0;
         else

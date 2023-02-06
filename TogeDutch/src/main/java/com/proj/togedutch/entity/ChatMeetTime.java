@@ -15,4 +15,5 @@ public class ChatMeetTime {
     private int chatRoomId;
     private int userId;
     private String meetTime;
+    private Timestamp createdAt;
 }
