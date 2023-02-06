@@ -60,11 +60,11 @@ public class KakaoPayController {
     }
     @GetMapping("/cancel")
     public void kakaoPayCancel() throws BaseException {
-        throw new BaseException(BaseResponseStatus.POST_AD_EMPTY_MAINMENU); // 결제 취소화면 redirect
+        throw new BaseException(BaseResponseStatus.KAKAO_PAY_CANCLE); // 결제 취소화면 redirect
     }
     @GetMapping("/fail")
     public void kakaoPayFail() throws BaseException {
-        throw new BaseException(BaseResponseStatus.POST_AD_EMPTY_MAINMENU); // 결제 실패화면 redirect
+        throw new BaseException(BaseResponseStatus.KAKAO_PAY_FAIL); // 결제 실패화면 redirect
     }
 
     @PostMapping("/refund")
