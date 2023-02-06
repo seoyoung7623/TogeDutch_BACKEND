@@ -44,7 +44,7 @@ public class ReviewController {
 
 
     @ResponseBody
-    @GetMapping("/{postId}/{reviewId}")
+    @GetMapping("/{postId}")
     public BaseResponse<List<Review>> getTextReview(@PathVariable("postId") int postId) {
         try {
             List<Review> getTextReview = reviewService.getTextReview(postId);
