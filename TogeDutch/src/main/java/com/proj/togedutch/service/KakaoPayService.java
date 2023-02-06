@@ -29,8 +29,8 @@ public class KakaoPayService {
     private HttpHeaders getHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        String auth = "KakaoAK " + "41b165acaabc5c3ff295dfd5559893e0";
-        httpHeaders.add("Authorization", "KakaoAK " + "41b165acaabc5c3ff295dfd5559893e0");
+        String auth = "KakaoAK " + "c9b25c5ace47f4ccdbc524e87891f97e";
+        httpHeaders.add("Authorization", "KakaoAK " + "c9b25c5ace47f4ccdbc524e87891f97e");
         httpHeaders.add("Accept", MediaType.APPLICATION_JSON_UTF8_VALUE);
         httpHeaders.add("Content-Type", MediaType.APPLICATION_FORM_URLENCODED_VALUE + ";charset=UTF-8");
 
@@ -42,7 +42,7 @@ public class KakaoPayService {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<String, String>();
         params.add("cid", "TC0ONETIME");
         params.add("partner_order_id", "1001"); // 가맹점 주문번호, 최대 100자
-        params.add("partner_user_id", "gorany"); // 가맹점 회원 id, 최대 100자
+        params.add("partner_user_id", "togeDutch"); // 가맹점 회원 id, 최대 100자
         params.add("item_name", "가치더치 광고 결제"); // 상품명
         params.add("quantity", "1"); // 상품 수량
         params.add("total_amount", "5000"); // 상품 금액
@@ -77,7 +77,7 @@ public class KakaoPayService {
         params.add("cid", "TC0ONETIME");
         params.add("tid", kakaoReadyRes.getTid());
         params.add("partner_order_id", "1001");
-        params.add("partner_user_id", "gorany");
+        params.add("partner_user_id", "togeDutch");
         params.add("pg_token", pg_token);
 
         log.info("파트너 주문 아이디:"+ params.get("partner_order_id"));
