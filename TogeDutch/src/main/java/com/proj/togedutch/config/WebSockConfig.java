@@ -29,9 +29,9 @@ public class WebSockConfig implements WebSocketMessageBrokerConfigurer {
     // STOMP가 필요 한 이유는 websocket은 통신 프로토콜이지 특정 주제에 가입한 사용자에게 메시지를 전송하는 기능을 제공하지 않는다.
     // 이를 쉽게 사용하기 위해 STOMP를 사용한다.
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry){
+    public void registerStompEndpoints(StompEndpointRegistry registry)  {
         registry.addEndpoint("/stomp/chat")
-                .setAllowedOrigins("http://localhost:9000")
+                .setAllowedOrigins("*")
                 .withSockJS();
     }
 
