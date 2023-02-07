@@ -15,4 +15,5 @@ public class Matching {
     int UserSecondId;
     int UserThirdId;
     int count;
+    int postIdx;
 }

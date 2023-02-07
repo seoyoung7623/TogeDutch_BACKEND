@@ -7,6 +7,8 @@ import com.proj.togedutch.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 
 import static com.proj.togedutch.config.BaseResponseStatus.COUNT_EXCEED;
@@ -28,19 +30,40 @@ public class MatchingService {
         }
     }
     public int getReMatching(int postIdx) throws BaseException {
-        int MatchingCount = 0;
+        int MatchingCount = 500;
         try{
             Post post = MatchingDao.getReMatchingFirst(postIdx);
-            Matching matching =MatchingDao.getReMatchingSecond(post);
-            User user=MatchingDao.getReMatchingThird(post,matching);
-            System.out.println("다른거?" + user.getUserIdx());
-            MatchingCount=MatchingDao.getReMatching(matching,user,post);
+            Matching matching =MatchingDao.getReMatchingSecond(post.getPost_id());
+            int first=-1;
+            int second=-1;
+
+            if(matching.getCount() == 1){
+                first = matching.getUserFirstId();
+                User user=MatchingDao.getReMatchingThird(post,matching,matching.getCount(), first , second);
+                MatchingCount=MatchingDao.getReMatching(matching.getCount(),user,post.getPost_id());
+            }
+            else if (matching.getCount() == 2) {
+                first = matching.getUserFirstId();
+                second = matching.getUserSecondId();
+                User user=MatchingDao.getReMatchingThird(post,matching,matching.getCount(), first , second);
+                MatchingCount=MatchingDao.getReMatching(matching.getCount(),user,post.getPost_id());
+            }
+            else if (matching.getCount() == 3){
+                MatchingCount=400; //횟수 초과
+                return MatchingCount;
+            }
+
             return MatchingCount;
-        } catch(Exception e){
+        } catch(EmptyResultDataAccessException e){
+            MatchingCount=300;
             Post post = MatchingDao.getReMatchingFirst(postIdx);
-            MatchingCount = MatchingDao.getNoMatching(post);
+            MatchingCount = MatchingDao.getNoMatching(post.getLatitude(),post.getLongitude(),post.getPost_id());
+            
+            return MatchingCount;
+            //throw new BaseException(DATABASE_ERROR);
         }
-        return MatchingCount;
+
+
     }
     public int getAcceptUserId(int userIdx,int postIdx) throws BaseException {
         try{
