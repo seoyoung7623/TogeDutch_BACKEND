@@ -1,7 +1,7 @@
 package com.proj.togedutch.service;
 
 import com.proj.togedutch.config.BaseException;
-import com.proj.togedutch.dao.MatchingDao;
+import com.proj.togedutch.entity.Matching;
 import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.entity.User;
 import org.slf4j.Logger;
@@ -27,17 +27,19 @@ public class MatchingService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-    public User getReMatching(int postIdx) throws BaseException {
+    public int getReMatching(int postIdx) throws BaseException {
+        int MatchingCount = 0;
         try{
-            User getMatching = MatchingDao.getReMatching(postIdx);
-
-            if(getMatching == null)
-                throw new BaseException(COUNT_EXCEED);
-
-            return getMatching;
+            Post post = MatchingDao.getReMatchingFirst(postIdx);
+            Matching matching =MatchingDao.getReMatchingSecond(post);
+            User user=MatchingDao.getReMatchingThird(post,matching);
+            MatchingCount=MatchingDao.getReMatching(matching,user,post);
+            return MatchingCount;
         } catch(Exception e){
-            throw new BaseException(COUNT_EXCEED);
+            Post post = MatchingDao.getReMatchingFirst(postIdx);
+            MatchingCount = MatchingDao.getNoMatching(post);
         }
+        return MatchingCount;
     }
     public int getAcceptUserId(int userIdx,int postIdx) throws BaseException {
         try{
