@@ -71,6 +71,7 @@ public enum BaseResponseStatus {
     // KakaoPay
     KAKAO_PAY_CANCLE(false, 2040, "카카오 결제를 취소했습니다."),
     KAKAO_PAY_FAIL(false, 2041, "카카오 결제에 실패했습니다."),
+
     /**
      * 3000 : Response 오류
      */
@@ -82,17 +83,13 @@ public enum BaseResponseStatus {
     FAILED_TO_LOGIN(false,3014,"없는 아이디거나 비밀번호가 틀렸습니다."),
     FAILED_TO_FIND_USER(false, 3015, "존재하지 않는 회원입니다. 회원가입이 필요합니다."),
 
-    // Post
-    DELETE_POST_FAIL(false, 5000, "삭제에 실패했습니다."),
-    NUM_Of_RECRUITS_EMPTY(false, 5001, "모집된 인원이 없습니다."),
+    // [POST] /post
+    FAILED_TO_FIND_BY_CATEGORY(false, 3016, "해당하는 카테고리에 공고가 없습니다."),
 
     //Application
     NOT_FULL_NUM_OF_RECRUITS(false, 3020, "모집인원이 채워지지 않았습니다."),
 
 
-
-    //matching
-    COUNT_EXCEED(false, 6060,"이 공고의 카운트 횟수 초과."),
 
     /**
      * 4000 : Database, Server 오류
@@ -101,17 +98,28 @@ public enum BaseResponseStatus {
     SERVER_ERROR(false, 4001, "서버와의 연결에 실패하였습니다."),
 
     //[PATCH] /users/{userIdx}
-    MODIFY_FAIL_USER(false,4014,"유저 수정 실패"),
-    MODIFY_FAIL_KEYWORD(false,4015,"키워드 수정 실패"),
-
     PASSWORD_ENCRYPTION_ERROR(false, 4011, "비밀번호 암호화에 실패하였습니다."),
     PASSWORD_DECRYPTION_ERROR(false, 4012, "비밀번호 복호화에 실패하였습니다."),
+    MODIFY_FAIL_USER(false,4014,"유저 수정 실패"),
+    MODIFY_FAIL_KEYWORD(false,4015,"키워드 수정 실패"),
+    DELETE_FAIL_USER(false,4020,"유저 삭제 실패"),
 
-    DELETE_FAIL_USER(false,4020,"유저 삭제 실패");
 
-    // 5000 : 필요시 만들어서 쓰세요
-    // 6000 : 필요시 만들어서 쓰세요
 
+    /**
+     * 5000 : 필요시 만들어서 쓰세요
+     */
+    // Post
+    DELETE_POST_FAIL(false, 5000, "삭제에 실패했습니다."),
+    NUM_Of_RECRUITS_EMPTY(false, 5001, "모집된 인원이 없습니다."),
+
+
+
+    /**
+     * 6000 : 필요시 만들어서 쓰세요
+     */
+    //matching
+    COUNT_EXCEED(false, 6060,"이 공고의 카운트 횟수 초과.");
 
     private final boolean isSuccess;
     private final int code;
