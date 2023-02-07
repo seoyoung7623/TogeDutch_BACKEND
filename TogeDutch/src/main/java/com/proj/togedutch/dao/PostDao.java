@@ -5,6 +5,7 @@ import com.proj.togedutch.entity.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.proj.togedutch.config.BaseResponseStatus.FAILED_TO_FIND_BY_CATEGORY;
 
 
 @Repository
@@ -40,7 +42,7 @@ public class PostDao {
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class); // post_id 반환
     }
 
-    public Post getPostById(int postIdx){
+    public Post getPostById(int postIdx) {
         String getPostQuery = "select * from Post where post_id = ?";
         return this.jdbcTemplate.queryForObject(getPostQuery,
                 (rs, rowNum) -> new Post(
@@ -66,7 +68,7 @@ public class PostDao {
 
 
     // 공고 전체 조회
-    public List<Post> getAllPosts(){
+    public List<Post> getAllPosts() {
         String getPostQuery = "select * from Post where status != \"공고사용불가\" ";
         return this.jdbcTemplate.query(getPostQuery,
                 (rs, rowNum) -> new Post(
@@ -91,11 +93,11 @@ public class PostDao {
     }
 
     // 공고 전체 조회 (최신순 / 주문 임박)
-    public List<Post> getSortingPosts(String sort){
+    public List<Post> getSortingPosts(String sort) {
         String getPostQuery;
 
         this.jdbcTemplate.update("set time_zone = 'Asia/Seoul'");
-        if(sort.equals("latest"))   // 최신순
+        if (sort.equals("latest"))   // 최신순
             getPostQuery = "select * from Post where status!=\"모집완료\" and status!=\"시간만료\" and status != \"공고사용불가\" order by created_at desc";
         else                        // 주문 임박
             getPostQuery = "select * from Post where order_time between now() and DATE_ADD(NOW(), INTERVAL 10 MINUTE) and status!=\"모집완료\" and status!=\"시간만료\" and status != \"공고사용불가\" order by order_time asc";
@@ -122,7 +124,7 @@ public class PostDao {
                 ));
     }
 
-    public String getImageUrl(int postIdx){
+    public String getImageUrl(int postIdx) {
         String getImageUrlQuery = "select image from Post where post_id = ?";
         return this.jdbcTemplate.queryForObject(getImageUrlQuery, String.class, postIdx);
     }
@@ -280,7 +282,7 @@ public class PostDao {
     public Post modifyPostStatus(int postIdx) throws BaseException {
         String modifyPostQuery = "update Post set status=\"시간만료\" where post_id = ? and order_time < current_timestamp and num_of_recruits != recruited_num";
 
-        Object[] modifyPostParams = new Object[]{ postIdx };
+        Object[] modifyPostParams = new Object[]{postIdx};
 
         if (this.jdbcTemplate.update(modifyPostQuery, modifyPostParams) == 1)
             return getPostById(postIdx);
@@ -289,4 +291,28 @@ public class PostDao {
         }
     }
 
+    // 카테고리로 공고 조회
+    public List<Post> getPostsByCategory(String category) throws BaseException {
+        String getPostQuery = "select * from Post where category = ?";
+        return this.jdbcTemplate.query(getPostQuery,
+                    (rs, rowNum) -> new Post(
+                            rs.getInt("post_id"),
+                            rs.getString("title"),
+                            rs.getString("url"),
+                            rs.getInt("delivery_tips"),
+                            rs.getInt("minimum"),
+                            rs.getString("order_time"),
+                            rs.getInt("num_of_recruits"),
+                            rs.getInt("recruited_num"),
+                            rs.getString("status"),
+                            rs.getTimestamp("created_at"),
+                            rs.getTimestamp("updated_at"),
+                            rs.getInt("User_user_id"),
+                            rs.getString("image"),
+                            rs.getDouble("latitude"),
+                            rs.getDouble("longitude"),
+                            rs.getInt("ChatRoom_chatRoom_id"),
+                            rs.getString("category")
+                    ), category);
+    }
 }

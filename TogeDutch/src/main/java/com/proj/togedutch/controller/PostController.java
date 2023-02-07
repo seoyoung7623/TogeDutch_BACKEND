@@ -234,4 +234,13 @@ public class PostController {
         }
     }
 
+    @GetMapping("/category/")
+    public BaseResponse<List<Post>> getPostsByCategory(@RequestParam String keyword) throws BaseException {
+        try{
+            List<Post> getPostsByCategory = postService.getPostsByCategory(keyword);
+            return new BaseResponse<>(getPostsByCategory);
+        } catch(BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 }

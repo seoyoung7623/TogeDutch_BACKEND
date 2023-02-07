@@ -7,6 +7,7 @@ import com.proj.togedutch.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,15 +32,15 @@ public class PostService {
     }
 
     public List<Post> getAllPosts() throws BaseException {
-        try{
+        try {
             return postDao.getAllPosts();
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
-    public List<Post> getSortingPosts(String sort) throws BaseException{
-        try{
+    public List<Post> getSortingPosts(String sort) throws BaseException {
+        try {
             return postDao.getSortingPosts(sort);
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
@@ -47,72 +48,74 @@ public class PostService {
     }
 
     public String getImageUrl(int postIdx) throws BaseException {
-        try{
+        try {
             return postDao.getImageUrl(postIdx);
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-
 
 
     public Post modifyPost(int postIdx, Post post, int userIdx, String fileUrl) throws BaseException {
-        try{
+        try {
             Post modifyPost = postDao.modifyPost(postIdx, post, userIdx, fileUrl);
             return modifyPost;
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
     public int deletePost(int postIdx) throws BaseException {
-        try{
+        try {
             int deletePost = postDao.deletePost(postIdx);
             return deletePost;
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
     public List<Post> getPostByJoinUserId(int userIdx) throws BaseException {
-        try{
+        try {
             List<Post> joinPost = postDao.getPostByJoinUserId(userIdx);
             return joinPost;
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
     public List<Post> getPostByUploadUserId(int userIdx) throws BaseException {
-        try{
+        try {
             List<Post> UploadPost = postDao.getPostByUploadUserId(userIdx);
             return UploadPost;
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
     public Post getPostByPostId(int postIdx) throws BaseException {
-        try{
+        try {
             Post getPost = postDao.getPostById(postIdx);
             return getPost;
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
     public List<Post> getPostByTitleUserId(String title) throws BaseException {
-        try{
+        try {
             List<Post> TitlePost = postDao.getPostByTitleUserId(title);
             return TitlePost;
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
 
     public Post getPostByUserId(int postIdx, int userIdx) throws BaseException {
-        try{
+        try {
             Post getPost = postDao.getPostByUserId(postIdx, userIdx);
             return getPost;
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
@@ -126,8 +129,8 @@ public class PostService {
         }
     }
 
-    public Post insertChatRoom(int postIdx, int chatRoomIdx) throws BaseException{
-        try{
+    public Post insertChatRoom(int postIdx, int chatRoomIdx) throws BaseException {
+        try {
             Post modifyPost = postDao.insertChatRoom(postIdx, chatRoomIdx);
             return modifyPost;
         } catch (Exception e) {
@@ -136,20 +139,38 @@ public class PostService {
     }
 
     public int modifyPostByChatRoomId(int chatRoomIdx) throws BaseException {
-        try{
+        try {
             int modifyPost = postDao.modifyPostByChatRoomId(chatRoomIdx);
             return modifyPost;
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
     }
 
     public Post modifyPostStatus(int postIdx) throws BaseException {
-        try{
+        try {
             Post modifyPost = postDao.modifyPostStatus(postIdx);
             return modifyPost;
-        } catch(Exception e){
+        } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
         }
+    }
+
+    public List<Post> getPostsByCategory(String category) throws BaseException {
+        List<Post> getPostsByCategory;
+
+        try {
+            getPostsByCategory = postDao.getPostsByCategory(category);
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
+
+        if(getPostsByCategory.isEmpty()) {
+            System.out.println("null임");
+            throw new BaseException(FAILED_TO_FIND_BY_CATEGORY);
+        }
+
+        return getPostsByCategory;
     }
 }
