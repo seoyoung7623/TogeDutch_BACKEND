@@ -139,7 +139,7 @@ public class MatchingDao {
                 + "HAVING distance <= 0.5 "
                 + "ORDER BY distance asc limit 1 ";
 
-        Object[] getDistance = new Object[]{post.getLongitude() ,post.getLatitude(), post.getLongitude()};
+        Object[] getDistance = new Object[]{post.getLatitude(),post.getLongitude(),post.getLatitude()};
 
         User user = this.jdbcTemplate.queryForObject(getdistanceQuery,
                 (rs, rowNum) -> new User(
@@ -157,8 +157,6 @@ public class MatchingDao {
                         rs.getDouble("latitude"),
                         rs.getDouble("longitude")),
                 getDistance
-
-                //
         );
 
             String MatchingQuery = "Insert into Matching (user_first_id, count, Post_post_id) values (?,?,?) ";
@@ -186,12 +184,14 @@ public class MatchingDao {
         }
 
 
-        System.out.println(first);
+        System.out.println("제외 왜 안시킴" + first);
+        System.out.println("제외 왜 안시킴2" + second);
+        System.out.println("제외 왜 안시킴3" + third);
         System.out.println(post.getLongitude());
 
         String getdistanceQuery = "SELECT *, (6371*acos(cos(radians(?))*cos(radians(latitude))*cos(radians(longitude)-radians(?))+sin(radians(?))*sin(radians(latitude)))) AS distance "
                 + "FROM User "
-                + "WHERE user_id != ? or user_id != ? or user_id != ? "
+                + "WHERE user_id != ? and user_id !=?  and user_id !=? "
                 + "HAVING distance <= 0.5 "
                 + "ORDER BY distance asc limit 1 ";
 
