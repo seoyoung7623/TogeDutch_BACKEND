@@ -3,6 +3,7 @@ package com.proj.togedutch.controller;
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.config.BaseResponse;
 import com.proj.togedutch.config.BaseResponseStatus;
+import com.proj.togedutch.entity.CategoryRequest;
 import com.proj.togedutch.entity.ChatRoom;
 import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.entity.User;
@@ -234,4 +235,16 @@ public class PostController {
         }
     }
 
+    /*
+    * 카테고리랑 거리(위도 경도) 주면 일정 거리 한 1km정도 안에 공고들 중에 order time 아직 안지난 공고 리스트 넘겨줌
+    * */
+    @GetMapping("/category")
+    public BaseResponse<List<Post>> getPostsByCategory(@RequestBody CategoryRequest postReq) throws BaseException {
+        try{
+            List<Post> getPostsByCategory = postService.getPostsByCategory(postReq);
+            return new BaseResponse<>(getPostsByCategory);
+        } catch(BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 }
