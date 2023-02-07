@@ -101,8 +101,8 @@ public class MatchingDao {
                         rs.getTimestamp("updated_at"),
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
-                        rs.getDouble("latitude"),
                         rs.getDouble("longitude"),
+                        rs.getDouble("latitude"),
                         rs.getInt("ChatRoom_chatRoom_id"),
                         rs.getString("category")
                 ), postIdx);
@@ -115,7 +115,7 @@ public class MatchingDao {
 
         return post;
     }
-    public Matching getReMatchingSecond(Post post){
+    public Matching getReMatchingSecond(int post_id){
 
         String getMatchingUser = "Select * From Matching Where Post_post_id = ? ";
         Matching match = this.jdbcTemplate.queryForObject(getMatchingUser,
@@ -124,78 +124,29 @@ public class MatchingDao {
                         rs.getInt("user_first_id"),
                         rs.getInt("user_second_id"),
                         rs.getInt("user_third_id"),
-                        rs.getInt("count")), post.getPost_id()
+                        rs.getInt("count"),
+                        rs.getInt("Post_post_id")
+                ), post_id
         );
-
+        System.out.println("뭐가 나오나 보자"+ match.getPostIdx());
         return match;
 
     }
 
-    @Transactional(rollbackFor = Exception.class)
-    public int getNoMatching(Post post) {
 
+    public User getReMatchingThird(Post post, Matching match,int matchCount,int userIdx, int userIdx2){
+
+        System.out.println("롱 "+ post.getLongitude());
+        System.out.println("라"+ post.getLatitude());
+        System.out.println("유퍼"+ userIdx);
+        System.out.println("유세"+ userIdx2);
         String getdistanceQuery = "SELECT *, (6371*acos(cos(radians(?))*cos(radians(latitude))*cos(radians(longitude)-radians(?))+sin(radians(?))*sin(radians(latitude)))) AS distance "
                 + "FROM User "
+                + "WHERE user_id != ? and user_id !=? "
                 + "HAVING distance <= 0.5 "
                 + "ORDER BY distance asc limit 1 ";
 
-        Object[] getDistance = new Object[]{post.getLatitude(),post.getLongitude(),post.getLatitude()};
-
-        User user = this.jdbcTemplate.queryForObject(getdistanceQuery,
-                (rs, rowNum) -> new User(
-                        rs.getInt("user_id"),
-                        rs.getInt("Keyword_keyword_id"),
-                        rs.getString("name"),
-                        rs.getString("role"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("phone"),
-                        rs.getString("image"),
-                        rs.getString("status"),
-                        rs.getTimestamp("created_at"),
-                        rs.getTimestamp("updated_at"),
-                        rs.getDouble("latitude"),
-                        rs.getDouble("longitude")),
-                getDistance
-        );
-
-            String MatchingQuery = "Insert into Matching (user_first_id, count, Post_post_id) values (?,?,?) ";
-            Object[] getMatchingParams = new Object[]{user.getUserIdx(), 1, post.getPost_id()};
-            int a = this.jdbcTemplate.update(MatchingQuery, getMatchingParams);
-            System.out.println(a);
-            return a;
-
-    }
-    public User getReMatchingThird(Post post, Matching match){
-
-        int first=-1;
-        int second=-1;
-        int third=-1;
-
-        if(match.getCount() == 1){
-            first = match.getUserFirstId();
-        }
-        else if (match.getCount() == 2) {
-            first = match.getUserFirstId();
-            second = match.getUserSecondId();
-        }
-        else if (match.getCount() == 3){
-            return null;
-        }
-
-
-        System.out.println("제외 왜 안시킴" + first);
-        System.out.println("제외 왜 안시킴2" + second);
-        System.out.println("제외 왜 안시킴3" + third);
-        System.out.println(post.getLongitude());
-
-        String getdistanceQuery = "SELECT *, (6371*acos(cos(radians(?))*cos(radians(latitude))*cos(radians(longitude)-radians(?))+sin(radians(?))*sin(radians(latitude)))) AS distance "
-                + "FROM User "
-                + "WHERE user_id != ? and user_id !=?  and user_id !=? "
-                + "HAVING distance <= 0.5 "
-                + "ORDER BY distance asc limit 1 ";
-
-        Object[] getDistance = new Object[]{post.getLongitude() ,post.getLatitude(), post.getLongitude() , first ,second ,third};
+        Object[] getDistance = new Object[]{post.getLatitude(),post.getLongitude(), post.getLatitude(), userIdx , userIdx2};
 
         User user1 = this.jdbcTemplate.queryForObject(getdistanceQuery,
                 (rs, rowNum) -> new User(
@@ -217,39 +168,76 @@ public class MatchingDao {
                 //
         );
 
-        logger.info(String.valueOf(user1.getLongitude()));
-        System.out.println(user1);
+        logger.info(String.valueOf(user1.getUserIdx()));
+        System.out.println(user1.getUserIdx());
 
         return user1;
     }
+    @Transactional(rollbackFor = Exception.class)
+    public int getNoMatching(Double latitude, Double longitude, int postIdx) {
+
+        String getdistanceQuery = "SELECT *, (6371*acos(cos(radians(?))*cos(radians(latitude))*cos(radians(longitude)-radians(?))+sin(radians(?))*sin(radians(latitude)))) AS distance "
+                + "FROM User "
+                + "HAVING distance <= 0.5 "
+                + "ORDER BY distance asc limit 1 ";
+
+        System.out.println("다른거?" + latitude +longitude);
+
+        Object[] getDistance = new Object[]{latitude,longitude,latitude};
+
+        User user = this.jdbcTemplate.queryForObject(getdistanceQuery,
+                (rs, rowNum) -> new User(
+                        rs.getInt("user_id"),
+                        rs.getInt("Keyword_keyword_id"),
+                        rs.getString("name"),
+                        rs.getString("role"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phone"),
+                        rs.getString("image"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude")),
+                getDistance
+        );
+
+        String MatchingQuery = "Insert into Matching (user_first_id, count, Post_post_id) values (?,?,?) ";
+        Object[] getMatchingParams = new Object[]{user.getUserIdx(), 1, postIdx};
+        int a = this.jdbcTemplate.update(MatchingQuery, getMatchingParams);
+        System.out.println(a);
+        return a;
+
+    }
 
     @Transactional(rollbackFor = Exception.class)
-    public int getReMatching(Matching match, User user, Post post){
+    public int getReMatching(int matchCount, User user, int postIdx){
 
-        if(match.getCount() == 0){
+        if(matchCount == 0){
             //매칭 횟수 변경
 
             String MatchingQuery = "UPDATE Matching SET user_first_id = ? , count = ? WHERE Post_post_id = ? ";
-            Object[] getMatchingParams = new Object[]{user.getUserIdx(),1,post.getPost_id()};
+            Object[] getMatchingParams = new Object[]{user.getUserIdx(),1,postIdx};
             int c = this.jdbcTemplate.update(MatchingQuery, getMatchingParams);
             System.out.println(c);
             return c;
 
         }
-
-        if(match.getCount() == 1){
+        else if (matchCount == 1){
+            System.out.println(matchCount);
             //매칭 횟수 변경
             String MatchingQuery = "UPDATE Matching SET user_second_id = ? , count = ? WHERE Post_post_id = ? ";
-            Object[] getMatchingParams = new Object[]{user.getUserIdx(),2,post.getPost_id()};
+            Object[] getMatchingParams = new Object[]{user.getUserIdx(),2,postIdx};
             int a = this.jdbcTemplate.update(MatchingQuery, getMatchingParams);
             System.out.println(a);
             return a;
 
         }
-        else if (match.getCount() == 2){
+        else if (matchCount == 2){
             //매칭 횟수 변경
             String MatchingQuery = "UPDATE Matching SET user_third_id = ?,  count = ? WHERE Post_post_id = ? ";
-            Object[] getMatchingParams = new Object[]{user.getUserIdx(),3,post.getPost_id()};
+            Object[] getMatchingParams = new Object[]{user.getUserIdx(),3,postIdx};
             int b = this.jdbcTemplate.update(MatchingQuery, getMatchingParams);
             System.out.println(b);
             return b;
