@@ -33,6 +33,7 @@ public class MatchingService {
             Post post = MatchingDao.getReMatchingFirst(postIdx);
             Matching matching =MatchingDao.getReMatchingSecond(post);
             User user=MatchingDao.getReMatchingThird(post,matching);
+            System.out.println("다른거?" + user.getUserIdx());
             MatchingCount=MatchingDao.getReMatching(matching,user,post);
             return MatchingCount;
         } catch(Exception e){
