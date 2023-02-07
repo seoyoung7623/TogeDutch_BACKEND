@@ -1,6 +1,7 @@
 package com.proj.togedutch.dao;
 
 import com.proj.togedutch.config.BaseException;
+import com.proj.togedutch.entity.CategoryRequest;
 import com.proj.togedutch.entity.Post;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -292,8 +293,22 @@ public class PostDao {
     }
 
     // 카테고리로 공고 조회
-    public List<Post> getPostsByCategory(String category) throws BaseException {
-        String getPostQuery = "select * from Post where category = ?";
+    public List<Post> getPostsByCategory(CategoryRequest postReq) throws BaseException {
+        this.jdbcTemplate.update("set time_zone = 'Asia/Seoul'");
+
+        String getPostQuery = "SELECT\n" +
+                "    * , (\n" +
+                "       6371 * acos ( cos ( radians(?) ) * cos( radians(latitude) ) * cos( radians(longitude) - radians(?) )\n" +
+                "          + sin ( radians(?) ) * sin( radians(`latitude`) )\n" +
+                "       )\n" +
+                "   ) AS distance\n" +
+                "FROM Post\n" +
+                "where order_time > now() and category = ?\n" +
+                "HAVING distance <= 1\n" +
+                "ORDER BY distance;";
+
+        Object[] getPostParams = new Object[]{ postReq.getLatitude(), postReq.getLongitude(), postReq.getLatitude(), postReq.getCategory() };
+
         return this.jdbcTemplate.query(getPostQuery,
                     (rs, rowNum) -> new Post(
                             rs.getInt("post_id"),
@@ -313,6 +328,6 @@ public class PostDao {
                             rs.getDouble("longitude"),
                             rs.getInt("ChatRoom_chatRoom_id"),
                             rs.getString("category")
-                    ), category);
+                    ), getPostParams);
     }
 }

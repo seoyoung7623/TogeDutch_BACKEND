@@ -2,6 +2,7 @@ package com.proj.togedutch.service;
 
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.dao.PostDao;
+import com.proj.togedutch.entity.CategoryRequest;
 import com.proj.togedutch.entity.Post;
 import com.proj.togedutch.entity.User;
 import org.slf4j.Logger;
@@ -156,11 +157,11 @@ public class PostService {
         }
     }
 
-    public List<Post> getPostsByCategory(String category) throws BaseException {
+    public List<Post> getPostsByCategory(CategoryRequest postReq) throws BaseException {
         List<Post> getPostsByCategory;
 
         try {
-            getPostsByCategory = postDao.getPostsByCategory(category);
+            getPostsByCategory = postDao.getPostsByCategory(postReq);
         } catch(Exception e) {
             e.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
