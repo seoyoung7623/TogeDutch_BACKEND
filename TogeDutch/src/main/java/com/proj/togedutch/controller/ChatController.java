@@ -26,7 +26,7 @@ public class ChatController {
 
     // 채팅 가져오기
     @GetMapping("/chatmessage/{chat_id}")
-    public BaseResponse<ChatMessage> getChatMessage(@PathVariable("chatRoom_id") int chatRoomId,@PathVariable("chat_id") int chatId) throws BaseException {
+    public BaseResponse<ChatMessage> getChatMessage(@PathVariable("chatRoom_id") int chatRoomId, @PathVariable("chat_id") int chatId) throws BaseException {
         try{
             ChatMessage chatMessage = chatService.getChatMessage(chatRoomId,chatId);
             return new BaseResponse<>(chatMessage);
@@ -38,9 +38,9 @@ public class ChatController {
     //채팅 저장
     @ResponseBody
     @PostMapping("/chatmessage")
-    public BaseResponse<ChatMessage> createChatMessage(@RequestPart ChatMessage message) throws  BaseException {
+    public BaseResponse<ChatMessage> createChatMessage(@PathVariable("chatRoom_id") int chatRoomId,@RequestPart ChatMessage message) throws IOException, NullPointerException {
         try {
-            ChatMessage chatMessage = chatService.createChatMessage(message);
+            ChatMessage chatMessage = chatService.createChatMessage(chatRoomId,message);
             return new BaseResponse<>(chatMessage);
         } catch (BaseException e){
             return new BaseResponse<>(e.getStatus());
