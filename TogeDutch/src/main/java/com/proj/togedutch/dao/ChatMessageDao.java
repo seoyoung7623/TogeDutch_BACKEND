@@ -52,13 +52,16 @@ public class ChatMessageDao {
                 rs.getInt("ChatRoom_chatRoom_id"),
                 rs.getInt("User_user_id"),
                 rs.getTimestamp("created_at"),
+
+
+
                 rs.getString("content"),
                 rs.getString("name")
         ),chatRoom_id);
     }
-    public int createChatMessage(ChatMessage message) {
+    public int createChatMessage(int chatRoomId, ChatMessage message) {
         String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
-        Object[] createChatMessage = new Object[]{message.getChatRoomId(),message.getUserId(),message.getContent()};
+        Object[] createChatMessage = new Object[]{chatRoomId,message.getUserId(),message.getContent()};
         this.jdbcTemplate.update(sql, createChatMessage);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
