@@ -59,9 +59,9 @@ public class ChatMessageDao {
                 rs.getString("name")
         ),chatRoom_id);
     }
-    public int createChatMessage(int chatRoomId, ChatMessage message) {
+    public int createChatMessage(int chatRoomId, int user ,ChatMessage message) {
         String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
-        Object[] createChatMessage = new Object[]{chatRoomId,message.getUserId(),message.getContent()};
+        Object[] createChatMessage = new Object[]{chatRoomId,user,message.getContent()};
         this.jdbcTemplate.update(sql, createChatMessage);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);

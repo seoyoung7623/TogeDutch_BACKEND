@@ -38,9 +38,9 @@ public class ChatController {
     //채팅 저장
     @ResponseBody
     @PostMapping("/chatmessage")
-    public BaseResponse<ChatMessage> createChatMessage(@PathVariable("chatRoom_id") int chatRoomId,@RequestPart ChatMessage message) throws IOException, NullPointerException {
+    public BaseResponse<ChatMessage> createChatMessage(@PathVariable("chatRoom_id") int chatRoomId, @RequestParam int user,@RequestPart ChatMessage message) throws IOException, NullPointerException {
         try {
-            ChatMessage chatMessage = chatService.createChatMessage(chatRoomId,message);
+            ChatMessage chatMessage = chatService.createChatMessage(chatRoomId,user,message);
             return new BaseResponse<>(chatMessage);
         } catch (BaseException e){
             return new BaseResponse<>(e.getStatus());
