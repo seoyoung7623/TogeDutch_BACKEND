@@ -25,8 +25,8 @@ public class Post {
     private Timestamp updated_at;
     private int user_id;
     private String image;
-    private Double longitude;
     private Double latitude;
+    private Double longitude;
     private int chatRoom_id;
     private String category;
 }
