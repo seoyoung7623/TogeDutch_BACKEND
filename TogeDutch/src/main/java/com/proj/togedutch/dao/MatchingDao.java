@@ -173,7 +173,7 @@ public class MatchingDao {
         return user1;
     }
     @Transactional(rollbackFor = Exception.class)
-    public int getNoMatching(Double latitude, Double longitude, int postIdx) {
+    public User getNoMatching(Double latitude, Double longitude, int postIdx) {
 
         String getdistanceQuery = "SELECT *, (6371*acos(cos(radians(?))*cos(radians(latitude))*cos(radians(longitude)-radians(?))+sin(radians(?))*sin(radians(latitude)))) AS distance "
                 + "FROM User "
@@ -206,7 +206,7 @@ public class MatchingDao {
         Object[] getMatchingParams = new Object[]{user.getUserIdx(), 1, postIdx};
         int a = this.jdbcTemplate.update(MatchingQuery, getMatchingParams);
         System.out.println(a);
-        return a;
+        return user;
 
     }
 
