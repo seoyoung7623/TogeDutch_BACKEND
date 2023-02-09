@@ -10,11 +10,12 @@ import com.proj.togedutch.entity.ChatPhoto;
 import com.proj.togedutch.service.ChatMessageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequiredArgsConstructor
 @Controller
+@RequestMapping("/chat")
 public class ChatWebSockController {
     private final ChatMessageService chatMessageService;
 
@@ -43,4 +44,5 @@ public class ChatWebSockController {
     public void meetTime(ChatMeetTime meetTime){
         chatMessageService.sendChatMeetTime(meetTime);
     }
+
 }

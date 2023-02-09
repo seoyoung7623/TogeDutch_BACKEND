@@ -34,6 +34,7 @@ public class ChatMessageDao {
 
     // 채팅 메세지 조회
     public ChatMessage getChatMessage(int chatRoomId, int chatId) {
+        this.jdbcTemplate.update("set time_zone = 'Asia/Seoul'");
         String sql = "select Chat.*,User.name from Chat join User on Chat.User_user_id = User.user_id where ChatRoom_chatRoom_id = ? and chat_id = ?";
         return this.jdbcTemplate.queryForObject(sql,(rs, rowNum) -> new ChatMessage(
                 rs.getInt("chat_id"),
@@ -52,19 +53,24 @@ public class ChatMessageDao {
                 rs.getInt("ChatRoom_chatRoom_id"),
                 rs.getInt("User_user_id"),
                 rs.getTimestamp("created_at"),
+
+
+
                 rs.getString("content"),
                 rs.getString("name")
         ),chatRoom_id);
     }
-    public int createChatMessage(ChatMessage message) {
+    public int createChatMessage(int chatRoomId, int user ,ChatMessage message) {
+        this.jdbcTemplate.update("set time_zone = 'Asia/Seoul'");
         String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
-        Object[] createChatMessage = new Object[]{message.getChatRoomId(),message.getUserId(),message.getContent()};
+        Object[] createChatMessage = new Object[]{chatRoomId,user,message.getContent()};
         this.jdbcTemplate.update(sql, createChatMessage);
         String lastInsertIdQuery = "select last_insert_id()";
         return this.jdbcTemplate.queryForObject(lastInsertIdQuery, int.class);
     }
 
     public void saveMessage(ChatMessage message){
+        this.jdbcTemplate.update("set time_zone = 'Asia/Seoul'");
         String roomIdName = Integer.toString(message.getChatRoomId());
         String sql = "INSERT INTO Chat (`ChatRoom_chatRoom_id`, `User_user_id`, `content`) VALUES (?,?,?)";
         Object[] createMessageParams = new Object[]{message.getChatRoomId(),message.getUserId(),message.getContent()};
@@ -110,6 +116,7 @@ public class ChatMessageDao {
 
 
     public int createChatPhoto(int chatRoomId,int userId,String file) {
+        this.jdbcTemplate.update("set time_zone = 'Asia/Seoul'");
         String ChatPhotoQuery = "insert into ChatPhoto (ChatRoom_chatRoom_id,User_user_id,image,created_at) Values (?,?,?)";
 
         Object[] createChatPhoto = new Object[]{chatRoomId,userId,file};
@@ -119,6 +126,7 @@ public class ChatMessageDao {
     }
 
     public int createChatMeetTime(int chatRoom_id, int user, String time) {
+        this.jdbcTemplate.update("set time_zone = 'Asia/Seoul'");
         String chatMeetTimeQuery = "insert into ChatMeetTime (ChatRoom_chatRoom_id,User_user_id,meetTime) values (?,?,?)";
         Object[] MeetTimeParams = new Object[]{chatRoom_id,user,time};
         this.jdbcTemplate.update(chatMeetTimeQuery,MeetTimeParams);
@@ -139,12 +147,14 @@ public class ChatMessageDao {
     }
 
     public void putChatMeetTime(int chatRoom_id,int chatMeetTime_id,String time){
+        this.jdbcTemplate.update("set time_zone = 'Asia/Seoul'");
         String updateMeetTimeQuery = "update ChatMeetTime set meetTime=? where chatMeetTime_id = ? and ChatRoom_chatRoom_id = ?";
         Object[] putMeetTimeParams = new Object[]{time,chatMeetTime_id,chatRoom_id};
         this.jdbcTemplate.update(updateMeetTimeQuery,putMeetTimeParams);
     }
 
     public int createChatLocation(int chatRoom_id, int user, BigDecimal latitude, BigDecimal longitude) {
+        this.jdbcTemplate.update("set time_zone = 'Asia/Seoul'");
         String createChatLocationQuery = "insert into ChatLocation (ChatRoom_chatRoom_id,User_user_id, latitude, longitude) values (?,?,?,?)";
         Object[] createChatLocationParams = new Object[]{chatRoom_id,user,latitude, longitude};
         this.jdbcTemplate.update(createChatLocationQuery,createChatLocationParams);
@@ -166,6 +176,7 @@ public class ChatMessageDao {
     }
 
     public void putChatLocation(int chatRoom_id, int chatLocationIdx, BigDecimal latitude, BigDecimal longitude) {
+        this.jdbcTemplate.update("set time_zone = 'Asia/Seoul'");
         String updateCLQuery = "update ChatLocation set latitude=?, longitude=? where chatLocation_id = ? and ChatRoom_chatRoom_id = ?";
         Object[] putChatLocationParams = new Object[]{latitude,longitude,chatLocationIdx,chatRoom_id};
         this.jdbcTemplate.update(updateCLQuery,putChatLocationParams);

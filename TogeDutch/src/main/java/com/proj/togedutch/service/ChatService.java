@@ -26,6 +26,7 @@ public class ChatService {
     public ChatMessage getChatMessage(int chatRoomId, int chatId) throws  BaseException {
         try {
             ChatMessage chatMessage = chatMessageDao.getChatMessage(chatRoomId,chatId);
+            System.out.println(chatMessage.getCreateAt());
             chatMessage.setType(ChatMessage.MessageType.TALK);
             return chatMessage;
         }catch (Exception e){
@@ -44,12 +45,10 @@ public class ChatService {
         }
     }
     // 채팅 메세지 생성
-    public ChatMessage createChatMessage(ChatMessage chatMessage) throws BaseException {
+    public int createChatMessage(int chatRoomId, int user ,ChatMessage chatMessage) throws BaseException {
         try {
-            int message_id = chatMessageDao.createChatMessage(chatMessage);
-            ChatMessage newMessage = chatMessageDao.getChatMessage(chatMessage.getChatRoomId(),message_id);
-            newMessage.setType(ChatMessage.MessageType.TALK);
-            return newMessage;
+            int message_id = chatMessageDao.createChatMessage(chatRoomId,user,chatMessage);
+            return message_id;
         } catch (Exception e){
             throw new BaseException(DATABASE_ERROR);
         }

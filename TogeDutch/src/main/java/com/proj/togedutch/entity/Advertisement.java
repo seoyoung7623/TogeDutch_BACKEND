@@ -17,8 +17,8 @@ public class Advertisement {
     private String information;
     private String mainMenu;
     private int deliveryTips;
-    private Double longitude;
     private Double latitude;
+    private Double longitude;
     private String request;
     private Timestamp createdAt;
     private Timestamp updatedAt;
