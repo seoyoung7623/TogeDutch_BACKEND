@@ -169,11 +169,12 @@ public class PostController {
     //공고삭제
     @ResponseBody
     @DeleteMapping("/delete/{postIdx}")
-    public int deletePost(@PathVariable("postIdx") int postIdx) throws Exception {
+    public BaseResponse<Integer> deletePost(@PathVariable("postIdx") int postIdx) throws Exception {
 
             int deletePost = postService.deletePost(postIdx);
             logger.info("Delete success");
-            return deletePost;
+
+            return new BaseResponse<>(deletePost);
 
     }
 
