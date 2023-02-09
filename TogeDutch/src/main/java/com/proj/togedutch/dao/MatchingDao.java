@@ -183,7 +183,7 @@ public class MatchingDao {
 
         System.out.println("다른거?" + latitude +longitude);
 
-        Object[] getDistance = new Object[]{latitude,longitude,latitude};
+        Object[] getDistance = new Object[]{longitude,latitude,longitude};
 
         User user = this.jdbcTemplate.queryForObject(getdistanceQuery,
                 (rs, rowNum) -> new User(
