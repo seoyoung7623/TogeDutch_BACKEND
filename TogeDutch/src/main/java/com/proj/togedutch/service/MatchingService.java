@@ -58,7 +58,7 @@ public class MatchingService {
             MatchingCount=300;
             Post post = MatchingDao.getReMatchingFirst(postIdx);
             MatchingCount = MatchingDao.getNoMatching(post.getLatitude(),post.getLongitude(),post.getPost_id());
-            
+
             return MatchingCount;
             //throw new BaseException(DATABASE_ERROR);
         }
