@@ -26,6 +26,7 @@ public class ChatService {
     public ChatMessage getChatMessage(int chatRoomId, int chatId) throws  BaseException {
         try {
             ChatMessage chatMessage = chatMessageDao.getChatMessage(chatRoomId,chatId);
+            System.out.println(chatMessage.getCreateAt());
             chatMessage.setType(ChatMessage.MessageType.TALK);
             return chatMessage;
         }catch (Exception e){
