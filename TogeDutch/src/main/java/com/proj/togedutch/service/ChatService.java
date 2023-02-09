@@ -44,12 +44,10 @@ public class ChatService {
         }
     }
     // 채팅 메세지 생성
-    public ChatMessage createChatMessage(int chatRoomId, int user ,ChatMessage chatMessage) throws BaseException {
+    public int createChatMessage(int chatRoomId, int user ,ChatMessage chatMessage) throws BaseException {
         try {
             int message_id = chatMessageDao.createChatMessage(chatRoomId,user,chatMessage);
-            ChatMessage newMessage = chatMessageDao.getChatMessage(chatRoomId,message_id);
-            newMessage.setType(ChatMessage.MessageType.TALK);
-            return newMessage;
+            return message_id;
         } catch (Exception e){
             throw new BaseException(DATABASE_ERROR);
         }

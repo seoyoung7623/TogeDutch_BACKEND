@@ -40,7 +40,9 @@ public class ChatController {
     @PostMapping("/chatmessage")
     public BaseResponse<ChatMessage> createChatMessage(@PathVariable("chatRoom_id") int chatRoomId, @RequestParam int user,@RequestBody ChatMessage message) throws IOException, NullPointerException {
         try {
-            ChatMessage chatMessage = chatService.createChatMessage(chatRoomId,user,message);
+            int message_id = chatService.createChatMessage(chatRoomId,user,message);
+            ChatMessage chatMessage = chatService.getChatMessage(chatRoomId,message_id);
+            chatMessage.setType(ChatMessage.MessageType.TALK);
             return new BaseResponse<>(chatMessage);
         } catch (BaseException e){
             return new BaseResponse<>(e.getStatus());
