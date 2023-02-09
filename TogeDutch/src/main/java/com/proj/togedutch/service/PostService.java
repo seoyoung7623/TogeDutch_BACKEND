@@ -160,6 +160,9 @@ public class PostService {
     public List<Post> getPostsByCategory(CategoryRequest postReq) throws BaseException {
         List<Post> getPostsByCategory;
 
+        if(postReq.getCategory1() == null)
+            throw new BaseException(NONE_INPUT_CATEGORY);
+
         try {
             getPostsByCategory = postDao.getPostsByCategory(postReq);
         } catch(Exception e) {
