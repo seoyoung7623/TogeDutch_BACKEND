@@ -72,9 +72,9 @@ public class KakaoPayController {
         KakaoCancelRes kakaoCancelRes = kakaoPayService.payCancel(tid);
         try {
             adService.deleteAd(tid);
+            return new ResponseEntity<>(new BaseResponse<>(kakaoCancelRes), HttpStatus.OK);
         } catch (BaseException e) {
-            return new ResponseEntity<>(e.getStatus(), HttpStatus.BAD_GATEWAY);
+            return new ResponseEntity<>(new BaseResponse<>(e.getStatus()), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(kakaoCancelRes, HttpStatus.OK);
     }
 }
