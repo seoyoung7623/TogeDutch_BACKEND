@@ -1,9 +1,6 @@
 package com.proj.togedutch.dao;
 
-import com.proj.togedutch.entity.Application;
-import com.proj.togedutch.entity.Keyword;
-import com.proj.togedutch.entity.Review;
-import com.proj.togedutch.entity.User;
+import com.proj.togedutch.entity.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,24 +25,28 @@ public class ReviewDao {
 
         String getApplicationQuery = "select * from Application where application_id = ?";
         int getApplicationParams = applicationId;
-        Application application = this.jdbcTemplate.queryForObject(getApplicationQuery,
-                (rs, rowNum) -> new Application(
+        ReviewApplication application = this.jdbcTemplate.queryForObject(getApplicationQuery,
+                (rs, rowNum) -> new ReviewApplication(
                         rs.getInt("application_id"),
                         rs.getString("status"),
                         rs.getInt("Post_post_id"),
+                        rs.getInt("Post_User_user_id"),
                         rs.getInt("User_user_id"),
                         rs.getInt("ChatRoom_chatRoom_id")),
                 getApplicationParams
         );
 
-        logger.info(String.valueOf(application.getStatus()));
-        System.out.println(application.getUser_id());
+        //logger.info(String.valueOf(application.getStatus()));
+        //System.out.println(application.getUser_id());
 
-        String InsertReviewQuery = "insert into Review (emotion_status, content, Application_application_Id, Application_Post_post_id, Application_Post_User_user_id) VALUES (?, ?, ?, ?, ?) ";
+        String InsertReviewQuery = "insert into Review (emotion_status, content, Application_application_id, Application_Post_post_id, Application_Post_User_user_id) VALUES (?, ?, ?, ?, ?) ";
         System.out.println(review.getEmotionStatus());
         System.out.println(review.getContent());
+        System.out.println(applicationId);
+        System.out.println(application.getPost_id());
+        System.out.println(application.getPost_user_id());
 
-        Object[] createReviewParams = new Object[]{review.getEmotionStatus(), review.getContent(), applicationId, application.getPost_id(), application.getUser_id()};
+        Object[] createReviewParams = new Object[]{review.getEmotionStatus(), review.getContent(), applicationId, application.getPost_id(), application.getPost_user_id()};
         return this.jdbcTemplate.update(InsertReviewQuery, createReviewParams);
 
     }

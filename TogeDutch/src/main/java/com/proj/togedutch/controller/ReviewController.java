@@ -35,10 +35,15 @@ public class ReviewController {
 
     @ResponseBody
     @PostMapping("/{applicationId}")
-    public int createReview(@RequestPart Review review, @PathVariable("applicationId") int applicationId) throws BaseException {
+    public BaseResponse<Integer> createReview(@RequestBody Review review, @PathVariable("applicationId") int applicationId) throws BaseException {
 
-
-            return reviewService.createReview(applicationId,review);
+        try {
+            int a = reviewService.createReview(applicationId,review);
+            System.out.println(a);
+            return new BaseResponse<>(a);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
 
     }
 
