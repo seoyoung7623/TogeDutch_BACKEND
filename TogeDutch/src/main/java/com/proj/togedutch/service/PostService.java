@@ -160,21 +160,36 @@ public class PostService {
     public List<Post> getPostsByCategory(CategoryRequest postReq) throws BaseException {
         List<Post> getPostsByCategory;
 
-        if(postReq.getCategory1() == null)
+        if (postReq.getCategory1() == null)
             throw new BaseException(NONE_INPUT_CATEGORY);
 
         try {
             getPostsByCategory = postDao.getPostsByCategory(postReq);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new BaseException(DATABASE_ERROR);
         }
 
-        if(getPostsByCategory.isEmpty()) {
+        if (getPostsByCategory.isEmpty()) {
             System.out.println("null임");
             throw new BaseException(FAILED_TO_FIND_BY_CATEGORY);
         }
 
         return getPostsByCategory;
+    }
+
+    public List<User> getUsersInPost(int postIdx) throws BaseException {
+
+        Post post = postDao.getPostById(postIdx);
+        if(post.getStatus().equals("공고사용불가"))
+            throw new BaseException(POST_NOT_ACCESSIBLE);
+
+        try {
+            List<User> getUsersInPost = postDao.getUsersInPost(postIdx);
+            return getUsersInPost;
+        } catch (BaseException e) {
+            e.printStackTrace();
+            throw new BaseException(DATABASE_ERROR);
+        }
     }
 }

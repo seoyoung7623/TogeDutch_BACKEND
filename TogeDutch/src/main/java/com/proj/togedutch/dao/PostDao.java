@@ -3,6 +3,7 @@ package com.proj.togedutch.dao;
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.entity.CategoryRequest;
 import com.proj.togedutch.entity.Post;
+import com.proj.togedutch.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -303,11 +304,11 @@ public class PostDao {
                 "       )\n" +
                 "   ) AS distance\n" +
                 "FROM Post\n" +
-                "where order_time > now() and (category = ? or category = ? or category = ? or category = ? or category = ? or category = ?)\n" +
+                "where order_time > now() and (category = ? or category = ? or category = ? or category = ? or category = ? or category = ?) and status = ? \n" +
                 "HAVING distance <= 1\n" +
                 "ORDER BY distance;";
 
-        Object[] getPostParams = new Object[]{ postReq.getLatitude(), postReq.getLongitude(), postReq.getLatitude(), postReq.getCategory1(), postReq.getCategory2(), postReq.getCategory3(), postReq.getCategory4(), postReq.getCategory5(), postReq.getCategory6() };
+        Object[] getPostParams = new Object[]{ postReq.getLatitude(), postReq.getLongitude(), postReq.getLatitude(), postReq.getCategory1(), postReq.getCategory2(), postReq.getCategory3(), postReq.getCategory4(), postReq.getCategory5(), postReq.getCategory6(), "모집중" };
 
         return this.jdbcTemplate.query(getPostQuery,
                     (rs, rowNum) -> new Post(
@@ -329,5 +330,26 @@ public class PostDao {
                             rs.getInt("ChatRoom_chatRoom_id"),
                             rs.getString("category")
                     ), getPostParams);
+    }
+
+    public List<User> getUsersInPost(int postIdx) throws BaseException {
+        String getUsersQuery = "select * from User where user_id in ( select User_user_id from Application where Post_post_id = ? and status = \"수락완료\");";
+
+        return this.jdbcTemplate.query(getUsersQuery,
+                (rs, rowNum) -> new User(
+                        rs.getInt("user_id"),
+                        rs.getInt("Keyword_keyword_id"),
+                        rs.getString("name"),
+                        rs.getString("role"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phone"),
+                        rs.getString("image"),
+                        rs.getString("status"),
+                        rs.getTimestamp("created_at"),
+                        rs.getTimestamp("updated_at"),
+                        rs.getDouble("latitude"),
+                        rs.getDouble("longitude"))
+        , postIdx);
     }
 }
