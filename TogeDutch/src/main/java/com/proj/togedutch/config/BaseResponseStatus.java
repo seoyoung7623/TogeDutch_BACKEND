@@ -91,7 +91,7 @@ public enum BaseResponseStatus {
 
     // [POST] /post
     FAILED_TO_FIND_BY_CATEGORY(false, 3016, "해당하는 카테고리에 공고가 없습니다."),
-
+    NONE_INPUT_CATEGORY(false, 3017, "카테고리를 입력하지 않았습니다."),
     //Application
     NOT_FULL_NUM_OF_RECRUITS(false, 3020, "모집인원이 채워지지 않았습니다."),
 

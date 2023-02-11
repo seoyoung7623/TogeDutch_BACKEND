@@ -169,11 +169,12 @@ public class PostController {
     //공고삭제
     @ResponseBody
     @DeleteMapping("/delete/{postIdx}")
-    public int deletePost(@PathVariable("postIdx") int postIdx) throws Exception {
+    public BaseResponse<Integer> deletePost(@PathVariable("postIdx") int postIdx) throws Exception {
 
             int deletePost = postService.deletePost(postIdx);
             logger.info("Delete success");
-            return deletePost;
+
+            return new BaseResponse<>(deletePost);
 
     }
 
@@ -238,7 +239,7 @@ public class PostController {
     /*
     * 카테고리랑 거리(위도 경도) 주면 일정 거리 한 1km정도 안에 공고들 중에 order time 아직 안지난 공고 리스트 넘겨줌
     * */
-    @GetMapping("/category")
+    @PostMapping("/category")
     public BaseResponse<List<Post>> getPostsByCategory(@RequestBody CategoryRequest postReq) throws BaseException {
         try{
             List<Post> getPostsByCategory = postService.getPostsByCategory(postReq);

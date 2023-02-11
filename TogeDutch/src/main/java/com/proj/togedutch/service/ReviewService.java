@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
+import static com.proj.togedutch.config.BaseResponseStatus.DUPLICATED_EMAIL;
+
 @Service
 public class ReviewService {
 
@@ -24,7 +26,7 @@ public class ReviewService {
         try {
             return reviewDao.createReview(applicationId,review);
         } catch (Exception e) {
-            throw new BaseException(DATABASE_ERROR);
+            throw new BaseException(DUPLICATED_EMAIL);
         }
 
     }

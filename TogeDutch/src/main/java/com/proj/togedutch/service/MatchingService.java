@@ -29,8 +29,9 @@ public class MatchingService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
-    public int getReMatching(int postIdx) throws BaseException {
+    public User getReMatching(int postIdx) throws BaseException {
         int MatchingCount = 500;
+        User user = null;
         try{
             Post post = MatchingDao.getReMatchingFirst(postIdx);
             Matching matching =MatchingDao.getReMatchingSecond(post.getPost_id());
@@ -39,27 +40,28 @@ public class MatchingService {
 
             if(matching.getCount() == 1){
                 first = matching.getUserFirstId();
-                User user=MatchingDao.getReMatchingThird(post,matching,matching.getCount(), first , second);
+                user=MatchingDao.getReMatchingThird(post,matching,matching.getCount(), first , second);
                 MatchingCount=MatchingDao.getReMatching(matching.getCount(),user,post.getPost_id());
             }
             else if (matching.getCount() == 2) {
                 first = matching.getUserFirstId();
                 second = matching.getUserSecondId();
-                User user=MatchingDao.getReMatchingThird(post,matching,matching.getCount(), first , second);
+                user=MatchingDao.getReMatchingThird(post,matching,matching.getCount(), first , second);
                 MatchingCount=MatchingDao.getReMatching(matching.getCount(),user,post.getPost_id());
             }
             else if (matching.getCount() == 3){
                 MatchingCount=400; //횟수 초과
-                return MatchingCount;
+                user = new User("3번 횟수 초과");
+                return user;
             }
 
-            return MatchingCount;
+            return user;
         } catch(EmptyResultDataAccessException e){
             MatchingCount=300;
             Post post = MatchingDao.getReMatchingFirst(postIdx);
-            MatchingCount = MatchingDao.getNoMatching(post.getLatitude(),post.getLongitude(),post.getPost_id());
-            
-            return MatchingCount;
+            user = MatchingDao.getNoMatching(post.getLatitude(),post.getLongitude(),post.getPost_id());
+
+            return user;
             //throw new BaseException(DATABASE_ERROR);
         }
 

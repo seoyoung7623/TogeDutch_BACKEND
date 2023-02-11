@@ -60,4 +60,7 @@ public class User {
         this.email = email;
         this.password = password;
     }
+    public User(String Status) {
+        this.status = Status;
+    }
 }

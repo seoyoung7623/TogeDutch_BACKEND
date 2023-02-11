@@ -10,12 +10,9 @@ import com.proj.togedutch.entity.KakaoReadyRes;
 import com.proj.togedutch.service.AdService;
 import com.proj.togedutch.service.KakaoPayService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
 
 @Slf4j
 @RestController
@@ -47,7 +44,7 @@ public class KakaoPayController {
         return kakaoReadyRes;
     }
     @GetMapping("/success")
-    public BaseResponse<Advertisement> kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model) throws IOException {
+    public BaseResponse<Advertisement> kakaoPaySuccess(@RequestParam("pg_token") String pg_token, Model model){
         log.info("kakaoPaySuccess get............................................");
         log.info("kakaoPaySuccess pg_token : " + pg_token);
         KakaoApproveRes kakaoApproveRes = kakaoPayService.payApprove(pg_token);
@@ -68,13 +65,13 @@ public class KakaoPayController {
     }
 
     @PostMapping("/refund")
-    public ResponseEntity kakaoPayRefund(@RequestParam("tid") String tid){
+    public BaseResponse<?> kakaoPayRefund(@RequestParam("tid") String tid){
         KakaoCancelRes kakaoCancelRes = kakaoPayService.payCancel(tid);
         try {
             adService.deleteAd(tid);
+            return new BaseResponse<>(kakaoCancelRes);
         } catch (BaseException e) {
-            return new ResponseEntity<>(e.getStatus(), HttpStatus.BAD_GATEWAY);
+            return new BaseResponse<>(e.getStatus());
         }
-        return new ResponseEntity<>(kakaoCancelRes, HttpStatus.OK);
     }
 }

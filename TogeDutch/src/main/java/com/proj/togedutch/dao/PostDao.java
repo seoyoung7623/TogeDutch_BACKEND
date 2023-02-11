@@ -303,11 +303,11 @@ public class PostDao {
                 "       )\n" +
                 "   ) AS distance\n" +
                 "FROM Post\n" +
-                "where order_time > now() and category = ?\n" +
+                "where order_time > now() and (category = ? or category = ? or category = ? or category = ? or category = ? or category = ?)\n" +
                 "HAVING distance <= 1\n" +
                 "ORDER BY distance;";
 
-        Object[] getPostParams = new Object[]{ postReq.getLatitude(), postReq.getLongitude(), postReq.getLatitude(), postReq.getCategory() };
+        Object[] getPostParams = new Object[]{ postReq.getLatitude(), postReq.getLongitude(), postReq.getLatitude(), postReq.getCategory1(), postReq.getCategory2(), postReq.getCategory3(), postReq.getCategory4(), postReq.getCategory5(), postReq.getCategory6() };
 
         return this.jdbcTemplate.query(getPostQuery,
                     (rs, rowNum) -> new Post(

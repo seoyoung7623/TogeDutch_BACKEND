@@ -101,8 +101,8 @@ public class MatchingDao {
                         rs.getTimestamp("updated_at"),
                         rs.getInt("User_user_id"),
                         rs.getString("image"),
-                        rs.getDouble("longitude"),
                         rs.getDouble("latitude"),
+                        rs.getDouble("longitude"),
                         rs.getInt("ChatRoom_chatRoom_id"),
                         rs.getString("category")
                 ), postIdx);
@@ -117,7 +117,7 @@ public class MatchingDao {
     }
     public Matching getReMatchingSecond(int post_id){
 
-        String getMatchingUser = "Select * From Matching Where Post_post_id = ? ";
+        String getMatchingUser = "Select * From Matching Where Post_post_id = ?  ";
         Matching match = this.jdbcTemplate.queryForObject(getMatchingUser,
                 (rs, rowNum) -> new Matching(
                         rs.getInt("Matching_Id"),
@@ -146,7 +146,7 @@ public class MatchingDao {
                 + "HAVING distance <= 0.5 "
                 + "ORDER BY distance asc limit 1 ";
 
-        Object[] getDistance = new Object[]{post.getLatitude(),post.getLongitude(), post.getLatitude(), userIdx , userIdx2};
+        Object[] getDistance = new Object[]{post.getLongitude(), post.getLatitude(),post.getLongitude(), userIdx , userIdx2};
 
         User user1 = this.jdbcTemplate.queryForObject(getdistanceQuery,
                 (rs, rowNum) -> new User(
@@ -165,7 +165,6 @@ public class MatchingDao {
                         rs.getDouble("longitude")),
                 getDistance
 
-                //
         );
 
         logger.info(String.valueOf(user1.getUserIdx()));
@@ -174,7 +173,7 @@ public class MatchingDao {
         return user1;
     }
     @Transactional(rollbackFor = Exception.class)
-    public int getNoMatching(Double latitude, Double longitude, int postIdx) {
+    public User getNoMatching(Double latitude, Double longitude, int postIdx) {
 
         String getdistanceQuery = "SELECT *, (6371*acos(cos(radians(?))*cos(radians(latitude))*cos(radians(longitude)-radians(?))+sin(radians(?))*sin(radians(latitude)))) AS distance "
                 + "FROM User "
@@ -183,7 +182,7 @@ public class MatchingDao {
 
         System.out.println("다른거?" + latitude +longitude);
 
-        Object[] getDistance = new Object[]{latitude,longitude,latitude};
+        Object[] getDistance = new Object[]{longitude,latitude,longitude};
 
         User user = this.jdbcTemplate.queryForObject(getdistanceQuery,
                 (rs, rowNum) -> new User(
@@ -207,7 +206,7 @@ public class MatchingDao {
         Object[] getMatchingParams = new Object[]{user.getUserIdx(), 1, postIdx};
         int a = this.jdbcTemplate.update(MatchingQuery, getMatchingParams);
         System.out.println(a);
-        return a;
+        return user;
 
     }
 

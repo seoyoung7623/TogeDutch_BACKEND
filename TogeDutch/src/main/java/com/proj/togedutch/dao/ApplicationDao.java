@@ -1,19 +1,16 @@
 package com.proj.togedutch.dao;
 
 import com.proj.togedutch.config.BaseException;
-import com.proj.togedutch.entity.*;
+import com.proj.togedutch.entity.Application;
+import com.proj.togedutch.entity.ChatRoom;
+import com.proj.togedutch.entity.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-
-
 import javax.sql.DataSource;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import static com.proj.togedutch.config.BaseResponseStatus.DATABASE_ERROR;
@@ -112,13 +109,13 @@ public class ApplicationDao {
 
     //채팅방 전체 조회 (내가 참여)
     public List<ChatRoom> getChatRoomByJoinUserId(int userIdx) throws BaseException {
-        String getChatRoomQuery = "select * From ChatRoom where chatRoom_id In( select ChatRoom_chatRoom_id from Application where User_user_id = ? )";
+        String getChatRoomQuery = "select * From ChatRoom where chatRoom_id In( select ChatRoom_chatRoom_id from Application where User_user_id = ? and status = ?)";
 
         return this.jdbcTemplate.query(getChatRoomQuery,
                 (rs, rowNum) -> new ChatRoom(
                         rs.getInt("chatRoom_id"),
                         rs.getTimestamp("created_at")
-                ), userIdx);
+                ), userIdx, "수락완료");
     }
 
     //공고 상태 변경
