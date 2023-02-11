@@ -136,17 +136,14 @@ public class ApplicationController {
         }
     }
 
-    /*
+
     @GetMapping("/application/waiting/{userIdx}")
     public BaseResponse<List<ApplicationWaiting>> getApplicationWaitings(@PathVariable int userIdx) throws BaseException {
         try{
             List<ApplicationWaiting> getApplicationWaitings = applicationService.getApplicationWaitings(userIdx);
-            return getApplicationWaitings;
+            return new BaseResponse<>(getApplicationWaitings);
         } catch (BaseException e) {
-            e.printStackTrace();
             return new BaseResponse<>(e.getStatus());
         }
     }
-
-     */
 }
