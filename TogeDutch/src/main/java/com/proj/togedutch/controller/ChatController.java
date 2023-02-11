@@ -2,6 +2,7 @@ package com.proj.togedutch.controller;
 
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.config.BaseResponse;
+import com.proj.togedutch.config.BaseResponseStatus;
 import com.proj.togedutch.entity.*;
 import com.proj.togedutch.service.AWSS3Service;
 import com.proj.togedutch.service.ChatService;
@@ -102,7 +103,7 @@ public class ChatController {
             ChatMeetTime chatMeetTime = chatService.createChatMeetTime(chatRoomId,user,time);
             return new BaseResponse<>(chatMeetTime);
         }catch (BaseException e){
-            return new BaseResponse<>(e.getStatus());
+            return new BaseResponse<>(BaseResponseStatus.CHAT_MEETTIME_ERROR);
         }
     }
 
