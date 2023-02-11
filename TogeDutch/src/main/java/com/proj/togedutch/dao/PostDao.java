@@ -235,8 +235,8 @@ public class PostDao {
     }
 
     public List<Post> getPostByTitleUserId(String title) throws BaseException {
-        String getPostQuery = "select * from Post where title = ? and status != \"공고사용불가\" ";
-
+        String getPostQuery = "select * from Post where title like ? and status != \"공고사용불가\" ";
+        String titleKeyword= "%" + title + "%";
         return this.jdbcTemplate.query(getPostQuery,
                 (rs, rowNum) -> new Post(
                         rs.getInt("post_id"),
@@ -256,7 +256,7 @@ public class PostDao {
                         rs.getDouble("longitude"),
                         rs.getInt("ChatRoom_chatRoom_id"),
                         rs.getString("category")
-                ), title);
+                ), titleKeyword);
     }
 
     @Transactional(rollbackFor = Exception.class)
