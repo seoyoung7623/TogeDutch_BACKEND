@@ -59,7 +59,7 @@ public class MatchingService {
         } catch(EmptyResultDataAccessException e){
             MatchingCount=300;
             Post post = MatchingDao.getReMatchingFirst(postIdx);
-            user = MatchingDao.getNoMatching(post.getLatitude(),post.getLongitude(),post.getPost_id());
+            user = MatchingDao.getNoMatching(post.getLatitude(),post.getLongitude(),post.getPost_id(),post);
 
             return user;
             //throw new BaseException(DATABASE_ERROR);
