@@ -83,5 +83,13 @@ public class MatchingService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+    public int getWaitApplicationId(int userIdx, int postIdx) throws BaseException {
+        try{
+            int getWait = MatchingDao.getWaitApplicationId(userIdx,postIdx);
+            return getWait;
+        } catch(Exception e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
 
 }
