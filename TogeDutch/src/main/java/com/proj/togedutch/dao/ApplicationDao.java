@@ -164,31 +164,23 @@ public class ApplicationDao {
         }
     }
 
-    /*
-    public List<ApplicationWaiting> getApplicationWaitings(int userIdx) {
-        String getApplicationQuery = "select * from Application where Post_User_user_id = ? and status =\"수락대기\";";
+    public List<ApplicationWaiting> getApplicationWaitings(int userIdx) throws BaseException {
+        String getApplicationQuery = "SELECT a.application_id, a.status, a.Post_post_id, a.User_user_id, a.ChatRoom_chatRoom_id, p.title,  u.name\n" +
+                "FROM Application a LEFT JOIN Post p ON a.Post_post_id = p.post_id JOIN User u ON a.User_user_id = u.user_id \n" +
+                "where a.Post_User_user_id = ? and a.status = \"수락대기\"";
 
 
-        Application application =  this.jdbcTemplate.queryForObject(getApplicationQuery,
-                (rs, rowNum) -> new Application(
+        return this.jdbcTemplate.query(getApplicationQuery,
+                (rs, rowNum) -> new ApplicationWaiting(
                         rs.getInt("application_id"),
                         rs.getString("status"),
                         rs.getInt("Post_post_id"),
                         rs.getInt("User_user_id"),
-                        rs.getInt("ChatRoom_chatRoom_id")),
+                        rs.getInt("ChatRoom_chatRoom_id"),
+                        rs.getString("title"),
+                        rs.getString("name")
+                ),
                 userIdx
         );
-
-        ApplicationWaiting waiting = new ApplicationWaiting();
-        waiting.setApplication_id(application.getApplication_id());
-        waiting.setStatus(application.getStatus());
-        waiting.setPost_id(application.getPost_id());
-        waiting.setUser_id(application.getUser_id());
-        waiting.setChatRoom_id(application.getChatRoom_id());
-
-        String getPostQuery = "select * from Post where post_id = ?";
-
     }
-
-     */
 }
