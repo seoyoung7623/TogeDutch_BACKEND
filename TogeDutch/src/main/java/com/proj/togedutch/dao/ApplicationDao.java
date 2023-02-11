@@ -2,6 +2,7 @@ package com.proj.togedutch.dao;
 
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.entity.Application;
+import com.proj.togedutch.entity.ApplicationWaiting;
 import com.proj.togedutch.entity.ChatRoom;
 import com.proj.togedutch.entity.Post;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,15 +108,16 @@ public class ApplicationDao {
     }
 
 
-    //채팅방 전체 조회 (내가 참여)
+    //채팅방 전체 조회 (내가 업로드 + 참여)
     public List<ChatRoom> getChatRoomByJoinUserId(int userIdx) throws BaseException {
-        String getChatRoomQuery = "select * From ChatRoom where chatRoom_id In( select ChatRoom_chatRoom_id from Application where User_user_id = ? and status = ?)";
+        String getChatRoomQuery = "select * From ChatRoom where chatRoom_id In ( select ChatRoom_chatRoom_id from Application where (User_user_id = ? or Post_User_user_id = ?) and status = ?)";
+        Object[] getChatRoomParams = new Object[]{userIdx, userIdx, "수락완료"};
 
         return this.jdbcTemplate.query(getChatRoomQuery,
                 (rs, rowNum) -> new ChatRoom(
                         rs.getInt("chatRoom_id"),
                         rs.getTimestamp("created_at")
-                ), userIdx, "수락완료");
+                ), getChatRoomParams);
     }
 
     //공고 상태 변경
@@ -161,4 +163,32 @@ public class ApplicationDao {
             return null;
         }
     }
+
+    /*
+    public List<ApplicationWaiting> getApplicationWaitings(int userIdx) {
+        String getApplicationQuery = "select * from Application where Post_User_user_id = ? and status =\"수락대기\";";
+
+
+        Application application =  this.jdbcTemplate.queryForObject(getApplicationQuery,
+                (rs, rowNum) -> new Application(
+                        rs.getInt("application_id"),
+                        rs.getString("status"),
+                        rs.getInt("Post_post_id"),
+                        rs.getInt("User_user_id"),
+                        rs.getInt("ChatRoom_chatRoom_id")),
+                userIdx
+        );
+
+        ApplicationWaiting waiting = new ApplicationWaiting();
+        waiting.setApplication_id(application.getApplication_id());
+        waiting.setStatus(application.getStatus());
+        waiting.setPost_id(application.getPost_id());
+        waiting.setUser_id(application.getUser_id());
+        waiting.setChatRoom_id(application.getChatRoom_id());
+
+        String getPostQuery = "select * from Post where post_id = ?";
+
+    }
+
+     */
 }

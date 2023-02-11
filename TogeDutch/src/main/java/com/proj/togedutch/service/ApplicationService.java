@@ -1,9 +1,11 @@
 package com.proj.togedutch.service;
 
 import com.proj.togedutch.config.BaseException;
+import com.proj.togedutch.config.BaseResponse;
 import com.proj.togedutch.dao.ApplicationDao;
 import com.proj.togedutch.dao.PostDao;
 import com.proj.togedutch.entity.Application;
+import com.proj.togedutch.entity.ApplicationWaiting;
 import com.proj.togedutch.entity.ChatRoom;
 
 import com.proj.togedutch.entity.Post;
@@ -153,4 +155,19 @@ public class ApplicationService {
             throw new BaseException(DATABASE_ERROR);
         }
     }
+
+    /*
+    public List<ApplicationWaiting> getApplicationWaitings(int userIdx) throws BaseException {
+        try{
+            List<ApplicationWaiting> getApplicationWaitings = applicationDao.getApplicationWaitings(userIdx);
+
+            if(getApplicationWaitings.isEmpty())
+                throw new BaseException(NOBODY_WAITING);
+            return getApplicationWaitings;
+        } catch(BaseException e){
+            throw new BaseException(DATABASE_ERROR);
+        }
+    }
+
+     */
 }
