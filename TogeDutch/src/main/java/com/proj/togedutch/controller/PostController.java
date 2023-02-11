@@ -260,4 +260,15 @@ public class PostController {
             return new BaseResponse<>(e.getStatus());
         }
     }
+
+    // 채팅방 아이디로 공고 조회
+    @GetMapping("/chatRoom/{chatRoomIdx}")
+    public BaseResponse<Post> getPostByChatRoomId(@PathVariable int chatRoomIdx) throws BaseException {
+        try{
+            Post getPost = postService.getPostByChatRoomId(chatRoomIdx);
+            return new BaseResponse<>(getPost);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 }
