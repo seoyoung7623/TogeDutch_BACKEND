@@ -167,13 +167,17 @@ public class MatchingDao {
 
         );
 
+        String MatchingApplicationQuery = "Insert into Application (status, Post_post_id, Post_User_user_id, ChatRoom_chatRoom_id,User_user_id) values (?,?,?,?,?) ";
+        Object[] getMatchingApplicationParams = new Object[]{"매칭 대기",post.getPost_id(),post.getUser_id(),post.getChatRoom_id(),user1.getUserIdx()};
+        int x =this.jdbcTemplate.update(MatchingApplicationQuery, getMatchingApplicationParams);
+
         logger.info(String.valueOf(user1.getUserIdx()));
-        System.out.println(user1.getUserIdx());
+        System.out.println(x);
 
         return user1;
     }
     @Transactional(rollbackFor = Exception.class)
-    public User getNoMatching(Double latitude, Double longitude, int postIdx) {
+    public User getNoMatching(Double latitude, Double longitude, int postIdx, Post post) {
 
         String getdistanceQuery = "SELECT *, (6371*acos(cos(radians(?))*cos(radians(latitude))*cos(radians(longitude)-radians(?))+sin(radians(?))*sin(radians(latitude)))) AS distance "
                 + "FROM User "
@@ -206,6 +210,10 @@ public class MatchingDao {
         Object[] getMatchingParams = new Object[]{user.getUserIdx(), 1, postIdx};
         int a = this.jdbcTemplate.update(MatchingQuery, getMatchingParams);
         System.out.println(a);
+
+        String MatchingApplicationQuery = "Insert into Application (status, Post_post_id, Post_User_user_id, ChatRoom_chatRoom_id,User_user_id) values (?,?,?,?,?) ";
+        Object[] getMatchingApplicationParams = new Object[]{"매칭 대기",post.getPost_id(),post.getUser_id(),post.getChatRoom_id(),user.getUserIdx()};
+        int x =this.jdbcTemplate.update(MatchingApplicationQuery, getMatchingApplicationParams);
         return user;
 
     }
