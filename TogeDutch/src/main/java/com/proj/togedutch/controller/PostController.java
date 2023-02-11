@@ -248,4 +248,16 @@ public class PostController {
             return new BaseResponse<>(e.getStatus());
         }
     }
+
+    // 해당 공고에 참여중인 유저 전체 조회
+    @GetMapping("/users/{postIdx}")
+    public BaseResponse<List<User>> getUsersInPost(@PathVariable("postIdx") int postIdx) throws BaseException {
+        try{
+            List<User> getUsersInPost = postService.getUsersInPost(postIdx);
+            return new BaseResponse<>(getUsersInPost);
+        } catch(BaseException e){
+            e.printStackTrace();
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
 }
