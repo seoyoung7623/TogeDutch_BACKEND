@@ -90,6 +90,8 @@ public enum BaseResponseStatus {
     NOT_FULL_NUM_OF_RECRUITS(false, 3020, "모집인원이 채워지지 않았습니다."),
     POST_NOT_ACCESSIBLE(false, 3021, "공고를 사용할 수 없으므로, 참여자를 조회할 수 없습니다."),
 
+    // [GET] /application
+    NOBODY_WAITING(false, 3022, "수락대기 중인 메이트 신청자가 없습니다."),
 
 
     /**
