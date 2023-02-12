@@ -3,10 +3,7 @@ package com.proj.togedutch.controller;
 import com.proj.togedutch.config.BaseException;
 import com.proj.togedutch.config.BaseResponse;
 import com.proj.togedutch.config.BaseResponseStatus;
-import com.proj.togedutch.entity.CategoryRequest;
-import com.proj.togedutch.entity.ChatRoom;
-import com.proj.togedutch.entity.Post;
-import com.proj.togedutch.entity.User;
+import com.proj.togedutch.entity.*;
 import com.proj.togedutch.service.AWSS3Service;
 import com.proj.togedutch.service.ChatRoomService;
 import com.proj.togedutch.service.PostService;
@@ -217,7 +214,10 @@ public class PostController {
     @ResponseBody
     @GetMapping("/search")
     public BaseResponse<List<Post>> getPostByTitleUserId(@RequestParam String keyword) throws BaseException {
+        if(keyword.isEmpty())
+            return new BaseResponse<>(BaseResponseStatus.POST_EMPTY_KEYWORD);
         try {
+            System.out.println("뭐가?찍힘?" + keyword);
             List<Post> getPost = postService.getPostByTitleUserId(keyword);
             return new BaseResponse<>(getPost);
         } catch(BaseException e) {
@@ -245,6 +245,29 @@ public class PostController {
             List<Post> getPostsByCategory = postService.getPostsByCategory(postReq);
             return new BaseResponse<>(getPostsByCategory);
         } catch(BaseException e){
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    // 해당 공고에 참여중인 유저 전체 조회
+    @GetMapping("/users/{postIdx}")
+    public BaseResponse<List<User>> getUsersInPost(@PathVariable("postIdx") int postIdx) throws BaseException {
+        try{
+            List<User> getUsersInPost = postService.getUsersInPost(postIdx);
+            return new BaseResponse<>(getUsersInPost);
+        } catch(BaseException e){
+            e.printStackTrace();
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    // 채팅방 아이디로 공고 조회
+    @GetMapping("/chatRoom/{chatRoomIdx}")
+    public BaseResponse<Post> getPostByChatRoomId(@PathVariable int chatRoomIdx) throws BaseException {
+        try{
+            Post getPost = postService.getPostByChatRoomId(chatRoomIdx);
+            return new BaseResponse<>(getPost);
+        } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
         }
     }
