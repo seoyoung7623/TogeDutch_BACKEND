@@ -58,10 +58,22 @@ public class ReviewController {
     }
 
     @ResponseBody
-    @GetMapping("/emotion/{postId}")
-    public BaseResponse<ReviewEmotion> getEmotionReview(@PathVariable("postId") int postId) {
+    @GetMapping("/upload/{userId}")
+    public BaseResponse<List<Post>> getUploadPostReview(@PathVariable("userId") int userId) {
         try {
-            ReviewEmotion getEmotion = reviewService.getEmotionReview(postId);
+            List<Post> getUpload = reviewService.getUploadPostReview(userId);
+
+            return new BaseResponse<>(getUpload);
+        } catch (BaseException e) {
+            return new BaseResponse<>(e.getStatus());
+        }
+    }
+
+    @ResponseBody
+    @GetMapping("/emotion/{postId}")
+    public BaseResponse<List<ReviewEmotion>> getEmotionReview(@PathVariable("postId") int postId) {
+        try {
+            List<ReviewEmotion> getEmotion = reviewService.getEmotionReview(postId);
             return new BaseResponse<>(getEmotion);
         } catch (BaseException e) {
             return new BaseResponse<>(e.getStatus());
