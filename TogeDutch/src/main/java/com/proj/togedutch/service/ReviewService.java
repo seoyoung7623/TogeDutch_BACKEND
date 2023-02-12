@@ -56,8 +56,9 @@ public class ReviewService {
 
         return post;
     }
-    public List<ReviewEmotion> getEmotionReview(int postId) throws BaseException{
+    public ReviewEmotion getEmotionReview(int postId) throws BaseException{
         try {
+
             return reviewDao.getEmotionReview(postId);
         } catch (Exception e) {
             throw new BaseException(DATABASE_ERROR);
