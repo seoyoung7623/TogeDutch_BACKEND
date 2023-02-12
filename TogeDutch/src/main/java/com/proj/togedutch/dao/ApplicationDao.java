@@ -165,9 +165,9 @@ public class ApplicationDao {
     }
 
     public List<ApplicationWaiting> getApplicationWaitings(int userIdx) throws BaseException {
-        String getApplicationQuery = "SELECT a.application_id, a.status, a.Post_post_id, a.User_user_id, a.ChatRoom_chatRoom_id, p.title,  u.name\n" +
-                "FROM Application a LEFT JOIN Post p ON a.Post_post_id = p.post_id JOIN User u ON a.User_user_id = u.user_id \n" +
-                "(a.Post_User_user_id = 39 and a.status = \"수락대기\") or (a.User_user_id = 39 and a.status = \"매칭 대기\")";
+        String getApplicationQuery = "SELECT a.application_id, a.status, a.Post_post_id, (select name from User where user_id = a.Post_User_user_id) as uploader, a.User_user_id, a.ChatRoom_chatRoom_id, p.title,  u.name as applicant\n" +
+                "FROM Application a LEFT JOIN Post p ON a.Post_post_id = p.post_id JOIN User u ON a.User_user_id = u.user_id\n" +
+                "where (a.Post_User_user_id = ? and a.status = \"수락대기\") or (a.User_user_id = ? and a.status = \"매칭 대기\")";
         Object[] getApplicationParams = new Object[]{ userIdx, userIdx };
 
         return this.jdbcTemplate.query(getApplicationQuery,
@@ -175,10 +175,11 @@ public class ApplicationDao {
                         rs.getInt("application_id"),
                         rs.getString("status"),
                         rs.getInt("Post_post_id"),
+                        rs.getString("uploader"),
                         rs.getInt("User_user_id"),
                         rs.getInt("ChatRoom_chatRoom_id"),
                         rs.getString("title"),
-                        rs.getString("name")
+                        rs.getString("applicant")
                 ),
                 getApplicationParams
         );
