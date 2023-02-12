@@ -167,8 +167,8 @@ public class ApplicationDao {
     public List<ApplicationWaiting> getApplicationWaitings(int userIdx) throws BaseException {
         String getApplicationQuery = "SELECT a.application_id, a.status, a.Post_post_id, a.User_user_id, a.ChatRoom_chatRoom_id, p.title,  u.name\n" +
                 "FROM Application a LEFT JOIN Post p ON a.Post_post_id = p.post_id JOIN User u ON a.User_user_id = u.user_id \n" +
-                "where a.Post_User_user_id = ? and a.status = \"수락대기\"";
-
+                "(a.Post_User_user_id = 39 and a.status = \"수락대기\") or (a.User_user_id = 39 and a.status = \"매칭 대기\")";
+        Object[] getApplicationParams = new Object[]{ userIdx, userIdx };
 
         return this.jdbcTemplate.query(getApplicationQuery,
                 (rs, rowNum) -> new ApplicationWaiting(
@@ -180,7 +180,7 @@ public class ApplicationDao {
                         rs.getString("title"),
                         rs.getString("name")
                 ),
-                userIdx
+                getApplicationParams
         );
     }
 }
