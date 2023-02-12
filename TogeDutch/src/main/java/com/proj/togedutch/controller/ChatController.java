@@ -118,10 +118,6 @@ public class ChatController {
         }
     }
 
-//    // 만남시간 전체조회
-//    @GetMapping("/chatMeetTimes")
-//    public BaseResponse<ChatMeetTime> getChatMeetTime(@PathVariable("chatRoom_id") int chatRoomId)
-
     @PutMapping("/chatMeetTime/{chatMeetTime_id}")
     public BaseResponse<ChatMeetTime> putChatMeetTime(@PathVariable("chatRoom_id") int chatRoom_id,@PathVariable("chatMeetTime_id") int chatMeetTime_id,@RequestParam String time) throws BaseException{
         try {
