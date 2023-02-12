@@ -73,6 +73,11 @@ public enum BaseResponseStatus {
     KAKAO_PAY_FAIL(false, 2041, "카카오 결제에 실패했습니다."),
 
     POST_EMPTY_KEYWORD(false,2042, "키워드 값을 입력하세요"),
+    // Chat
+    CHAT_MEETTIME_ERROR(false,2043,"<만남시간>의 형식이 잘못되었습니다."),
+
+
+
     /**
      * 3000 : Response 오류
      */
@@ -89,10 +94,7 @@ public enum BaseResponseStatus {
     NONE_INPUT_CATEGORY(false, 3017, "카테고리를 입력하지 않았습니다."),
     //Application
     NOT_FULL_NUM_OF_RECRUITS(false, 3020, "모집인원이 채워지지 않았습니다."),
-    POST_NOT_ACCESSIBLE(false, 3021, "공고를 사용할 수 없으므로, 참여자를 조회할 수 없습니다."),
 
-    // [GET] /application
-    NOBODY_WAITING(false, 3022, "수락대기 중인 메이트 신청자가 없습니다."),
 
 
     /**
