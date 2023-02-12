@@ -13,8 +13,9 @@ public class ApplicationWaiting {
     private int application_id;
     private String status;
     private int post_id;
+    private String uploader;    // 공고 업로드한 유저 이름
     private int user_id;
     private int chatRoom_id;
     private String title;
-    private String user_name;
+    private String applicant;       // 일반 : 신청자 이름 or 랜덤매칭 : 추천된 유저 이름
 }
