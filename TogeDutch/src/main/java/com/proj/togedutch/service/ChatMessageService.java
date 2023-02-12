@@ -28,6 +28,7 @@ public class ChatMessageService {
     //채팅에서 메세지 전송
     public void sendChatMessage(ChatMessage message) {
         String roomIdName = Integer.toString(message.getChatRoomId());
+        message.setWriter("STOMP로 보내지는중"); //test
         if (ChatMessage.MessageType.ENTER.equals(message.getType())){
             message.setContent(message.getWriter() + "님이 방에 입장했습니다.");
         } else if (ChatMessage.MessageType.QUIT.equals(message.getContent())) {
