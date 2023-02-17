@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
 
 
@@ -17,18 +17,19 @@ import org.springframework.stereotype.Service;
 public class ChatMessageService {
     final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final ChatMessageDao chatMessageDao;
-    private final SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
+    private SimpMessageSendingOperations simpMessagingTemplate;
 
     @Autowired
-    public ChatMessageService(ChatMessageDao chatMessageDao, SimpMessagingTemplate simpMessagingTemplate, JdbcTemplate jdbcTemplate){
+    public ChatMessageService(ChatMessageDao chatMessageDao){
         this.chatMessageDao = chatMessageDao;
-        this.simpMessagingTemplate = simpMessagingTemplate;
     }
 
     //채팅에서 메세지 전송
     public void sendChatMessage(ChatMessage message) {
         String roomIdName = Integer.toString(message.getChatRoomId());
-        message.setWriter("STOMP로 보내지는중"); //test
+        String stompTest = message.getContent()+"(stomp전송완료)";
+        message.setContent(stompTest); //test
         if (ChatMessage.MessageType.ENTER.equals(message.getType())){
             message.setContent(message.getWriter() + "님이 방에 입장했습니다.");
         } else if (ChatMessage.MessageType.QUIT.equals(message.getContent())) {
