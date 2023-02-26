@@ -28,8 +28,6 @@ public class ChatMessageService {
     //채팅에서 메세지 전송
     public void sendChatMessage(ChatMessage message) {
         String roomIdName = Integer.toString(message.getChatRoomId());
-        String stompTest = message.getContent()+"(stomp전송완료)";
-        message.setContent(stompTest); //test
         if (ChatMessage.MessageType.ENTER.equals(message.getType())){
             message.setContent(message.getWriter() + "님이 방에 입장했습니다.");
         } else if (ChatMessage.MessageType.QUIT.equals(message.getContent())) {
