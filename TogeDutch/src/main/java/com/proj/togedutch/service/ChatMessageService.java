@@ -36,7 +36,6 @@ public class ChatMessageService {
             message.setContent(message.getWriter() + "님이 방에서 나갔습니다.");
         }
         simpMessagingTemplate.convertAndSend("/sub/chat/room/" + roomIdName, message); //message 전송
-        chatMessageDao.saveMessage(message);
     }
 
     // 채팅에서 이미지 전송
